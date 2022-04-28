@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -13,7 +12,7 @@ export class UserService {
 
   private readonly userRepo: UserRepository;
 
-  public constructor(@InjectRepository(User) userRepo: UserRepository) {
+  public constructor(userRepo: UserRepository) {
     this.userRepo = userRepo;
   }
 
