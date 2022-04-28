@@ -1,0 +1,11 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 100,
+      "driver": "SQLite",
+      "name": "dev",
+      "database": "db/dev.db"
+    }
+  ],
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}
