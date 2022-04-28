@@ -1,5 +1,5 @@
-import { Emotion } from 'src/emotions/emotion.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Emotion } from '../emotions/emotion.entity';
 
 /**
  * User entity

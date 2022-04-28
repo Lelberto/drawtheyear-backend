@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CreateEmotionDto } from 'src/emotions/emotion.dto';
-import { EmotionService } from 'src/emotions/emotion.service';
 import { User } from '../users/user.entity';
+import { CreateEmotionDto } from './emotion.dto';
+import { EmotionService } from './emotion.service';
 
 /**
  * Emotion by user controller

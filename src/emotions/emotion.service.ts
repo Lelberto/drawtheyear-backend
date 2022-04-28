@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/users/user.entity';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { User } from '../users/user.entity';
 import { CreateEmotionDto, UpdateEmotionDto } from './emotion.dto';
 import { Emotion } from './emotion.entity';
 import { EmotionRepository } from './emotion.repository';

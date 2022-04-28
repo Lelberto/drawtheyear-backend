@@ -1,5 +1,5 @@
-import { User } from 'src/users/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
+import { User } from '../users/user.entity';
 import { Emotion } from './emotion.entity';
 
 /**
