@@ -45,7 +45,7 @@ export class EmotionService {
    * Finds an emotion
    * 
    * @param id Emotion ID
-   * @returns emotion
+   * @returns Emotion
    * @throws NotFoundException If the emotion is not found
    * @async
    */

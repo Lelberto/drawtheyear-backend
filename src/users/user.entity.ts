@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Day } from 'src/days/day.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Emotion } from '../emotions/emotion.entity';
 
@@ -28,5 +29,8 @@ export class User extends BaseEntity {
     description: 'User emotions'
   })
   @OneToMany(() => Emotion, emotion => emotion.user)
-  public emotions: Emotion[];
+  public emotions: Emotion[] | Emotion['id'][];
+
+  @OneToMany(() => Day, day => day.user)
+  public days: Day[] | Day['id'][];
 }

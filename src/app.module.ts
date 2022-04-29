@@ -7,6 +7,8 @@ import loggingConfig, { LoggingConfig } from 'config/logging';
 import serverConfig from 'config/server';
 import * as morgan from 'morgan';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { Day } from './days/day.entity';
+import { DayModule } from './days/day.module';
 import { Emotion } from './emotions/emotion.entity';
 import { EmotionModule } from './emotions/emotion.module';
 import { AccessLogger } from './logger/access.logger';
@@ -39,7 +41,7 @@ import { UserModule } from './users/user.module';
           username: config.user,
           password: config.password,
           database: config.name,
-          entities: [User, Emotion],
+          entities: [User, Emotion, Day],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: env !== 'production',
           dropSchema: env === 'test',
@@ -53,6 +55,7 @@ import { UserModule } from './users/user.module';
     LoggerModule,
     UserModule,
     EmotionModule,
+    DayModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {
