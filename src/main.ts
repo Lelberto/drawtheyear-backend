@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
 import { AppLogger } from './logger/app.logger';
@@ -12,6 +13,15 @@ async function bootstrap() {
 
   app.useLogger(logger);
   app.useGlobalFilters(new EntityNotFoundExceptionFilter());
+
+  // Setups swagger
+  const swaggerOptions = new DocumentBuilder()
+    .setTitle('DrawTheYear API')
+    .setDescription('DrawTheYear API')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerOptions);
+  SwaggerModule.setup('swagger', app, document);
 
   await app.listen(3000);
 }

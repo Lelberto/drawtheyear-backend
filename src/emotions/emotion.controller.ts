@@ -1,4 +1,6 @@
-import { Controller, Get, Param, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { UpdateEmotionDto } from './emotion.dto';
 import { Emotion } from './emotion.entity';
 import { EmotionService } from './emotion.service';
 import { IdToEmotionPipe } from './id-to-emotion.pipe';
@@ -8,6 +10,7 @@ import { IdToEmotionPipe } from './id-to-emotion.pipe';
  * 
  * Path : `/emotions`
  */
+@ApiTags('emotions')
 @Controller('emotions')
 @UsePipes(ValidationPipe)
 export class EmotionController {
@@ -26,5 +29,10 @@ export class EmotionController {
   @Get(':id')
   public async findById(@Param('id', IdToEmotionPipe) emotion: Emotion) {
     return emotion;
+  }
+
+  @Patch(':id')
+  public async update(@Param('id') id: string, @Body() body: UpdateEmotionDto) {
+    await this.emotionService.update(id, body);
   }
 }

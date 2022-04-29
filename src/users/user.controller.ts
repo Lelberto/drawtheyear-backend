@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { IdToUserPipe } from './id-to-user.pipe';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -9,6 +10,7 @@ import { UserService } from './user.service';
  * 
  * Path : `/users`
  */
+@ApiTags('users')
 @Controller('users')
 @UsePipes(ValidationPipe)
 export class UserController {

@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { User } from '../users/user.entity';
 import { CreateEmotionDto } from './emotion.dto';
 import { EmotionService } from './emotion.service';
@@ -8,6 +9,7 @@ import { EmotionService } from './emotion.service';
  * 
  * Path : `/users/:userId/emotions`
  */
+@ApiTags('emotions')
 @Controller('users/:userId/emotions')
 @UsePipes(ValidationPipe)
 export class EmotionByUserController {
