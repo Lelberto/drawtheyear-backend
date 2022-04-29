@@ -10,7 +10,7 @@ import * as path from 'path';
  * 
  * This is the default logger.
  * 
- * Logs are written in the `logs/application.log` file.
+ * Logs are written in the `LOGGING_APPLICATION_FILE` environment variable path.
  */
 @Injectable()
 export class AppLogger extends ConsoleLogger implements LoggerService {

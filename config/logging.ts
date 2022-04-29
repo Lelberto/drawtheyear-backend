@@ -7,6 +7,7 @@ export type LoggingConfig = {
   files: {
     application: string;
     access: string;
+    database: string;
   };
 }
 
@@ -17,7 +18,8 @@ export default (): { logging: LoggingConfig } => ({
     dir: process.env.LOGGING_DIR,
     files: {
       application: process.env.LOGGING_FILE_APPLICATION,
-      access: process.env.LOGGING_FILE_ACCESS
+      access: process.env.LOGGING_FILE_ACCESS,
+      database: process.env.LOGGING_FILE_DATABASE
     }
   }
 });

@@ -11,6 +11,7 @@ import { Emotion } from './emotions/emotion.entity';
 import { EmotionModule } from './emotions/emotion.module';
 import { AccessLogger } from './logger/access.logger';
 import { AppLogger } from './logger/app.logger';
+import { DatabaseLogger } from './logger/database.logger';
 import { LoggerModule } from './logger/logger.module';
 import { User } from './users/user.entity';
 import { UserModule } from './users/user.module';
@@ -28,7 +29,7 @@ import { UserModule } from './users/user.module';
       load: [globalConfig, serverConfig, databaseConfig, loggingConfig]
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async (configService: ConfigService, logger: DatabaseLogger) => {
         const env = configService.get<NodeEnv>('env');
         const config = configService.get<DatabaseConfig>('database');
         return {
@@ -42,10 +43,12 @@ import { UserModule } from './users/user.module';
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: env !== 'production',
           dropSchema: env === 'test',
+          maxQueryExecutionTime: 1000,
+          logger,
           logging: env === 'development'
         }
       },
-      inject: [ConfigService]
+      inject: [ConfigService, DatabaseLogger]
     }),
     LoggerModule,
     UserModule,

@@ -8,7 +8,7 @@ import { AppLogger } from './app.logger';
  * 
  * This logger is used to log access to the application (requests and responses).
  * 
- * Logs are written in the `logs/access.log` file.
+ * Logs are written in the `LOGGING_ACCESS_FILE` environment variable path.
  */
 @Injectable()
 export class AccessLogger extends AppLogger {
