@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { EmotionService } from 'src/emotions/emotion.service';
 import { UpdateDayDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayService } from './day.service';
@@ -16,9 +17,11 @@ import { IdToDayPipe } from './id-to-day.pipe';
 export class DayController {
 
   private readonly dayService: DayService;
+  private readonly emotionsService: EmotionService;
 
-  public constructor(dayService: DayService) {
+  public constructor(dayService: DayService, emotionService: EmotionService) {
     this.dayService = dayService;
+    this.emotionsService = emotionService;
   }
 
   @Get()
@@ -34,5 +37,10 @@ export class DayController {
   @Patch(':id')
   public async update(@Param('id') id: string, @Body() body: UpdateDayDto) {
     await this.dayService.update(id, body);
+  }
+
+  @Get(':id/emotions')
+  public async findEmotions(@Param('id', IdToDayPipe) day: Day) {
+    return await this.emotionsService.find(...day.emotions as string[]);
   }
 }

@@ -34,11 +34,12 @@ export class EmotionService {
   /**
    * Finds all emotions
    * 
+   * @param ids Emotion IDs
    * @returns All emotions
    * @async
    */
-  public async find(): Promise<Emotion[]> {
-    return await this.emotionRepo.find();
+  public async find(...ids: Emotion['id'][]): Promise<Emotion[]> {
+    return ids.length > 0 ? await this.emotionRepo.findByIds(ids) : await this.emotionRepo.find();
   }
 
   /**

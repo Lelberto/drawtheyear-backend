@@ -12,6 +12,7 @@ import { EmotionByUserController } from './emotion-by-user.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([Emotion, EmotionRepository])],
   providers: [EmotionService],
-  controllers: [EmotionController, EmotionByUserController]
+  controllers: [EmotionController, EmotionByUserController],
+  exports: [EmotionService]
 })
 export class EmotionModule {}
