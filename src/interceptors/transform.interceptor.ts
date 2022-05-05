@@ -28,7 +28,10 @@ export class TransformInterceptor implements NestInterceptor<Request, Response> 
 
   public intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(map(({ links, ...data }) => {
-        const res: { data: any, links?: Link[] } = { data };
+        const res: { data?: any, links?: Link[] } = {};
+        if (data && Object.keys(data).length > 0) {
+          res.data = data;
+        }
         if (links) {
           res.links = links;
         }
