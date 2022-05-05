@@ -34,15 +34,19 @@ export class HateoasService {
     switch (rel) {
       case 'user-self':
         method = 'GET';
-        href = `/users/${params.userId}`;
+        href = `/users/${(params as RelParams['user-self']).userId}`;
         break;
       case 'user-emotions':
         method = 'GET';
-        href = `/users/${params.userId}/emotions`;
+        href = `/users/${(params as RelParams['user-emotions']).userId}/emotions`;
         break;
       case 'user-days':
         method = 'GET';
-        href = `/users/${params.userId}/days`;
+        href = `/users/${(params as RelParams['user-days']).userId}/days`;
+        break;
+      case 'emotion-self':
+        method = 'GET';
+        href = `/emotions/${(params as RelParams['emotion-self']).emotionId}`;
         break;
       default: throw new HateoasError(rel);
     }
