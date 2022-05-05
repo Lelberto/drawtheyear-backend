@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Emotion } from 'src/emotions/emotion.entity';
-import { User } from 'src/users/user.entity';
+import { Emotion } from '../emotions/emotion.entity';
+import { User } from '../users/user.entity';
 import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 /**

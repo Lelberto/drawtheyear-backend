@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Day } from 'src/days/day.entity';
+import { Day } from '../days/day.entity';
 import { BaseEntity, Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../users/user.entity';
 

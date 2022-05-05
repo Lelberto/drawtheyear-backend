@@ -1,6 +1,6 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsArray, IsDate, IsString } from 'class-validator';
-import { Emotion } from 'src/emotions/emotion.entity';
+import { Emotion } from '../emotions/emotion.entity';
 
 /**
  * DTO for day creation

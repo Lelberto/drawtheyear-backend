@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmotionModule } from 'src/emotions/emotion.module';
-import { EmotionRepository } from 'src/emotions/emotion.repository';
+import { EmotionModule } from '../emotions/emotion.module';
+import { EmotionRepository } from '../emotions/emotion.repository';
 import { DayByUserController } from './day-by-user.controller';
 import { DayController } from './day.controller';
 import { Day } from './day.entity';

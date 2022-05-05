@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 import { CreateDayDto } from './day.dto';
 import { DayService } from './day.service';
 

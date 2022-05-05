@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { EmotionService } from 'src/emotions/emotion.service';
+import { EmotionService } from '../emotions/emotion.service';
 import { UpdateDayDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayService } from './day.service';

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { HateoasService } from 'src/hateoas/hateoas.service';
+import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from './id-to-user.pipe';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';

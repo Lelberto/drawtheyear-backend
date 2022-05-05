@@ -2,7 +2,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Link } from 'src/hateoas/hateoas.types';
+import { Link } from '../hateoas/hateoas.types';
 
 /**
  * Transform interceptor
