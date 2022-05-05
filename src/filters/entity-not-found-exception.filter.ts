@@ -7,7 +7,7 @@ import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
  * 
  * This filter translates `EntityNotFoundError` to `NotFoundException`.
  */
-@Catch(EntityNotFoundError, Error)
+@Catch(EntityNotFoundError)
 export class EntityNotFoundExceptionFilter implements ExceptionFilter {
 
   public catch(ex: EntityNotFoundError, host: ArgumentsHost) {

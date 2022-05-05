@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
+import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { AppLogger } from './logger/app.logger';
 
 /**
@@ -12,6 +13,7 @@ async function bootstrap() {
   const logger = app.get(AppLogger);
 
   app.useLogger(logger);
+  app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new EntityNotFoundExceptionFilter());
 
   // Setups swagger
