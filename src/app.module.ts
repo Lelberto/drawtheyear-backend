@@ -11,6 +11,7 @@ import { Day } from './days/day.entity';
 import { DayModule } from './days/day.module';
 import { Emotion } from './emotions/emotion.entity';
 import { EmotionModule } from './emotions/emotion.module';
+import { HateoasModule } from './hateoas/hateoas.module';
 import { AccessLogger } from './logger/access.logger';
 import { AppLogger } from './logger/app.logger';
 import { DatabaseLogger } from './logger/database.logger';
@@ -55,7 +56,8 @@ import { UserModule } from './users/user.module';
     LoggerModule,
     UserModule,
     EmotionModule,
-    DayModule
+    DayModule,
+    HateoasModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {
