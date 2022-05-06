@@ -1,22 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FixtureManager } from '../../test/fixtures/fixtures';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import mocks from '../../test/mocks';
+import { CreateUserDto } from './user.dto';
+import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
-  const fixtures = new FixtureManager();
-  const user = fixtures.users.createOne();
-  const mockRepo: jest.Mocked<Partial<UserRepository>> = {
-    create: jest.fn(),
-    save: jest.fn(),
-    find: jest.fn().mockReturnValue([user]),
-    findOneOrFail: jest.fn().mockReturnValue(user),
-    update: jest.fn(),
-    delete: jest.fn(),
-    count: jest.fn().mockReturnValue(1),
-  }
+  const mockRepo = mocks.userRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,33 +28,26 @@ describe('UserService', () => {
   });
 
   it('should create an user', async () => {
-    await service.create(new CreateUserDto());
-
-    expect(mockRepo.create).toBeCalled();
-    expect(mockRepo.save).toBeCalled();
+    const dto: CreateUserDto = {
+      name: 'John'
+    };
+    
+    expect(await service.create(dto)).toEqual<Partial<User>>({
+      id: expect.any(String),
+      ...dto
+    });
+    expect(mockRepo.create).toBeCalledWith(dto);
+    expect(mockRepo.save).toBeCalledWith(expect.any(User));
   });
 
-  it('should return an array of users', async () => {
-    expect(await service.find()).toEqual([user]);
+  it('should find users', async () => {
+    expect(await service.find()).toEqual(expect.arrayContaining([expect.any(User)]));
+    expect(mockRepo.find).toBeCalled();
   });
 
-  it('should return an user', async () => {
-    expect(await service.findById(user.id)).toEqual(user);
-  });
+  it('should find an user', async () => {
+    expect(await service.findById('1')).toEqual<Partial<User>>({
 
-  it('should update an user', async () => {
-    await service.update(user.id, new UpdateUserDto());
-
-    expect(mockRepo.update).toBeCalled();
-  });
-
-  it('should delete an user', async () => {
-    await service.delete(user.id);
-
-    expect(mockRepo.delete).toBeCalled();
-  });
-
-  it('should return true if user exists', async () => {
-    expect(await service.exists(user.id)).toBeTruthy();
+    }
   });
 });

@@ -26,7 +26,7 @@ export abstract class Fixture<T, D> {
    * 
    * @param count Fixture instance coune
    */
-  public createMany(count: number): T[] {
+  public createMany(count = 10): T[] {
     const fixtures: T[] = [];
     for (let i = 0; i < count; i++) {
       fixtures.push(this.createOne());
