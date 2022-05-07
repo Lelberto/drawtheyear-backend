@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../days/day.entity';
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Emotion } from '../emotions/emotion.entity';
 
 /**
  * User entity
  */
 @Entity()
-export class User extends BaseEntity {
+export class User {
 
   @ApiProperty({
     description: 'User ID'
   })
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  public id!: string;
 
   @ApiProperty({
     description: 'User name'
@@ -22,15 +22,15 @@ export class User extends BaseEntity {
     type: 'varchar',
     length: 30
   })
-  public name: string;
+  public name!: string;
 
   @ApiProperty({
     type: () => [Emotion],
     description: 'User emotions'
   })
   @OneToMany(() => Emotion, emotion => emotion.user)
-  public emotions: Emotion[] | Emotion['id'][];
+  public emotions?: Emotion[] | Emotion['id'][];
 
   @OneToMany(() => Day, day => day.user)
-  public days: Day[] | Day['id'][];
+  public days?: Day[] | Day['id'][];
 }
