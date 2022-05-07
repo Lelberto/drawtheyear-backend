@@ -27,7 +27,7 @@ export class UserFixture extends Fixture<User, CreateUserDto> {
     return user;
   }
 
-  public createMany(count: number): User[] {
+  public createMany(count = 10): User[] {
     const users: User[] = [];
     for (let i = 0; i < count; i++) {
       users.push(this.createOne());
