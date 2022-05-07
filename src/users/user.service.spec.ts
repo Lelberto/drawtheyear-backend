@@ -1,15 +1,20 @@
+import faker from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import mocks from '../../test/mocks';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
-  const mockRepo = mocks.userRepository;
+  let mockRepo: jest.Mocked<Partial<UserRepository>>;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+    mockRepo = mocks.createMockUserRepository();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
@@ -32,7 +37,7 @@ describe('UserService', () => {
       name: 'John'
     };
     
-    expect(await service.create(dto)).toEqual<Partial<User>>({
+    expect(await service.create(dto)).toEqual<User>({
       id: expect.any(String),
       ...dto
     });
@@ -46,8 +51,51 @@ describe('UserService', () => {
   });
 
   it('should find an user', async () => {
-    expect(await service.findById('1')).toEqual<Partial<User>>({
+    const id = faker.datatype.uuid();
 
+    expect(await service.findById(id)).toEqual(expect.any(User));
+    expect(mockRepo.findOneOrFail).toBeCalledWith({ id });
+  });
+
+  it('should update an user', async () => {
+    const id = faker.datatype.uuid();
+    const dto: UpdateUserDto = {
+      name: 'John'
     }
+
+    await service.update(id, dto);
+    expect(mockRepo.count).toBeCalled();
+    expect(mockRepo.update).toBeCalledWith({ id }, dto);
+  });
+
+  it('should throw error when an user to update does not exists', async () => {
+    mockRepo.count.mockResolvedValue(0);
+
+    const id = faker.datatype.uuid();
+    const dto: UpdateUserDto = {
+      name: 'John'
+    }
+
+    await expect(service.update(id, dto)).rejects.toThrow(EntityNotFoundError);
+    expect(mockRepo.count).toBeCalled();
+    expect(mockRepo.update).not.toBeCalled();
+  });
+
+  it('should delete an user', async () => {
+    const id = faker.datatype.uuid();
+
+    await service.delete(id);
+    expect(mockRepo.count).toBeCalled();
+    expect(mockRepo.delete).toBeCalledWith({ id });
+  });
+
+  it('should throw error when an user to delete does not exists', async () => {
+    mockRepo.count.mockResolvedValue(0);
+
+    const id = faker.datatype.uuid();
+
+    await expect(service.delete(id)).rejects.toThrow(EntityNotFoundError);
+    expect(mockRepo.count).toBeCalled();
+    expect(mockRepo.delete).not.toBeCalledWith({ id });
   });
 });

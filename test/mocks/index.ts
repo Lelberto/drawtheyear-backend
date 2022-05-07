@@ -1,5 +1,6 @@
-import { mockUserRepository as userRepository } from './user.repository.mock';
+import createMockUserRepository from './user.repository.mock';
 
+/** Mocks */
 export default {
-  userRepository,
+  createMockUserRepository,
 }
