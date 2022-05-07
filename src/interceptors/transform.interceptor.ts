@@ -27,15 +27,28 @@ import { Link } from '../hateoas/hateoas.types';
 export class TransformInterceptor implements NestInterceptor<Request, Response> {
 
   public intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
-    return next.handle().pipe(map(({ links, ...data }) => {
-        const res: { data?: any, links?: Link[] } = {};
-        if (data && Object.keys(data).length > 0) {
-          res.data = data;
+    return next.handle().pipe(map(data => {
+      // Define base data if undefined (when no content is sent) or if some properties are not set (like pagination, HATEOAS, ...)
+      if (!data) {
+        data = {
+          links: null,
         }
-        if (links) {
-          res.links = links;
-        }
-        return res;
-      }));
+      } else {
+        data.links = data?.links || null;
+      }
+
+      const { links, ...rest } = data;
+      const resData: { data?: any, links?: Link[] } = {};
+
+      // Define response data
+      if (rest && Object.keys(rest).length > 0) {
+        resData.data = rest;
+      }
+      if (links) {
+        resData.links = links;
+      }
+      
+      return Object.keys(resData).length > 0 ? resData : null; // Send null if no data (no content)
+    }));
   }
 }
