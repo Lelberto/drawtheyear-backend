@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsHexColor, IsString, Length } from 'class-validator';
 
 /**
@@ -19,4 +19,4 @@ export class CreateEmotionDto {
 /**
  * DTO for emotion update
  */
-export class UpdateEmotionDto extends OmitType(CreateEmotionDto, []) {}
+export class UpdateEmotionDto extends PartialType(CreateEmotionDto) {}

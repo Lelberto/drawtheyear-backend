@@ -5,12 +5,16 @@ import { EmotionService } from './emotion.service';
 import { EmotionController } from './emotion.controller';
 import { EmotionRepository } from './emotion.repository';
 import { EmotionByUserController } from './emotion-by-user.controller';
+import { HateoasModule } from '../hateoas/hateoas.module';
 
 /**
  * Emotion module
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([Emotion, EmotionRepository])],
+  imports: [
+    TypeOrmModule.forFeature([Emotion, EmotionRepository]),
+    HateoasModule
+  ],
   providers: [EmotionService],
   controllers: [EmotionController, EmotionByUserController],
   exports: [EmotionService]
