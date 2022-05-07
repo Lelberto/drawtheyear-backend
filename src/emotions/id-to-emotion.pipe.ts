@@ -17,6 +17,6 @@ export class IdToEmotionPipe implements PipeTransform<string, Promise<Emotion>> 
   }
 
   public async transform(id: string): Promise<Emotion> {
-    return await this.emotionService.findById(id);
+    return await this.emotionService.findOne(id);
   }
 }

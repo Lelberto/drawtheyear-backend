@@ -32,10 +32,10 @@ export class EmotionService {
   }
 
   /**
-   * Finds all emotions
+   * Finds emotions
    * 
    * @param ids Emotion IDs
-   * @returns All emotions
+   * @returns Emotions
    * @async
    */
   public async find(...ids: Emotion['id'][]): Promise<Emotion[]> {
@@ -50,7 +50,7 @@ export class EmotionService {
    * @throws NotFoundException If the emotion is not found
    * @async
    */
-  public async findById(id: Emotion['id']): Promise<Emotion> {
+  public async findOne(id: Emotion['id']): Promise<Emotion> {
     return await this.emotionRepo.findOneOrFail({ id });
   }
 
@@ -101,7 +101,7 @@ export class EmotionService {
    * @returns True if the emotion exists, false otherwise
    * @async
    */
-   public async exists(id: User['id']): Promise<boolean> {
+   public async exists(id: Emotion['id']): Promise<boolean> {
     return await this.emotionRepo.count({ id }) > 0;
   }
 }
