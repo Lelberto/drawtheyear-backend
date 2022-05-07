@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
 import { CreateEmotionDto } from './emotion.dto';
 import { EmotionService } from './emotion.service';
@@ -14,19 +16,28 @@ import { EmotionService } from './emotion.service';
 @UsePipes(ValidationPipe)
 export class EmotionByUserController {
 
-  private emotionService: EmotionService;
+  private readonly emotionService: EmotionService;
+  private readonly hateoas: HateoasService;
 
-  public constructor(emotionService: EmotionService) {
+  public constructor(emotionService: EmotionService, hateoas: HateoasService) {
     this.emotionService = emotionService;
+    this.hateoas = hateoas;
   }
 
   @Get()
   public async find(@Param(':userId') userId: User['id']) {
-    return await this.emotionService.findByUser(userId);
+    return { emotions: await this.emotionService.findByUser(userId) };
   }
 
   @Post()
-  public async create(@Param('userId') userId: User['id'], @Body() dto: CreateEmotionDto) {
-    return await this.emotionService.create(userId, dto);
+  public async create(@Req() req: Request, @Param('userId') userId: User['id'], @Body() dto: CreateEmotionDto) {
+    const emotion = await this.emotionService.create(userId, dto);
+    return {
+      emotion,
+      links: [
+        this.hateoas.createLink(req, 'emotion-self', { emotionId: emotion.id }),
+        this.hateoas.createLink(req, 'user-emotions', { userId }),
+      ]
+    };
   }
 }

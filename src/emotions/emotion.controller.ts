@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { HateoasService } from '../hateoas/hateoas.service';
@@ -49,5 +49,11 @@ export class EmotionController {
         this.hateoas.createLink(req, 'emotion-self', { emotionId: id }),
       ]
     }
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  public async delete(@Param('id') id: string) {
+    await this.emotionService.delete(id);
   }
 }
