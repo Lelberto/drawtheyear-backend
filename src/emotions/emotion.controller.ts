@@ -35,6 +35,7 @@ export class EmotionController {
     return {
       emotion,
       links: [
+        this.hateoas.createLink(req, 'emotion-self', { emotionId: emotion.id }),
         this.hateoas.createLink(req, 'user-self', { userId: emotion.userId }),
         this.hateoas.createLink(req, 'user-emotions', { userId: emotion.userId })
       ]

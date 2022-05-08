@@ -39,7 +39,13 @@ export class EmotionService {
    * @async
    */
   public async find(...ids: Emotion['id'][]): Promise<Emotion[]> {
-    return ids.length > 0 ? await this.emotionRepo.findByIds(ids) : await this.emotionRepo.find();
+    if (ids.length > 0) {
+      if (!await this.exists(...ids)) {
+        throw new EntityNotFoundError(Emotion, ids);
+      }
+      return await this.emotionRepo.findByIds(ids);
+    }
+    return await this.emotionRepo.find();
   }
 
   /**
@@ -95,13 +101,13 @@ export class EmotionService {
   }
 
   /**
-   * Checks if an emotion exists
+   * Checks if emotion(s) exists
    * 
-   * @param id Emotion ID
-   * @returns True if the emotion exists, false otherwise
+   * @param ids Emotion IDs
+   * @returns True if the emotion(s) exists, false otherwise
    * @async
    */
-   public async exists(id: Emotion['id']): Promise<boolean> {
-    return await this.emotionRepo.count({ id }) > 0;
+   public async exists(...ids: Emotion['id'][]): Promise<boolean> {
+    return await this.emotionRepo.count({ id: { $in: ids } }) === ids.length;
   }
 }
