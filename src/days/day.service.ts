@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { EmotionService } from '../emotions/emotion.service';
 import { User } from '../users/user.entity';
-import { CreateDayDto, UpdateDayDto } from './day.dto';
+import { UserService } from '../users/user.service';
+import { CreateDayDto, UpdateDayDto, UpdateDayEmotionsDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayRepository } from './day.repository';
 
@@ -12,9 +14,25 @@ import { DayRepository } from './day.repository';
 export class DayService {
 
   private readonly dayRepo: DayRepository;
+  private readonly userService: UserService;
+  private readonly emotionService: EmotionService;
 
-  public constructor(dayRepo: DayRepository) {
+  public constructor(dayRepo: DayRepository, userService: UserService, emotionService: EmotionService) {
     this.dayRepo = dayRepo;
+    this.userService = userService;
+    this.emotionService = emotionService;
+  }
+
+  /**
+   * Resolves the day ID from an user ID and a day date
+   * 
+   * @param userId User ID
+   * @param date Day date
+   * @returns Resolved day ID
+   * @async
+   */
+  public async resolveId(userId: User['id'], date: Day['date']): Promise<Day['id']> {
+    return this.dayRepo.resolveId(userId, date);
   }
 
   /**
@@ -26,30 +44,40 @@ export class DayService {
    * @async
    */
   public async create(userId: User['id'], dto: CreateDayDto): Promise<Day> {
-    const day = this.dayRepo.create({...dto, user: { id: userId }});
+    const day = this.dayRepo.create({
+      user: await this.userService.findById(userId),
+      ...dto
+    });
     await this.dayRepo.save(day);
     return day;
   }
 
   /**
-   * Finds all days
+   * Finds days
    * 
-   * @returns All days
+   * @param ids Day ID(s)
+   * @returns Days
    * @async
    */
-   public async find(): Promise<Day[]> {
+   public async find(...ids: Day['id'][]): Promise<Day[]> {
+     if (ids.length > 0) {
+      if (!await this.exists(...ids)) {
+        throw new EntityNotFoundError(Day, ids);
+      }
+      return await this.dayRepo.findByIds(ids);
+    }
     return await this.dayRepo.find();
   }
 
   /**
-   * Finds a day
+   * Finds one day
    * 
    * @param id Day ID
    * @returns Day
    * @throws NotFoundException If the day is not found
    * @async
    */
-  public async findById(id: Day['id']): Promise<Day> {
+  public async findOne(id: Day['id']): Promise<Day> {
     return await this.dayRepo.findOneOrFail({ id });
   }
 
@@ -69,7 +97,7 @@ export class DayService {
    * 
    * @param id Day ID
    * @param dto DTO
-   * @throws NotFoundException If the day is not found
+   * @throws NotFoundException If the user or day are not found
    * @async
    */
   public async update(id: Day['id'], dto: UpdateDayDto): Promise<void> {
@@ -77,6 +105,23 @@ export class DayService {
       throw new EntityNotFoundError(Day, id);
     }
     await this.dayRepo.update({ id }, dto);
+  }
+
+  /**
+   * Updates a day
+   * 
+   * @param id Day ID
+   * @param dto DTO
+   * @throws NotFoundException If the user or day are not found
+   * @async
+   */
+  public async updateEmotions(id: Day['id'], dto: UpdateDayEmotionsDto): Promise<void> {
+    if (!await this.exists(id)) {
+      throw new EntityNotFoundError(Day, id);
+    }
+    const day = await this.dayRepo.findOne(id);
+    day.emotions = await this.emotionService.find(...dto.emotions);
+    await this.dayRepo.save(day);
   }
 
   /**
@@ -94,13 +139,13 @@ export class DayService {
   }
 
   /**
-   * Checks if a day exists
+   * Checks if day(s) exists
    * 
-   * @param id Day ID
-   * @returns True if the day exists, false otherwise
+   * @param ids Day IDs
+   * @returns True if the day(s) exists, false otherwise
    * @async
    */
-   public async exists(id: User['id']): Promise<boolean> {
-    return await this.dayRepo.count({ id }) > 0;
+   public async exists(...ids: Day['id'][]): Promise<boolean> {
+    return await this.dayRepo.exists(...ids);
   }
 }

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Transform } from 'class-transformer';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Emotion } from '../emotions/emotion.entity';
 import { User } from '../users/user.entity';
 
@@ -13,6 +14,7 @@ export class Day {
     description: 'Day ID'
   })
   @PrimaryGeneratedColumn('uuid')
+  @Exclude({ toPlainOnly: true })
   public id!: string;
 
   @ApiProperty({
@@ -27,26 +29,25 @@ export class Day {
     description: 'Day description'
   })
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  public description: string;
-
-  @Column({
-    type: 'uuid'
-  })
-  public userId!: string;
+  public description?: string;
 
   @ApiProperty({
     type: () => User,
     description: 'Day owner'
   })
-  @ManyToOne(() => User, user => user.days)
-  public user?: User | User['id'];
+  @ManyToOne(() => User, user => user.days, { eager: true })
+  @Transform(({ value }) => value.id, { toPlainOnly: true })
+  public user!: User;
 
   @ApiProperty({
     type: () => [Emotion],
     description: 'Day emotions'
   })
-  @ManyToMany(() => Emotion, emotion => emotion.days)
-  public emotions?: Emotion[] | Emotion['id'][];
+  @ManyToMany(() => Emotion, emotion => emotion.days, { eager: true, cascade: true })
+  @JoinTable()
+  @Transform(({ value }) => value.map(v => v.id), { toPlainOnly: true })
+  public emotions?: Emotion[];
 }

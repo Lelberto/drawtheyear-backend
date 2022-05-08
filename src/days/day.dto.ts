@@ -1,5 +1,6 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { IsArray, IsDate, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
+import { IsSpecificDate } from '../decorators/is-specific-date.decorator';
 import { Emotion } from '../emotions/emotion.entity';
 
 /**
@@ -8,19 +9,25 @@ import { Emotion } from '../emotions/emotion.entity';
 export class CreateDayDto {
 
   @ApiProperty()
-  @IsDate()
+  @IsSpecificDate()
   public readonly date: Date;
 
   @ApiProperty()
   @IsString()
   public readonly description: string;
-
-  @ApiProperty()
-  @IsArray()
-  public readonly emotions: Emotion['id'][];
 }
 
 /**
  * DTO for day update
  */
-export class UpdateDayDto extends OmitType(CreateDayDto, []) {}
+export class UpdateDayDto extends OmitType(CreateDayDto, ['date']) {}
+
+/**
+ * DTO for day emotions update
+ */
+export class UpdateDayEmotionsDto {
+
+  @ApiProperty()
+  @IsString({ each: true })
+  public readonly emotions: Emotion['id'][];
+}
