@@ -15,6 +15,7 @@ import { UserService } from './user.service';
     HateoasModule
   ],
   providers: [UserService],
-  controllers: [UserController]
+  controllers: [UserController],
+  exports: [UserService]
 })
 export class UserModule {}
