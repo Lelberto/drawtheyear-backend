@@ -1,4 +1,4 @@
-import { PipeTransform } from '@nestjs/common';
+import { Injectable, PipeTransform } from '@nestjs/common';
 import { Day } from './day.entity';
 import { DayService } from './day.service';
 
@@ -7,6 +7,7 @@ import { DayService } from './day.service';
  * 
  * Used to transform an emotion ID to the corresponding emotion.
  */
+@Injectable()
 export class IdToDayPipe implements PipeTransform<string, Promise<Day>> {
   
   private readonly dayService: DayService;
@@ -16,6 +17,6 @@ export class IdToDayPipe implements PipeTransform<string, Promise<Day>> {
   }
 
   public async transform(id: string): Promise<Day> {
-    return await this.dayService.findById(id);
+    return await this.dayService.findOne(id);
   }
 }
