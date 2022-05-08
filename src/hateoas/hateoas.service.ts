@@ -48,6 +48,11 @@ export class HateoasService {
         method = 'GET';
         href = `/emotions/${(params as RelParams['emotion-self']).emotionId}`;
         break;
+      case 'day-self':
+        const { userId, dayDate } = params as RelParams['day-self'];
+        method = 'GET';
+        href = `/users/${userId}/days/${dayDate}`;
+        break;
       default: throw new HateoasError(rel);
     }
 

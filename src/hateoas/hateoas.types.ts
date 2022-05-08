@@ -1,3 +1,4 @@
+import { Day } from '../days/day.entity';
 import { Emotion } from '../emotions/emotion.entity';
 import { User } from '../users/user.entity';
 
@@ -23,6 +24,7 @@ export type RelParams = {
   'user-emotions': { userId: User['id'] };
   'user-days': { userId: User['id'] };
   'emotion-self': { emotionId: Emotion['id'] };
+  'day-self': { userId: User['id'], dayDate: Day['date'] };
 }
 
 /**
