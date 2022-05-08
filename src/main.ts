@@ -1,4 +1,5 @@
-import { NestFactory } from '@nestjs/core';
+import { ClassSerializerInterceptor } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
@@ -13,7 +14,10 @@ async function bootstrap() {
   const logger = app.get(AppLogger);
 
   app.useLogger(logger);
-  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector)),
+    new TransformInterceptor()
+  );
   app.useGlobalFilters(new EntityNotFoundExceptionFilter());
 
   // Setups swagger
