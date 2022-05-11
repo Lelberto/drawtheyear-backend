@@ -120,10 +120,12 @@ export class DayService {
       throw new EntityNotFoundError(Day, id);
     }
     const emotions = await this.emotionService.findByDay(id);
-    const emotion = await this.emotionService.findOne(emotionId);
-    emotions.push(emotion);
-    const updatedDay = await this.dayRepo.preload({ id, emotions });
-    await this.dayRepo.save(updatedDay);
+    if (!emotions.some(emotion => emotion.id === emotionId)) {
+      const emotion = await this.emotionService.findOne(emotionId);
+      emotions.push(emotion);
+      const updatedDay = await this.dayRepo.preload({ id, emotions });
+      await this.dayRepo.save(updatedDay);
+    }
   }
 
   /**
@@ -138,10 +140,15 @@ export class DayService {
     if (!await this.exists(id)) {
       throw new EntityNotFoundError(Day, id);
     }
+    if (!await this.emotionService.exists(emotionId)) {
+      throw new EntityNotFoundError(Emotion, emotionId);
+    }
     const emotions = await this.emotionService.findByDay(id);
-    remove(emotions, emotion => emotion.id === emotionId);
-    const updatedDay = await this.dayRepo.preload({ id, emotions });
-    await this.dayRepo.save(updatedDay);
+    if (emotions.some(emotion => emotion.id === emotionId)) {
+      remove(emotions, emotion => emotion.id === emotionId);
+      const updatedDay = await this.dayRepo.preload({ id, emotions });
+      await this.dayRepo.save(updatedDay);
+    }
   }
 
   /**
