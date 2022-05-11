@@ -35,7 +35,6 @@ export class UserController {
     return {
       user,
       links: [
-        this.hateoas.createLink(req, 'user-self', { userId: user.id }),
         this.hateoas.createLink(req, 'user-emotions', { userId: user.id }),
         this.hateoas.createLink(req, 'user-days', { userId: user.id })
       ]
