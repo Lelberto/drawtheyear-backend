@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { remove } from 'lodash';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
-import { CreateDayDto, UpdateDayDto, UpdateDayEmotionsDto } from './day.dto';
+import { CreateDayDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayRepository } from './day.repository';
 
@@ -44,10 +47,7 @@ export class DayService {
    * @async
    */
   public async create(userId: User['id'], dto: CreateDayDto): Promise<Day> {
-    const day = this.dayRepo.create({
-      user: await this.userService.findById(userId),
-      ...dto
-    });
+    const day = this.dayRepo.create({ ...dto, user: await this.userService.findById(userId) });
     await this.dayRepo.save(day);
     return day;
   }
@@ -88,7 +88,7 @@ export class DayService {
    * @returns User's days
    * @async
    */
-  public async findByUser(userId: string): Promise<Day[]> {
+  public async findByUser(userId: User['id']): Promise<Day[]> {
     return await this.dayRepo.findByUser(userId);
   }
 
@@ -100,28 +100,48 @@ export class DayService {
    * @throws NotFoundException If the user or day are not found
    * @async
    */
-  public async update(id: Day['id'], dto: UpdateDayDto): Promise<void> {
+  public async update(id: Day['id'], data: QueryDeepPartialEntity<Day>): Promise<void> {
     if (!await this.exists(id)) {
       throw new EntityNotFoundError(Day, id);
     }
-    await this.dayRepo.update({ id }, dto);
+    await this.dayRepo.update({ id }, data);
   }
 
   /**
-   * Updates a day
+   * Adds an emotion to a day
    * 
    * @param id Day ID
-   * @param dto DTO
-   * @throws NotFoundException If the user or day are not found
+   * @param emotionId Emotion ID
+   * @throws NotFoundException If the day or emotion are not found
    * @async
    */
-  public async updateEmotions(id: Day['id'], dto: UpdateDayEmotionsDto): Promise<void> {
+  public async addEmotion(id: Day['id'], emotionId: Emotion['id']): Promise<void> {
     if (!await this.exists(id)) {
       throw new EntityNotFoundError(Day, id);
     }
-    const day = await this.dayRepo.findOne(id);
-    day.emotions = await this.emotionService.find(...dto.emotions);
-    await this.dayRepo.save(day);
+    const emotions = await this.emotionService.findByDay(id);
+    const emotion = await this.emotionService.findOne(emotionId);
+    emotions.push(emotion);
+    const updatedDay = await this.dayRepo.preload({ id, emotions });
+    await this.dayRepo.save(updatedDay);
+  }
+
+  /**
+   * Removes an emotion from a day
+   * 
+   * @param id Day ID
+   * @param emotionId Emotion ID
+   * @throws NotFoundException If the day or emotion are not found
+   * @async
+   */
+  public async removeEmotion(id: Day['id'], emotionId: Emotion['id']): Promise<void> {
+    if (!await this.exists(id)) {
+      throw new EntityNotFoundError(Day, id);
+    }
+    const emotions = await this.emotionService.findByDay(id);
+    remove(emotions, emotion => emotion.id === emotionId);
+    const updatedDay = await this.dayRepo.preload({ id, emotions });
+    await this.dayRepo.save(updatedDay);
   }
 
   /**

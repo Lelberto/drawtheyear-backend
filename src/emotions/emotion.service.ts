@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { Day } from '../days/day.entity';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
 import { CreateEmotionDto, UpdateEmotionDto } from './emotion.dto';
@@ -72,6 +73,17 @@ export class EmotionService {
    */
   public async findByUser(userId: User['id']): Promise<Emotion[]> {
     return await this.emotionRepo.findByUser(userId);
+  }
+
+  /**
+   * Finds day's emotions
+   * 
+   * @param dayId Day ID
+   * @returns Day's emotions
+   * @async
+   */
+  public async findByDay(dayId: Day['id']): Promise<Emotion[]> {
+    return await this.emotionRepo.findByDay(dayId);
   }
 
   /**

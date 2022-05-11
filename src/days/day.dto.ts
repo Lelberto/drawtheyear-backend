@@ -21,13 +21,3 @@ export class CreateDayDto {
  * DTO for day update
  */
 export class UpdateDayDto extends OmitType(CreateDayDto, ['date']) {}
-
-/**
- * DTO for day emotions update
- */
-export class UpdateDayEmotionsDto {
-
-  @ApiProperty()
-  @IsString({ each: true })
-  public readonly emotions: Emotion['id'][];
-}

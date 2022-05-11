@@ -1,4 +1,4 @@
-import { Controller, Get, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DayService } from './day.service';
 
@@ -16,10 +16,5 @@ export class DayController {
 
   public constructor(dayService: DayService) {
     this.dayService = dayService;
-  }
-
-  @Get()
-  public async find() {
-    return { days: await this.dayService.find() };
   }
 }

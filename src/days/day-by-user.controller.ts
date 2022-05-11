@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { Emotion } from '../emotions/emotion.entity';
+import { EmotionService } from '../emotions/emotion.service';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
-import { CreateDayDto, UpdateDayDto, UpdateDayEmotionsDto } from './day.dto';
+import { CreateDayDto, UpdateDayDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayService } from './day.service';
 import { ResolveDayIdPipe } from './resolve-day-id.pipe';
@@ -19,10 +21,12 @@ import { ResolveDayIdPipe } from './resolve-day-id.pipe';
 export class DayByUserController {
 
   private readonly dayService: DayService;
+  private readonly emotionService: EmotionService;
   private readonly hateoas: HateoasService;
 
-  public constructor(dayService: DayService, hateoas: HateoasService) {
+  public constructor(dayService: DayService, emotionService: EmotionService, hateoas: HateoasService) {
     this.dayService = dayService;
+    this.emotionService = emotionService;
     this.hateoas = hateoas;
   }
 
@@ -56,11 +60,16 @@ export class DayByUserController {
 
   @Get(':date/emotions')
   public async findEmotions(@Param(ResolveDayIdPipe) id: Day['id']) {
-    return { emotions: (await this.dayService.findOne(id)).emotions };
+    return { emotions: await this.emotionService.findByDay(id) };
   }
 
-  @Put(':date/emotions')
-  public async addEmotion(@Param(ResolveDayIdPipe) id: Day['id'], @Body() body: UpdateDayEmotionsDto) {
-    await this.dayService.updateEmotions(id, body);
+  @Put(':date/emotions/add/:emotionId')
+  public async addEmotion(@Param(ResolveDayIdPipe) id: Day['id'], @Param('emotionId') emotionId: Emotion['id']) {
+    await this.dayService.addEmotion(id, emotionId);
+  }
+
+  @Put(':date/emotions/remove/:emotionId')
+  public async removeEmotion(@Param(ResolveDayIdPipe) id: Day['id'], @Param('emotionId') emotionId: Emotion['id']) {
+    await this.dayService.removeEmotion(id, emotionId);
   }
 }
