@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from '../users/user.entity';
+import { UserDaysQueryDto } from './day.dto';
 import { Day } from './day.entity';
 
 /**
@@ -25,10 +26,24 @@ export class DayRepository extends Repository<Day> {
    * Finds days by user.
    * 
    * @param userId User ID
+   * @param query Query
    * @returns User's days
    */
-  public async findByUser(userId: User['id']): Promise<Day[]> {
-    return await this.find({ user: { id: userId } });
+  public async findByUser(userId: User['id'], query?: UserDaysQueryDto): Promise<Day[]> {
+    if (!query) {
+      return await this.find({ userId });
+    }
+    return await this.find({
+      where: {
+        userId,
+        date: {
+          $between: [
+            query.from || moment(new Date(0)).format('YYYY-MM-DD') as unknown as Date,
+            query.to || moment(new Date()).format('YYYY-MM-DD') as unknown as Date
+          ]
+        }
+      }
+    });
   }
 
   /**

@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
-import { CreateDayDto, UpdateDayDto } from './day.dto';
+import { CreateDayDto, UpdateDayDto, UserDaysQueryDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayService } from './day.service';
 import { ResolveDayIdPipe } from './resolve-day-id.pipe';
@@ -31,8 +31,8 @@ export class DayByUserController {
   }
 
   @Get()
-  public async find(@Param('userId') userId: User['id']) {
-    return { days: await this.dayService.findByUser(userId) };
+  public async find(@Param('userId') userId: User['id'], @Query() query: UserDaysQueryDto) {
+    return { days: await this.dayService.findByUser(userId, query) };
   }
 
   @Post()

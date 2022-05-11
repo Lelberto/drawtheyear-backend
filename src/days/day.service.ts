@@ -6,7 +6,7 @@ import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
-import { CreateDayDto } from './day.dto';
+import { CreateDayDto, UserDaysQueryDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayRepository } from './day.repository';
 
@@ -85,11 +85,12 @@ export class DayService {
    * Finds user's days
    * 
    * @param userId User ID
+   * @param query Query
    * @returns User's days
    * @async
    */
-  public async findByUser(userId: User['id']): Promise<Day[]> {
-    return await this.dayRepo.findByUser(userId);
+  public async findByUser(userId: User['id'], query?: UserDaysQueryDto): Promise<Day[]> {
+    return await this.dayRepo.findByUser(userId, query);
   }
 
   /**
