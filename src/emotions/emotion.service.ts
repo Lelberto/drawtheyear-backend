@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { User } from '../users/user.entity';
+import { UserService } from '../users/user.service';
 import { CreateEmotionDto, UpdateEmotionDto } from './emotion.dto';
 import { Emotion } from './emotion.entity';
 import { EmotionRepository } from './emotion.repository';
@@ -12,9 +13,11 @@ import { EmotionRepository } from './emotion.repository';
 export class EmotionService {
 
   private readonly emotionRepo: EmotionRepository;
+  private readonly userService: UserService;
 
-  public constructor(emotionRepo: EmotionRepository) {
+  public constructor(emotionRepo: EmotionRepository, userService: UserService) {
     this.emotionRepo = emotionRepo;
+    this.userService = userService;
   }
 
   /**
@@ -26,7 +29,7 @@ export class EmotionService {
    * @async
    */
   public async create(userId: User['id'], dto: CreateEmotionDto): Promise<Emotion> {
-    const emotion = this.emotionRepo.create({ ...dto, user: { id: userId } });
+    const emotion = this.emotionRepo.create({ ...dto, user: await this.userService.findById(userId) });
     await this.emotionRepo.save(emotion);
     return emotion;
   }
@@ -108,6 +111,6 @@ export class EmotionService {
    * @async
    */
    public async exists(...ids: Emotion['id'][]): Promise<boolean> {
-    return await this.emotionRepo.count({ id: { $in: ids } }) === ids.length;
+    return await this.emotionRepo.exists(...ids);
   }
 }

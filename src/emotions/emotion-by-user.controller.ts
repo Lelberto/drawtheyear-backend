@@ -25,7 +25,7 @@ export class EmotionByUserController {
   }
 
   @Get()
-  public async find(@Param(':userId') userId: User['id']) {
+  public async find(@Param('userId') userId: User['id']) {
     return { emotions: await this.emotionService.findByUser(userId) };
   }
 

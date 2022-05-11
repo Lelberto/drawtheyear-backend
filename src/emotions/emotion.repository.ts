@@ -17,4 +17,15 @@ export class EmotionRepository extends Repository<Emotion> {
   public async findByUser(userId: User['id']): Promise<Emotion[]> {
     return await this.find({ user: { id: userId } });
   }
+
+  /**
+   * Checks if emotion(s) exists
+   * 
+   * @param ids Emotion IDs
+   * @returns True if the emotion(s) exists, false otherwise
+   * @async
+   */
+   public async exists(...ids: Emotion['id'][]): Promise<boolean> {
+    return await this.count({ id: { $in: ids } }) === ids.length;
+  }
 }

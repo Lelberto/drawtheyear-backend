@@ -13,7 +13,7 @@ export class Emotion {
     description: 'Emotion ID'
   })
   @PrimaryGeneratedColumn('uuid')
-  public id!: string;
+  public id: string;
   
   @ApiProperty({
     description: 'Emotion name'
@@ -22,7 +22,7 @@ export class Emotion {
     type: 'varchar',
     length: 50
   })
-  public name!: string;
+  public name: string;
 
   @ApiProperty({
     description: 'Emotion color'
@@ -31,24 +31,24 @@ export class Emotion {
     type: 'varchar',
     length: 7
   })
-  public color!: string;
+  public color: string;
 
   @Column({
     type: 'uuid'
   })
-  public userId!: string;
+  public userId: User['id'];
 
   @ApiProperty({
     type: () => User,
     description: 'Emotion owner'
   })
   @ManyToOne(() => User, user => user.emotions)
-  public user?: User | User['id'];
+  public user?: User;
 
   @ApiProperty({
     type: () => [Day],
     description: 'Emotion days'
   })
   @ManyToMany(() => Day, day => day.emotions)
-  public days?: Day[] | Day['id'][];
+  public days?: Day[];
 }

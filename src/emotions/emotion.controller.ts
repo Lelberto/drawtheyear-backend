@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Req, UsePipes, V
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { HateoasService } from '../hateoas/hateoas.service';
+import { UserService } from '../users/user.service';
 import { UpdateEmotionDto } from './emotion.dto';
 import { Emotion } from './emotion.entity';
 import { EmotionService } from './emotion.service';
@@ -18,26 +19,24 @@ import { IdToEmotionPipe } from './id-to-emotion.pipe';
 export class EmotionController {
 
   private readonly emotionService: EmotionService;
+  private readonly userService: UserService;
   private readonly hateoas: HateoasService;
 
-  public constructor(emotionService: EmotionService, hateoas: HateoasService) {
+  public constructor(emotionService: EmotionService, userService: UserService, hateoas: HateoasService) {
     this.emotionService = emotionService;
+    this.userService = userService;
     this.hateoas = hateoas;
-  }
-
-  @Get()
-  public async find() {
-    return { emotions: await this.emotionService.find() };
   }
 
   @Get(':id')
   public async findById(@Req() req: Request, @Param('id', IdToEmotionPipe) emotion: Emotion) {
+    const user = await this.userService.findById(emotion.userId);
     return {
       emotion,
       links: [
         this.hateoas.createLink(req, 'emotion-self', { emotionId: emotion.id }),
-        this.hateoas.createLink(req, 'user-self', { userId: emotion.userId }),
-        this.hateoas.createLink(req, 'user-emotions', { userId: emotion.userId })
+        this.hateoas.createLink(req, 'user-self', { userId: user.id }),
+        this.hateoas.createLink(req, 'user-emotions', { userId: user.id })
       ]
     };
   }
