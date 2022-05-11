@@ -13,7 +13,7 @@ export class User {
     description: 'User ID'
   })
   @PrimaryGeneratedColumn('uuid')
-  public id!: string;
+  public id: string;
 
   @ApiProperty({
     description: 'User name'
@@ -22,15 +22,15 @@ export class User {
     type: 'varchar',
     length: 30
   })
-  public name!: string;
+  public name: string;
 
   @ApiProperty({
     type: () => [Emotion],
     description: 'User emotions'
   })
   @OneToMany(() => Emotion, emotion => emotion.user)
-  public emotions?: Emotion[] | Emotion['id'][];
+  public emotions?: Emotion[];
 
   @OneToMany(() => Day, day => day.user)
-  public days?: Day[] | Day['id'][];
+  public days?: Day[];
 }

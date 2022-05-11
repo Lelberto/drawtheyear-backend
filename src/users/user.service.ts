@@ -81,13 +81,13 @@ export class UserService {
   }
 
   /**
-   * Checks if an user exists
+   * Checks if user(s) exists
    * 
-   * @param id User ID
-   * @returns True if the user exists, false otherwise
+   * @param ids User IDs
+   * @returns True if the user(s) exists, false otherwise
    * @async
    */
-  public async exists(id: User['id']): Promise<boolean> {
-    return await this.userRepo.count({ id }) > 0;
+  public async exists(...ids: User['id'][]): Promise<boolean> {
+    return await this.userRepo.exists(...ids);
   }
 }
