@@ -1,9 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import databaseConfig from 'src/config/database';
-import globalConfig, { NodeEnv } from 'src/config/global';
-import loggingConfig, { LoggingConfig } from 'src/config/logging';
-import serverConfig from 'src/config/server';
+import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
 import { DatabaseModule } from './modules/database/database.module';
 import { DayModule } from './modules/days/day.module';
@@ -13,6 +9,9 @@ import { AccessLogger } from './modules/logger/access.logger';
 import { AppLogger } from './modules/logger/app.logger';
 import { LoggerModule } from './modules/logger/logger.module';
 import { UserModule } from './modules/users/user.module';
+import { ConfigModule } from './modules/config/config.module';
+import { NodeEnv } from './modules/config/global';
+import { LoggingConfig } from './modules/config/logging';
 
 /**
  * App module
@@ -21,17 +20,14 @@ import { UserModule } from './modules/users/user.module';
  */
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env.development', '.env'],
-      load: [globalConfig, serverConfig, databaseConfig, loggingConfig]
-    }),
+    ConfigModule,
     DatabaseModule,
     LoggerModule,
     UserModule,
     EmotionModule,
     DayModule,
-    HateoasModule
+    HateoasModule,
+    ConfigModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {

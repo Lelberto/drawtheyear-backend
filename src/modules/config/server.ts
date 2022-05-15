@@ -6,6 +6,6 @@ export type ServerConfig = {
 
 export default (): { server: ServerConfig } => ({
   server: {
-    port: parseInt(process.env.PORT, 10)
+    port: parseInt(process.env.PORT, 10) || 3000
   }
 });
