@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
-import mocks from '../../test/mocks';
+import mocks from '../../../test/mocks';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';

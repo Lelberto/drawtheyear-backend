@@ -1,18 +1,18 @@
 import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import databaseConfig from 'config/database';
-import globalConfig, { NodeEnv } from 'config/global';
-import loggingConfig, { LoggingConfig } from 'config/logging';
-import serverConfig from 'config/server';
+import databaseConfig from 'src/config/database';
+import globalConfig, { NodeEnv } from 'src/config/global';
+import loggingConfig, { LoggingConfig } from 'src/config/logging';
+import serverConfig from 'src/config/server';
 import * as morgan from 'morgan';
-import { DatabaseModule } from './database/database.module';
-import { DayModule } from './days/day.module';
-import { EmotionModule } from './emotions/emotion.module';
-import { HateoasModule } from './hateoas/hateoas.module';
-import { AccessLogger } from './logger/access.logger';
-import { AppLogger } from './logger/app.logger';
-import { LoggerModule } from './logger/logger.module';
-import { UserModule } from './users/user.module';
+import { DatabaseModule } from './modules/database/database.module';
+import { DayModule } from './modules/days/day.module';
+import { EmotionModule } from './modules/emotions/emotion.module';
+import { HateoasModule } from './modules/hateoas/hateoas.module';
+import { AccessLogger } from './modules/logger/access.logger';
+import { AppLogger } from './modules/logger/app.logger';
+import { LoggerModule } from './modules/logger/logger.module';
+import { UserModule } from './modules/users/user.module';
 
 /**
  * App module

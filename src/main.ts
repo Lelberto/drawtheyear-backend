@@ -4,7 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { AppLogger } from './logger/app.logger';
+import { AppLogger } from './modules/logger/app.logger';
 
 /**
  * Bootstraps the application

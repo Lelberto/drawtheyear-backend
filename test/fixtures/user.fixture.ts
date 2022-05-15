@@ -1,6 +1,6 @@
 import faker from '@faker-js/faker';
-import { CreateUserDto } from '../../src/users/user.dto';
-import { User } from '../../src/users/user.entity';
+import { CreateUserDto } from '../../src/modules/users/user.dto';
+import { User } from '../../src/modules/users/user.entity';
 import { Fixture } from './fixture';
 
 /**

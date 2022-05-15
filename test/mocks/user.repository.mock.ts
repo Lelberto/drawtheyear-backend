@@ -1,6 +1,6 @@
-import { CreateUserDto } from '../../src/users/user.dto';
-import { User } from '../../src/users/user.entity';
-import { UserRepository } from '../../src/users/user.repository';
+import { CreateUserDto } from '../../src/modules/users/user.dto';
+import { User } from '../../src/modules/users/user.entity';
+import { UserRepository } from '../../src/modules/users/user.repository';
 import { FixtureManager } from '../fixtures/fixtures';
 
 const fixtures = new FixtureManager();

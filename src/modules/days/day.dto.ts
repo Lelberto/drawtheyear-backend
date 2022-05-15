@@ -2,7 +2,7 @@ import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsDate, IsOptional, IsString } from 'class-validator';
 import * as moment from 'moment';
-import { IsSpecificDate } from '../decorators/is-specific-date.decorator';
+import { IsSpecificDate } from '../../decorators/is-specific-date.decorator';
 
 /**
  * DTO for day creation
