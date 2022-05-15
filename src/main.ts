@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor } from '@nestjs/common';
+import { ClassSerializerInterceptor, VersioningType, VERSION_NEUTRAL } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -14,6 +14,10 @@ async function bootstrap() {
   const logger = app.get(AppLogger);
 
   app.useLogger(logger);
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: [VERSION_NEUTRAL, '1']
+  });
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector)),
     new TransformInterceptor()
