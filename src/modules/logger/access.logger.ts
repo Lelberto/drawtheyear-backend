@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as path from 'path';
 import { AppLogger } from './app.logger';
 
 /**
@@ -15,6 +14,6 @@ export class AccessLogger extends AppLogger {
 
   public constructor(config: ConfigService) {
     super(config, 'Access');
-    this.logPath = path.join(this.config.dir, this.config.files.access);
+    this.logPath = this.config.files.access;
   }
 }

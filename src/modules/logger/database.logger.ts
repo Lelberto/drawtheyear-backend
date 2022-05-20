@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as path from 'path';
 import { Logger, QueryRunner } from 'typeorm';
 import { AppLogger } from './app.logger';
 
@@ -16,7 +15,7 @@ export class DatabaseLogger extends AppLogger implements Logger {
 
   public constructor(config: ConfigService) {
     super(config, 'Database');
-    this.logPath = path.join(this.config.dir, this.config.files.database);
+    this.logPath = this.config.files.database;
   }
 
   public logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
