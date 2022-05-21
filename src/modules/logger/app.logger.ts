@@ -21,7 +21,7 @@ export class AppLogger extends ConsoleLogger implements LoggerService {
   public constructor(config: ConfigService, context?: string) {
     super(context || 'Application');
     this.config = config.get('logging');
-    this.logPath = path.join(this.config.dir, this.config.files.application);
+    this.logPath = this.config.files.application;
   }
 
   protected printMessages(messages: unknown[], context?: string, logLevel?: LogLevel, writeStreamType?: 'stdout' | 'stderr'): void {
