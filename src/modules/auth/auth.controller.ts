@@ -33,7 +33,9 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   public async redirect(@Req() req: Request) {
-    return req.user;
+    return {
+      access_token: await this.authService.accessToken(req.user as User)
+    };
   }
 
   // TODO Remove this endpoint
