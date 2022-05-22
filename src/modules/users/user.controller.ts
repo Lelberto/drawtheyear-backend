@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from './id-to-user.pipe';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -26,6 +27,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   public async find() {
     return { users: await this.userService.find() };
   }
@@ -35,19 +37,6 @@ export class UserController {
     return {
       user,
       links: [
-        this.hateoas.createLink(req, 'user-emotions', { userId: user.id }),
-        this.hateoas.createLink(req, 'user-days', { userId: user.id })
-      ]
-    };
-  }
-
-  @Post()
-  public async create(@Req() req: Request, @Body() body: CreateUserDto) {
-    const user = await this.userService.create(body);
-    return {
-      user,
-      links: [
-        this.hateoas.createLink(req, 'user-self', { userId: user.id }),
         this.hateoas.createLink(req, 'user-emotions', { userId: user.id }),
         this.hateoas.createLink(req, 'user-days', { userId: user.id })
       ]
