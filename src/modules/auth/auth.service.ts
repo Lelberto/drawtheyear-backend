@@ -36,10 +36,15 @@ export class AuthService {
    * @param profile Google profile
    * @returns Created user
    */
-  public async createUserFromGoogle(profile: Profile) {
-    return await this.userService.create({
-      email: profile.emails[0].value,
-      name: profile.displayName
-    });
+  public async getUserFromGoogle(profile: Profile) {
+    const { emails, displayName } = profile;
+    try {
+      return await this.userService.findByEmail(emails[0].value);
+    } catch (err) {
+      return await this.userService.create({
+        email: emails[0].value,
+        name: displayName
+      });
+    }
   }
 }
