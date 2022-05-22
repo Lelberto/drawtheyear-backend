@@ -14,11 +14,6 @@ export class CreateUserDto {
   @IsString()
   @Length(3, 30)
   public readonly name: string;
-
-  @ApiProperty()
-  @IsString()
-  @Length(8, 100)
-  public readonly password: string;
 }
 
 /**

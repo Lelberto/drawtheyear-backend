@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../users/user.service';
-import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokenPayload } from '../../utils/types';
+import { Profile } from 'passport-google-oauth20';
 
 /**
  * Authentication service
@@ -20,23 +20,6 @@ export class AuthService {
   }
 
   /**
-   * Validates an user by his email and password
-   * 
-   * @param email Email
-   * @param password Password
-   * @returns Validated user, or `null` if invalid
-   */
-  public async validateUser(email: User['email'], password: User['password']): Promise<User> {
-    try {
-      const user = await this.userService.findByEmail(email);
-      if (user && await bcrypt.compare(password, user.password)) {
-        return user;
-      }
-    } catch (err) {}
-    return null;
-  }
-
-  /**
    * Creates a new access token for the given user
    * 
    * @param user User for payload
@@ -45,5 +28,18 @@ export class AuthService {
   public async accessToken(user: User) {
     const payload: AccessTokenPayload = { sub: user.id, email: user.email };
     return { access_token: this.jwtService.sign(payload) };
+  }
+
+  /**
+   * Creates an user from a google profile
+   * 
+   * @param profile Google profile
+   * @returns Created user
+   */
+  public async createUserFromGoogle(profile: Profile) {
+    return await this.userService.create({
+      email: profile.emails[0].value,
+      name: profile.displayName
+    });
   }
 }

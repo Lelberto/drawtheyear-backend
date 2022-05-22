@@ -2,8 +2,8 @@ import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { User } from '../users/user.entity';
 import { AuthService } from './auth.service';
+import { GoogleAuthGuard } from './google-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
 
 /**
  * Authentication controller
@@ -19,10 +19,21 @@ export class AuthController {
     this.authService = authService;
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('accessToken')
   public async accessToken(@Req() req: Request) {
     return this.authService.accessToken(req.user as User);
+  }
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  public async googleAuth() {
+    // Guard redirection
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  public async redirect(@Req() req: Request) {
+    return req.user;
   }
 
   // TODO Remove this endpoint
