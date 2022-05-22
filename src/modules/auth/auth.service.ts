@@ -3,6 +3,7 @@ import { UserService } from '../users/user.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { AccessTokenPayload } from '../../utils/types';
 
 /**
  * Authentication service
@@ -28,7 +29,7 @@ export class AuthService {
   public async validateUser(email: User['email'], password: User['password']): Promise<User> {
     try {
       const user = await this.userService.findByEmail(email);
-      if (await bcrypt.compare(password, user.password)) {
+      if (user && await bcrypt.compare(password, user.password)) {
         return user;
       }
     } catch (err) {}
@@ -42,7 +43,7 @@ export class AuthService {
    * @returns Access token
    */
   public async accessToken(user: User) {
-    const payload = { email: user.email, sub: user.id };
+    const payload: AccessTokenPayload = { sub: user.id, email: user.email };
     return { access_token: this.jwtService.sign(payload) };
   }
 }
