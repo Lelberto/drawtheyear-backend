@@ -52,6 +52,19 @@ export class UserService {
   }
 
   /**
+   * Finds an user by email
+   * 
+   * @param email User email
+   * @returns User
+   * @throws NotFoundException If the user is not found
+   * @async
+   */
+  public async findByEmail(email: User['email']): Promise<User> {
+    const user = await this.userRepo.findOneOrFail({ email });
+    return user;
+  }
+
+  /**
    * Updates an user
    * 
    * @param id User ID

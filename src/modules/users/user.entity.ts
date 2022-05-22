@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../days/day.entity';
 import { Emotion } from '../emotions/emotion.entity';
+import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
 
 /**
  * User entity
@@ -16,6 +18,15 @@ export class User {
   public id: string;
 
   @ApiProperty({
+    description: 'User email'
+  })
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
+  public email: string;
+
+  @ApiProperty({
     description: 'User name'
   })
   @Column({
@@ -23,6 +34,12 @@ export class User {
     length: 30
   })
   public name: string;
+
+  @Column({
+    type: 'text',
+  })
+  @Exclude({ toPlainOnly: true })
+  public password: string;
 
   @ApiProperty({
     type: () => [Emotion],
@@ -33,4 +50,11 @@ export class User {
 
   @OneToMany(() => Day, day => day.user)
   public days?: Day[];
+
+  @BeforeInsert()
+  private async hashPassword() {
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+  }
 }
