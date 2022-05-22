@@ -6,6 +6,8 @@ import { LocalAuthGuard } from './local-auth.guard';
 
 /**
  * Authentication controller
+ * 
+ * Path : `/auth`
  */
 @Controller('auth')
 export class AuthController {
