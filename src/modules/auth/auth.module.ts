@@ -19,7 +19,6 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: process.env.AUTH_JWT_EXPIRATION }
     })
   ],
-  exports: [AuthService],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController]
 })
