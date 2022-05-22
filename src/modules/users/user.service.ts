@@ -52,6 +52,19 @@ export class UserService {
   }
 
   /**
+   * Finds an user by his Google ID
+   * 
+   * @param googleId Google user ID
+   * @returns User
+   * @throws NotFoundException If the user is not found
+   * @async
+   */
+  public async findByGoogleId(googleId: User['googleId']): Promise<User> {
+    const user = await this.userRepo.findOneOrFail({ googleId });
+    return user;
+  }
+
+  /**
    * Finds an user by email
    * 
    * @param email User email

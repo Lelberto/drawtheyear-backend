@@ -39,9 +39,10 @@ export class AuthService {
   public async getUserFromGoogle(profile: Profile) {
     const { emails, displayName } = profile;
     try {
-      return await this.userService.findByEmail(emails[0].value);
+      return await this.userService.findByGoogleId(profile.id);
     } catch (err) {
       return await this.userService.create({
+        googleId: profile.id,
         email: emails[0].value,
         name: displayName
       });

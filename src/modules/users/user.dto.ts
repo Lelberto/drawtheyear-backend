@@ -14,6 +14,10 @@ export class CreateUserDto {
   @IsString()
   @Length(3, 30)
   public readonly name: string;
+
+  @ApiProperty()
+  @IsString()
+  public readonly googleId: string;
 }
 
 /**
