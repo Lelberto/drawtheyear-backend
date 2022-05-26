@@ -54,7 +54,7 @@ describe('UserService', () => {
     const id = faker.datatype.uuid();
 
     expect(await service.findById(id)).toEqual(expect.any(User));
-    expect(mockRepo.findOneOrFail).toBeCalledWith({ id });
+    expect(mockRepo.findOne).toBeCalledWith({ id });
   });
 
   it('should update an user', async () => {

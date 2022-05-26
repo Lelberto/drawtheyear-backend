@@ -61,7 +61,7 @@ export class EmotionService {
    * @async
    */
   public async findOne(id: Emotion['id']): Promise<Emotion> {
-    return await this.emotionRepo.findOneOrFail({ id });
+    return await this.emotionRepo.findOne({ id });
   }
 
   /**

@@ -16,6 +16,30 @@ export class User {
   public id: string;
 
   @ApiProperty({
+    description: 'Google user ID'
+  })
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
+  public googleId: string;
+
+  @ApiProperty({
+    description: 'User email'
+  })
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
+  public email: string;
+
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
+  public username: string;
+
+  @ApiProperty({
     description: 'User name'
   })
   @Column({
