@@ -7,8 +7,8 @@
 # Dependencies
 /node_modules
 
-# Databases
-/db
+# Data
+/data
 
 # Logs
 logs
