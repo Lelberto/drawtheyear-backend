@@ -8,6 +8,7 @@ import { AccessTokenStrategy } from './access-token.strategy';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
+import { RefreshTokenStrategy } from './refresh-token.strategy';
 
 /**
  * Authentication module
@@ -27,7 +28,7 @@ import { GoogleStrategy } from './google.strategy';
       inject: [ConfigService]
     })
   ],
-  providers: [AuthService, AccessTokenStrategy, GoogleStrategy],
+  providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy, GoogleStrategy],
   controllers: [AuthController]
 })
 export class AuthModule {}

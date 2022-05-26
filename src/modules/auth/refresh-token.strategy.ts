@@ -19,7 +19,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'refresh-to
   public constructor(configService: ConfigService, userService: UserService) {
     const config = configService.get<AuthConfig>('auth').jwt.refreshToken;
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromBodyField('refresh_token'),
       ignoreExpiration: false,
       secretOrKey: config.secretKey
     });

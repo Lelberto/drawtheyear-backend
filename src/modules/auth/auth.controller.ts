@@ -4,6 +4,7 @@ import { User } from '../users/user.entity';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './google-auth.guard';
 import { JwtAuthGuard } from './access-token-auth.guard';
+import { RefreshTokenAuthGuard } from './refresh-token-auth.guard';
 
 /**
  * Authentication controller
@@ -20,9 +21,12 @@ export class AuthController {
   }
 
   @Post('accessToken')
-  // TODO Create refresh token system and guard
+  @UseGuards(RefreshTokenAuthGuard)
   public async accessToken(@Req() req: Request) {
-    return this.authService.generateAccessToken(req.user as User);
+    return {
+      access_token: await this.authService.generateAccessToken(req.user as User),
+      refresh_token: await this.authService.generateRefreshToken(req.user as User)
+    };
   }
 
   @Get('google')
