@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { AccessTokenAuthGuard } from '../auth/access-token-auth.guard';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from './id-to-user.pipe';
 import { UpdateUserDto } from './user.dto';
@@ -27,7 +26,6 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AccessTokenAuthGuard)
   public async find() {
     return { users: await this.userService.find() };
   }
