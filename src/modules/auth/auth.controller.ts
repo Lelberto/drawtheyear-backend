@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { User } from '../users/user.entity';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './google-auth.guard';
-import { JwtAuthGuard } from './access-token-auth.guard';
+import { AccessTokenAuthGuard } from './access-token-auth.guard';
 import { RefreshTokenAuthGuard } from './refresh-token-auth.guard';
 
 /**
@@ -45,7 +45,7 @@ export class AuthController {
   }
 
   // TODO Remove this endpoint
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AccessTokenAuthGuard)
   @Get('profile')
   public async getProfile(@Req() req: Request) {
     return req.user;
