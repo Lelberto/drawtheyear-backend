@@ -2,8 +2,14 @@
 
 export type AuthConfig = {
   jwt: {
-    secretKey: string;
-    expiration: string;
+    accessToken: {
+      secretKey: string;
+      expiration: string;
+    };
+    refreshToken: {
+      secretKey: string;
+      expiration: string;
+    };
   };
   google: {
     clientId: string;
@@ -15,8 +21,14 @@ export type AuthConfig = {
 export default (): { auth: AuthConfig } => ({
   auth: {
     jwt: {
-      secretKey: process.env.AUTH_JWT_SECRET_KEY || 'secret',
-      expiration: process.env.AUTH_JWT_EXPIRATION || '60s'
+      accessToken: {
+        secretKey: process.env.AUTH_JWT_ACCESS_TOKEN_SECRET_KEY || 'secret',
+        expiration: process.env.AUTH_JWT_ACCESS_TOKEN_EXPIRATION || '60s'
+      },
+      refreshToken: {
+        secretKey: process.env.AUTH_JWT_REFRESH_TOKEN_SECRET_KEY || 'secret',
+        expiration: process.env.AUTH_JWT_REFRESH_TOKEN_EXPIRATION || '7d'
+      },
     },
     google: {
       clientId: process.env.AUTH_GOOGLE_CLIENT_ID,

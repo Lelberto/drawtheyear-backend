@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../users/user.service';
-import { User } from '../users/user.entity';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AccessTokenPayload } from '../../utils/types';
 import { Profile } from 'passport-google-oauth20';
+import { AccessTokenPayload, RefreshTokenPayload } from '../../utils/types';
+import { AuthConfig } from '../config/auth';
+import { User } from '../users/user.entity';
+import { UserService } from '../users/user.service';
 
 /**
  * Authentication service
@@ -11,23 +13,39 @@ import { Profile } from 'passport-google-oauth20';
 @Injectable()
 export class AuthService {
 
+  private readonly config: AuthConfig['jwt']['refreshToken'];
   private readonly userService: UserService;
   private readonly jwtService: JwtService;
 
-  public constructor(userService: UserService, jwtService: JwtService) {
+  public constructor(configService: ConfigService, userService: UserService, jwtService: JwtService) {
+    this.config = configService.get<AuthConfig>('auth').jwt.refreshToken;
     this.userService = userService;
     this.jwtService = jwtService;
   }
 
   /**
-   * Creates a new access token for the given user
+   * Generates a new access token for the given user
    * 
    * @param user User for payload
    * @returns Access token
    */
-  public async accessToken(user: User) {
+  public async generateAccessToken(user: User) {
     const payload: AccessTokenPayload = { sub: user.id, email: user.email };
-    return this.jwtService.sign(payload);
+    return this.jwtService.signAsync(payload);
+  }
+
+  /**
+   * Generates a new refresh token for the given user
+   * 
+   * @param user User for payload
+   * @returns Refresh token
+   */
+  public async generateRefreshToken(user: User) {
+    const payload: RefreshTokenPayload = { sub: user.id, email: user.email };
+    return this.jwtService.signAsync(payload, {
+      secret: this.config.secretKey,
+      expiresIn: this.config.expiration
+    });
   }
 
   /**

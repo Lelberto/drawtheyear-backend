@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { User } from '../users/user.entity';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './google-auth.guard';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { JwtAuthGuard } from './access-token-auth.guard';
 
 /**
  * Authentication controller
@@ -20,8 +20,9 @@ export class AuthController {
   }
 
   @Post('accessToken')
+  // TODO Create refresh token system and guard
   public async accessToken(@Req() req: Request) {
-    return this.authService.accessToken(req.user as User);
+    return this.authService.generateAccessToken(req.user as User);
   }
 
   @Get('google')
@@ -34,7 +35,8 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   public async redirect(@Req() req: Request) {
     return {
-      access_token: await this.authService.accessToken(req.user as User)
+      access_token: await this.authService.generateAccessToken(req.user as User),
+      refresh_token: await this.authService.generateRefreshToken(req.user as User)
     };
   }
 

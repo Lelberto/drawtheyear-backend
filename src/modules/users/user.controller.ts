@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/access-token-auth.guard';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from './id-to-user.pipe';
 import { UpdateUserDto } from './user.dto';

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
-import { UserModule } from '../users/user.module';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { AuthConfig } from '../config/auth';
+import { UserModule } from '../users/user.module';
+import { AccessTokenStrategy } from './access-token.strategy';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 
 /**
@@ -18,7 +18,7 @@ import { GoogleStrategy } from './google.strategy';
     PassportModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
-        const config = configService.get<AuthConfig>('auth').jwt;
+        const config = configService.get<AuthConfig>('auth').jwt.accessToken;
         return {
           secret: config.secretKey,
           signOptions: { expiresIn: config.expiration }
@@ -27,7 +27,7 @@ import { GoogleStrategy } from './google.strategy';
       inject: [ConfigService]
     })
   ],
-  providers: [AuthService, JwtStrategy, GoogleStrategy],
+  providers: [AuthService, AccessTokenStrategy, GoogleStrategy],
   controllers: [AuthController]
 })
 export class AuthModule {}

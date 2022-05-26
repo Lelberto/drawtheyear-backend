@@ -7,15 +7,17 @@ import { AuthConfig } from '../config/auth';
 import { UserService } from '../users/user.service';
 
 /**
- * JWT passport strategy
+ * Access token passport strategy.
+ * 
+ * This strategy uses `passport-jwt`.
  */
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class AccessTokenStrategy extends PassportStrategy(Strategy, 'access-token') {
 
   private readonly userService: UserService;
 
   public constructor(configService: ConfigService, userService: UserService) {
-    const config = configService.get<AuthConfig>('auth').jwt;
+    const config = configService.get<AuthConfig>('auth').jwt.accessToken;
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
