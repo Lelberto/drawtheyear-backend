@@ -19,7 +19,7 @@ export class DayRepository extends Repository<Day> {
    * @async
    */
   public async resolveId(userId: User['id'], date: Day['date']): Promise<Day['id']> {
-    return (await this.findOneOrFail({ user: { id: userId }, date: moment(date).format('YYYY-MM-DD') }, { select: { id: true } })).id;
+    return (await this.findOne({ user: { id: userId }, date: moment(date).format('YYYY-MM-DD') }, { select: { id: true } })).id;
   }
 
   /**

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as _ from 'lodash';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -47,7 +48,7 @@ export class UserService {
    * @async
    */
   public async findById(id: User['id']): Promise<User> {
-    const user = await this.userRepo.findOneOrFail({ id });
+    const user = await this.userRepo.findOne({ id });
     return user;
   }
 
@@ -60,7 +61,7 @@ export class UserService {
    * @async
    */
   public async findByGoogleId(googleId: User['googleId']): Promise<User> {
-    const user = await this.userRepo.findOneOrFail({ googleId });
+    const user = await this.userRepo.findOne({ googleId });
     return user;
   }
 
@@ -73,7 +74,7 @@ export class UserService {
    * @async
    */
   public async findByEmail(email: User['email']): Promise<User> {
-    const user = await this.userRepo.findOneOrFail({ email });
+    const user = await this.userRepo.findOne({ email });
     return user;
   }
 
@@ -115,5 +116,31 @@ export class UserService {
    */
   public async exists(...ids: User['id'][]): Promise<boolean> {
     return await this.userRepo.exists(...ids);
+  }
+
+  /**
+   * Generates an unique username from a given base
+   * 
+   * The username generation algorithm will search if the base username exists
+   * in the database. If it does, it will append a random tag (4 digits) to
+   * the base username.
+   * 
+   * @param username Base username
+   * @returns Unique generated username
+   * @async
+   * @recursive
+   */
+  public async generateUsername(username: string): Promise<string> {
+    username = username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 30);
+    const existingUser = await this.userRepo.findOne({ username });
+    if (existingUser) {
+      const existingUsernameLength = existingUser.username.length;
+      const existingUsername = existingUsernameLength > 26
+        ? existingUser.username.substring(0, 26)
+        : existingUser.username;
+      const randomTag = _.padStart(_.random(0, 9999).toFixed(), 4, '0');
+      return await this.generateUsername(`${existingUsername}${randomTag}`);
+    }
+    return username;
   }
 }

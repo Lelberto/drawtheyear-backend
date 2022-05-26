@@ -33,6 +33,12 @@ export class User {
   })
   public email: string;
 
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
+  public username: string;
+
   @ApiProperty({
     description: 'User name'
   })

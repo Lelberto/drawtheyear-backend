@@ -14,7 +14,7 @@ export default function createMock(): jest.Mocked<Partial<UserRepository>> {
   return {
     create: jest.fn().mockImplementation((dto: CreateUserDto) => fixtures.users.createOne(dto)),
     find: jest.fn().mockReturnValue(fixtures.users.createMany()),
-    findOneOrFail: jest.fn().mockReturnValue(fixtures.users.createOne()),
+    findOne: jest.fn().mockReturnValue(fixtures.users.createOne()),
     save: jest.fn().mockImplementation((user: User) => user),
     update: jest.fn(),
     delete: jest.fn(),

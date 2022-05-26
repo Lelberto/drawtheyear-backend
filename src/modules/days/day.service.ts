@@ -78,7 +78,7 @@ export class DayService {
    * @async
    */
   public async findOne(id: Day['id']): Promise<Day> {
-    return await this.dayRepo.findOneOrFail({ id });
+    return await this.dayRepo.findOne({ id });
   }
 
   /**
