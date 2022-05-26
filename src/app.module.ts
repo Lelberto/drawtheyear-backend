@@ -13,6 +13,7 @@ import { ConfigModule } from './modules/config/config.module';
 import { NodeEnv } from './modules/config/global';
 import { LoggingConfig } from './modules/config/logging';
 import { AuthModule } from './modules/auth/auth.module';
+import { StorageModule } from './modules/storage/storage.module';
 
 /**
  * App module
@@ -29,7 +30,8 @@ import { AuthModule } from './modules/auth/auth.module';
     DayModule,
     HateoasModule,
     ConfigModule,
-    AuthModule
+    AuthModule,
+    StorageModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {
