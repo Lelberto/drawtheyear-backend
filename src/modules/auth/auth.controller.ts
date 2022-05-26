@@ -29,7 +29,7 @@ export class AuthController {
     };
   }
 
-  @Get('google')
+  @Post('google')
   @UseGuards(GoogleAuthGuard)
   public async googleAuth() {
     // Guard redirection
