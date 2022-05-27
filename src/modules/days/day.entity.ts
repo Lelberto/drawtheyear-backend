@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Attachment } from '../attachments/attachment.entity';
 import { Emotion } from '../emotions/emotion.entity';
 import { User } from '../users/user.entity';
 
@@ -53,4 +54,7 @@ export class Day {
   @ManyToMany(() => Emotion, emotion => emotion.days, { cascade: true })
   @JoinTable()
   public emotions?: Emotion[];
+
+  @OneToMany(() => Attachment, attachment => attachment.day)
+  public attachments?: Attachment[];
 }

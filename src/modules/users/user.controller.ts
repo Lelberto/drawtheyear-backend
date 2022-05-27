@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from './id-to-user.pipe';
 import { UpdateUserDto } from './user.dto';
@@ -14,6 +15,7 @@ import { UserService } from './user.service';
  */
 @ApiTags('users')
 @Controller('users')
+@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class UserController {
 

@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Request } from 'express';
 import { User } from '../users/user.entity';
 import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './google-auth.guard';
 import { AccessTokenAuthGuard } from './access-token-auth.guard';
 import { RefreshTokenAuthGuard } from './refresh-token-auth.guard';
+import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 
 /**
  * Authentication controller
@@ -12,6 +13,7 @@ import { RefreshTokenAuthGuard } from './refresh-token-auth.guard';
  * Path : `/auth`
  */
 @Controller('auth')
+@UseInterceptors(TransformInterceptor)
 export class AuthController {
 
   private readonly authService: AuthService;
