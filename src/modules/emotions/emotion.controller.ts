@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { UserService } from '../users/user.service';
 import { UpdateEmotionDto } from './emotion.dto';
@@ -15,6 +16,7 @@ import { IdToEmotionPipe } from './id-to-emotion.pipe';
  */
 @ApiTags('emotions')
 @Controller('emotions')
+@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class EmotionController {
 

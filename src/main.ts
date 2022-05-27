@@ -23,8 +23,7 @@ async function bootstrap() {
   });
   app.useLogger(logger);
   app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(Reflector)),
-    new TransformInterceptor()
+    new ClassSerializerInterceptor(app.get(Reflector))
   );
   app.useGlobalFilters(new EntityNotFoundExceptionFilter());
 
