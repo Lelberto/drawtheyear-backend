@@ -7,6 +7,7 @@ import { EmotionService } from '../emotions/emotion.service';
 import { StorageModule } from '../storage/storage.module';
 import { UserRepository } from '../users/user.repository';
 import { UserService } from '../users/user.service';
+import { AttachmentStorageAdapter } from './attachment-storage.adapter';
 import { AttachmentController } from './attachment.controller';
 import { Attachment } from './attachment.entity';
 import { AttachmentRepository } from './attachment.repository';
@@ -18,9 +19,10 @@ import { AttachmentService } from './attachment.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Attachment, AttachmentRepository, UserRepository, EmotionRepository, DayRepository]),
-    StorageModule.register({ type: 'local' })
+    StorageModule.register({ type: 'local' }) // TODO Implement async registration
   ],
-  providers: [AttachmentService, UserService, EmotionService, DayService],
+  providers: [AttachmentService, AttachmentStorageAdapter, UserService, EmotionService, DayService],
+  exports: [AttachmentStorageAdapter],
   controllers: [AttachmentController]
 })
 export class AttachmentModule {}

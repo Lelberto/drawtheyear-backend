@@ -1,6 +1,8 @@
-import { copyFile, unlink } from 'fs/promises';
-import { basename, join } from 'path';
-import { StorageService, StoreOptions } from './storage.service';
+import { createReadStream } from 'fs';
+import { writeFile } from 'fs/promises';
+import { join } from 'path';
+import { Readable } from 'stream';
+import { StorageService } from './storage.service';
 
 /**
  * Local storage service
@@ -9,16 +11,11 @@ import { StorageService, StoreOptions } from './storage.service';
  */
 export class LocalStorageService extends StorageService {
   
-  public async store(srcPath: string, options: StoreOptions = { deleteSrcPath: false }): Promise<string> {
-    const { dest } = this.config.local;
-    const destPath = join(
-      dest,
-      options.transform ? options.transform(basename(srcPath)) : basename(srcPath)
-    );
-    await copyFile(srcPath, destPath);
-    if (options.deleteSrcPath) {
-      await unlink(srcPath);
-    }
-    return destPath;
+  public async store(stream: Readable, key: string): Promise<void> {
+    await writeFile(join(this.config.local.dest, key), stream);
+  }
+
+  public get(key: string): Readable {
+    return createReadStream(join(this.config.local.dest, key));
   }
 }

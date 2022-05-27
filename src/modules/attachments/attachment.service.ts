@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { createReadStream } from 'fs';
+import { Readable } from 'stream';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Day } from '../days/day.entity';
 import { DayService } from '../days/day.service';
-import { StorageService } from '../storage/storage.service';
+import { AttachmentStorageAdapter } from './attachment-storage.adapter';
 import { UpdateAttachmentDto } from './attachment.dto';
 import { Attachment } from './attachment.entity';
 import { AttachmentRepository } from './attachment.repository';
@@ -15,12 +17,12 @@ export class AttachmentService {
 
   private readonly attachmentRepo: AttachmentRepository;
   private readonly dayService: DayService;
-  private readonly storageService: StorageService;
+  private readonly storageAdapter: AttachmentStorageAdapter;
 
-  public constructor(attachmentsRepo: AttachmentRepository, dayService: DayService, storageService: StorageService) {
+  public constructor(attachmentsRepo: AttachmentRepository, dayService: DayService, storageAdapter: AttachmentStorageAdapter) {
     this.attachmentRepo = attachmentsRepo;
     this.dayService = dayService;
-    this.storageService = storageService;
+    this.storageAdapter = storageAdapter;
   }
 
   /**
@@ -32,12 +34,12 @@ export class AttachmentService {
    */
   public async create(dayId: Day['id'], file: Express.Multer.File): Promise<Attachment> {
     const extension = file.originalname.substring(file.originalname.lastIndexOf('.') + 1).toLowerCase();
-    const path = await this.storageService.store(file.path, {
-      transform: (filename: string) => `${filename}.${extension}`,
-      deleteSrcPath: true
+    const filename = `${file.filename}.${extension}`;
+    await this.storageAdapter.store(createReadStream(file.path), filename, {
+      mimetype: file.mimetype
     });
     const attachment = this.attachmentRepo.create({
-      path,
+      path: filename,
       mimetype: file.mimetype,
       extension,
       day: await this.dayService.findOne(dayId)
@@ -96,5 +98,16 @@ export class AttachmentService {
    */
    public async exists(...ids: Day['id'][]): Promise<boolean> {
     return await this.attachmentRepo.exists(...ids);
+  }
+
+  /**
+   * Downloads an attachment
+   * 
+   * @param id Attachment ID
+   * @returns Downloaded attachment stream
+   */
+  public async download(id: Attachment['id']): Promise<Readable> {
+    const attachment = await this.findOne(id);
+    return this.storageAdapter.get(attachment.path);
   }
 }

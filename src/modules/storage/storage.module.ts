@@ -1,4 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { StorageConfig } from '../config/storage';
 import { LocalStorageService } from './local-storage.service';
 import { S3StorageService } from './s3-storage.service';
@@ -16,9 +17,10 @@ export class StorageModule {
    * @param options Options
    * @returns Storage module
    */
-  public static register(options: StorageModuleOptions = { type: 'local' }): DynamicModule {
+  public static register(options: StorageModuleOptions = { type: 's3' }): DynamicModule {
     return {
       module: StorageModule,
+      imports: [ScheduleModule.forRoot()],
       providers: [
         {
           provide: StorageService,

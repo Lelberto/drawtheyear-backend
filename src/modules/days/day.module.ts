@@ -44,7 +44,7 @@ import { DayService } from './day.service';
       },
       inject: [ConfigService]
     }),
-    StorageModule.register({ type: 'local' }),
+    StorageModule.register({ type: 'local' }), // TODO Implement async registration
     UserModule,
     EmotionModule,
     AttachmentModule,
