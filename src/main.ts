@@ -3,9 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { ServerConfig } from './modules/config/server';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
-import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { ServerConfig } from './modules/config/server';
 import { AppLogger } from './modules/logger/app.logger';
 
 /**
