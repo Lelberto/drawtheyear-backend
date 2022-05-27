@@ -28,18 +28,11 @@ export class AttachmentController {
     return { attachment: await this.attachmentService.findOne(id) };
   }
 
-  // TODO WIP
   @Get(':id/download')
   public async download(@Res({ passthrough: true }) res: Response, @Param('id', IdToAttachmentPipe) attachment: Attachment) {
-    console.log(attachment.path);
     const stream = createReadStream(attachment.path);
-    stream.on('error', (err) => console.error('errrrr', err));
-    stream.on('data', (chunk) => console.log('chunk', chunk));
-    stream.on('end', () => console.log('end'));
     res.set({
-      'Content-Type': attachment.mimetype,
-      'Content-Disposition': `attachment; filename="${attachment.title || attachment.id}.${attachment.extension}"`,
-      'Content-Length': stream.bytesRead,
+      'Content-Disposition': `attachment; filename="${attachment.title || attachment.id}.${attachment.extension}"`
     });
     return new StreamableFile(stream);
   }
