@@ -4,7 +4,7 @@
       "previewLimit": 100,
       "driver": "SQLite",
       "name": "dev",
-      "database": "db/dev.db"
+      "database": "data/db/dev.db"
     }
   ],
   "typescript.tsdk": "node_modules\\typescript\\lib"
