@@ -14,6 +14,7 @@ import { NodeEnv } from './modules/config/global';
 import { LoggingConfig } from './modules/config/logging';
 import { AuthModule } from './modules/auth/auth.module';
 import { StorageModule } from './modules/storage/storage.module';
+import { AttachmentModule } from './modules/attachments/attachment.module';
 
 /**
  * App module
@@ -31,7 +32,8 @@ import { StorageModule } from './modules/storage/storage.module';
     HateoasModule,
     ConfigModule,
     AuthModule,
-    StorageModule
+    StorageModule,
+    AttachmentModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {

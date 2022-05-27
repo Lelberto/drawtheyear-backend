@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { Attachment } from '../attachments/attachment.entity';
 import { DatabaseConfig } from '../config/database';
 import { NodeEnv } from '../config/global';
 import { Day } from '../days/day.entity';
@@ -22,7 +23,7 @@ import { User } from '../users/user.entity';
           username: config.user,
           password: config.password,
           database: config.name,
-          entities: [User, Emotion, Day],
+          entities: [User, Emotion, Day, Attachment],
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: env !== 'production',
           dropSchema: env === 'test',

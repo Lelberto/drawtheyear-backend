@@ -1,6 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
+import { TransformInterceptor } from '../../interceptors/transform.interceptor';
+import { CreateAttachmentDto } from '../attachments/attachment.dto';
+import { AttachmentService } from '../attachments/attachment.service';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { HateoasService } from '../hateoas/hateoas.service';
@@ -17,16 +21,19 @@ import { ResolveDayIdPipe } from './resolve-day-id.pipe';
  */
 @ApiTags('days')
 @Controller('users/:userId/days')
+@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class DayByUserController {
 
   private readonly dayService: DayService;
   private readonly emotionService: EmotionService;
+  private readonly attachmentService: AttachmentService;
   private readonly hateoas: HateoasService;
 
-  public constructor(dayService: DayService, emotionService: EmotionService, hateoas: HateoasService) {
+  public constructor(dayService: DayService, emotionService: EmotionService, attachmentService: AttachmentService, hateoas: HateoasService) {
     this.dayService = dayService;
     this.emotionService = emotionService;
+    this.attachmentService = attachmentService;
     this.hateoas = hateoas;
   }
 
@@ -71,5 +78,11 @@ export class DayByUserController {
   @Put(':date/emotions/remove/:emotionId')
   public async removeEmotion(@Param(ResolveDayIdPipe) id: Day['id'], @Param('emotionId') emotionId: Emotion['id']) {
     await this.dayService.removeEmotion(id, emotionId);
+  }
+
+  @Post(':date/attachments')
+  @UseInterceptors(FileInterceptor('attachment'))
+  public async uploadAttachment(@Param(ResolveDayIdPipe) id: Day['id'], @Body() body: CreateAttachmentDto, @UploadedFile() file: Express.Multer.File) {
+    return { attachment: await this.attachmentService.create(id, body, file) };
   }
 }
