@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Res, StreamableFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
-import { createReadStream } from 'fs';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { UpdateAttachmentDto } from './attachment.dto';
 import { Attachment } from './attachment.entity';
@@ -30,7 +29,7 @@ export class AttachmentController {
 
   @Get(':id/download')
   public async download(@Res({ passthrough: true }) res: Response, @Param('id', IdToAttachmentPipe) attachment: Attachment) {
-    const stream = createReadStream(attachment.path);
+    const stream = await this.attachmentService.download(attachment.id);
     res.set({
       'Content-Disposition': `attachment; filename="${attachment.title || attachment.id}.${attachment.extension}"`
     });
