@@ -27,14 +27,14 @@ import { DayService } from './day.service';
     TypeOrmModule.forFeature([Day, DayRepository, UserRepository, EmotionRepository, AttachmentRepository]),
     MulterModule.registerAsync({
       useFactory: (configService: ConfigService) => {
-        const config = configService.get<StorageConfig>('storage');
+        const storageConfig = configService.get<StorageConfig>('storage');
         return {
-          dest: config.local.dest,
+          dest: storageConfig.tmpDir,
           limits: {
-            fileSize: config.maxSize
+            fileSize: storageConfig.maxSize
           },
           fileFilter: (req, file, cb) => {
-            if (config.allowedMineTypes.includes(file.mimetype.toLowerCase())) {
+            if (storageConfig.allowedMineTypes.includes(file.mimetype.toLowerCase())) {
               cb(null, true);
             } else {
               cb(new StorageException(`Invalid file type: ${file.mimetype}`), false);
@@ -44,7 +44,7 @@ import { DayService } from './day.service';
       },
       inject: [ConfigService]
     }),
-    StorageModule,
+    StorageModule.register({ type: 'local' }),
     UserModule,
     EmotionModule,
     AttachmentModule,

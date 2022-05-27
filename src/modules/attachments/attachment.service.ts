@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Day } from '../days/day.entity';
 import { DayService } from '../days/day.service';
+import { StorageService } from '../storage/storage.service';
 import { UpdateAttachmentDto } from './attachment.dto';
 import { Attachment } from './attachment.entity';
 import { AttachmentRepository } from './attachment.repository';
@@ -14,10 +15,12 @@ export class AttachmentService {
 
   private readonly attachmentRepo: AttachmentRepository;
   private readonly dayService: DayService;
+  private readonly storageService: StorageService;
 
-  public constructor(attachmentsRepo: AttachmentRepository, dayService: DayService) {
+  public constructor(attachmentsRepo: AttachmentRepository, dayService: DayService, storageService: StorageService) {
     this.attachmentRepo = attachmentsRepo;
     this.dayService = dayService;
+    this.storageService = storageService;
   }
 
   /**
@@ -28,10 +31,15 @@ export class AttachmentService {
    * @async
    */
   public async create(dayId: Day['id'], file: Express.Multer.File): Promise<Attachment> {
+    const extension = file.originalname.substring(file.originalname.lastIndexOf('.') + 1).toLowerCase();
+    const path = await this.storageService.store(file.path, {
+      transform: (filename: string) => `${filename}.${extension}`,
+      deleteSrcPath: true
+    });
     const attachment = this.attachmentRepo.create({
-      path: file.path,
+      path,
       mimetype: file.mimetype,
-      extension: file.originalname.substring(file.originalname.lastIndexOf('.') + 1).toLowerCase(),
+      extension,
       day: await this.dayService.findOne(dayId)
     });
     await this.attachmentRepo.save(attachment);

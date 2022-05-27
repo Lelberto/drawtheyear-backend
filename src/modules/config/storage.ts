@@ -2,6 +2,7 @@
 
 export type StorageConfig = {
   type: 'local' | 's3';
+  tmpDir: string;
   local: {
     dest: string;
   };
@@ -15,8 +16,9 @@ export type StorageConfig = {
 export default (): { storage: StorageConfig } => ({
   storage: {
     type: 'local',
+    tmpDir: './data/storage/tmp',
     local: {
-      dest: './data/storage',
+      dest: './data/storage/attachments',
     },
     s3: {},
     maxSize: 5 * 10**6, // <Mo> * 10**6
