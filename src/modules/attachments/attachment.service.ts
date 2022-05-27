@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Day } from '../days/day.entity';
 import { DayService } from '../days/day.service';
-import { CreateAttachmentDto } from './attachment.dto';
+import { UpdateAttachmentDto } from './attachment.dto';
 import { Attachment } from './attachment.entity';
 import { AttachmentRepository } from './attachment.repository';
 
@@ -24,13 +24,11 @@ export class AttachmentService {
    * Creates a new attachment
    * 
    * @param dayId Day ID
-   * @param dto DTO
    * @returns Created attachment
    * @async
    */
-  public async create(dayId: Day['id'], dto: CreateAttachmentDto, file: Express.Multer.File): Promise<Attachment> {
+  public async create(dayId: Day['id'], file: Express.Multer.File): Promise<Attachment> {
     const attachment = this.attachmentRepo.create({
-      ...dto,
       path: file.path,
       mimetype: file.mimetype,
       extension: file.originalname.substring(file.originalname.lastIndexOf('.') + 1).toLowerCase(),
@@ -38,6 +36,20 @@ export class AttachmentService {
     });
     await this.attachmentRepo.save(attachment);
     return attachment;
+  }
+
+  /**
+   * Updates an attachment
+   * 
+   * @param id Attachment ID
+   * @param dto DTO
+   * @async
+   */
+  public async update(id: Attachment['id'], dto: UpdateAttachmentDto): Promise<void> {
+    if (!await this.exists(id)) {
+      throw new EntityNotFoundError(Attachment, id);
+    }
+    await this.attachmentRepo.update({ id }, dto);
   }
 
   /**

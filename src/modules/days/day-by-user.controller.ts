@@ -3,7 +3,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { CreateAttachmentDto } from '../attachments/attachment.dto';
 import { AttachmentService } from '../attachments/attachment.service';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
@@ -82,7 +81,7 @@ export class DayByUserController {
 
   @Post(':date/attachments')
   @UseInterceptors(FileInterceptor('attachment'))
-  public async uploadAttachment(@Param(ResolveDayIdPipe) id: Day['id'], @Body() body: CreateAttachmentDto, @UploadedFile() file: Express.Multer.File) {
-    return { attachment: await this.attachmentService.create(id, body, file) };
+  public async uploadAttachment(@Param(ResolveDayIdPipe) id: Day['id'], @UploadedFile() file: Express.Multer.File) {
+    return { attachment: await this.attachmentService.create(id, file) };
   }
 }

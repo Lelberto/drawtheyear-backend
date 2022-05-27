@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Res, StreamableFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Res, StreamableFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
 import { createReadStream } from 'fs';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
+import { UpdateAttachmentDto } from './attachment.dto';
 import { Attachment } from './attachment.entity';
 import { AttachmentService } from './attachment.service';
 import { IdToAttachmentPipe } from './id-to-attachment.pipe';
@@ -41,5 +42,11 @@ export class AttachmentController {
       'Content-Length': stream.bytesRead,
     });
     return new StreamableFile(stream);
+  }
+
+  @Patch(':id')
+  @UseInterceptors(TransformInterceptor)
+  public async update(@Param('id') id: Attachment['id'], @Body() dto: UpdateAttachmentDto) {
+    await this.attachmentService.update(id, dto);
   }
 }

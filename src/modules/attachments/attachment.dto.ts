@@ -1,12 +1,12 @@
-import { IsOptional, IsString, Max } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 /**
- * DTO for attachment creation
+ * DTO for attachment update
  */
-export class CreateAttachmentDto {
+export class UpdateAttachmentDto {
 
   @IsOptional()
   @IsString()
-  @Max(30)
+  @MaxLength(30)
   public readonly title: string;
 }
