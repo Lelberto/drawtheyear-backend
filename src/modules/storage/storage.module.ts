@@ -17,7 +17,7 @@ export class StorageModule {
    * @param options Options
    * @returns Storage module
    */
-  public static register(options: StorageModuleOptions = { type: 's3' }): DynamicModule {
+  public static register(options: StorageModuleOptions = storageModuleOptionsDefault): DynamicModule {
     return {
       module: StorageModule,
       imports: [ScheduleModule.forRoot()],
@@ -57,3 +57,8 @@ export class StorageModule {
 export type StorageModuleOptions = {
   type: StorageConfig['type'];
 };
+
+/** Storage module options default values */
+const storageModuleOptionsDefault: StorageModuleOptions = {
+  type: 'local'
+}
