@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Req, Res, StreamableFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Req, Res, StreamableFile, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { UpdateAttachmentDto } from '../attachments/attachment.dto';
 import { Attachment } from '../attachments/attachment.entity';
 import { AttachmentService } from '../attachments/attachment.service';
@@ -32,7 +31,6 @@ export class AttachmentController {
   }
 
   @Get(':id')
-  @UseInterceptors(TransformInterceptor)
   public async findOne(@Req() req: Request, @Param('id', IdToAttachmentPipe) attachment: Attachment) {
     const day = await this.dayService.findOne(attachment.dayId);
     const links = this.hateoas.createActionBuilder(req)
@@ -40,7 +38,10 @@ export class AttachmentController {
       .add(new DaySelfAction(day.userId, day.formatedDate))
       .add(new UserSelfAction(day.userId))
       .build();
-    return { attachment, links };
+    return {
+      data: { attachment },
+      links
+    };
   }
 
   @Get(':id/download')
@@ -53,7 +54,6 @@ export class AttachmentController {
   }
 
   @Patch(':id')
-  @UseInterceptors(TransformInterceptor)
   public async update(@Req() req: Request, @Param('id', IdToAttachmentPipe) attachment: Attachment, @Body() dto: UpdateAttachmentDto) {
     await this.attachmentService.update(attachment.id, dto);
     const day = await this.dayService.findOne(attachment.dayId);

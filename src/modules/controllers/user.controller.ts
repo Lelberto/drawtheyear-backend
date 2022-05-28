@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { UserDaysAction } from '../hateoas/actions/user-days.action';
@@ -20,7 +19,6 @@ import { UserService } from '../users/user.service';
  */
 @ApiTags('users')
 @Controller('users')
-@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class UserController {
 
@@ -34,7 +32,9 @@ export class UserController {
 
   @Get()
   public async find(@Query(PaginationPipe) pagination: PaginationDto) {
-    return { users: await this.userService.find(pagination) };
+    return {
+      data: { users: await this.userService.find(pagination) }
+    };
   }
 
   @Get(':id')
@@ -43,7 +43,10 @@ export class UserController {
       .add(new UserEmotionsAction(user.id))
       .add(new UserDaysAction(user.id))
       .build();
-    return { user, links };
+    return {
+      data: { user },
+      links
+    };
   }
 
   @Patch(':id')

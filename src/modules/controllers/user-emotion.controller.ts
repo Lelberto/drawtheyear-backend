@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { CreateEmotionDto } from '../emotions/emotion.dto';
@@ -19,7 +18,6 @@ import { User } from '../users/user.entity';
  */
 @ApiTags('emotions')
 @Controller('users/:userId/emotions')
-@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class UserEmotionController {
 
@@ -37,7 +35,7 @@ export class UserEmotionController {
       .add(new UserSelfAction(userId))
       .build();
     return {
-      emotions: await this.emotionService.findByUser(userId, pagination),
+      data: { emotions: await this.emotionService.findByUser(userId, pagination) },
       links
     };
   }
@@ -50,6 +48,9 @@ export class UserEmotionController {
       .add(new UserEmotionsAction(userId))
       .add(new UserSelfAction(userId))
       .build();
-    return { emotion, links };
+    return {
+      data: { emotion },
+      links
+    };
   }
 }

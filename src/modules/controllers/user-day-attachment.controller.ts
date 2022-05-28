@@ -1,7 +1,6 @@
 import { Controller, Param, Post, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { AttachmentService } from '../attachments/attachment.service';
 import { Day } from '../days/day.entity';
 import { IdToDayPipe } from '../days/id-to-day.pipe';
@@ -18,7 +17,6 @@ import { HateoasService } from '../hateoas/hateoas.service';
  * Path : `/users/:userId/days/:date/attachments`
  */
 @Controller('users/:userId/days/:date/attachments')
-@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class UserDayAttachmentController {
   
@@ -40,6 +38,9 @@ export class UserDayAttachmentController {
       .add(new DaySelfAction(day.userId, day.formatedDate))
       .add(new UserSelfAction(day.userId))
       .build();
-    return { attachment, links };
+    return {
+      data: { attachment },
+      links
+    };
   }
 }

@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { DayQueryPipe } from '../days/day-query.pipe';
 import { CreateDayDto, DaysQueryDto, UpdateDayDto } from '../days/day.dto';
@@ -24,7 +23,6 @@ import { User } from '../users/user.entity';
  */
 @ApiTags('days')
 @Controller('users/:userId/days')
-@UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
 export class UserDayController {
 
@@ -44,8 +42,8 @@ export class UserDayController {
       .add(new UserSelfAction(userId))
       .build();
     return {
-      days: await this.dayService.findByUser(userId, query),
-      links 
+      data: { days: await this.dayService.findByUser(userId, query) },
+      links
     };
   }
 
@@ -57,7 +55,10 @@ export class UserDayController {
       .add(new UserDaysAction(userId))
       .add(new UserSelfAction(userId))
       .build();
-    return { day, links };
+    return {
+      data: { day },
+      links
+    };
   }
 
   @Patch(':date')
@@ -85,7 +86,7 @@ export class UserDayController {
       .add(new UserSelfAction(day.userId))
       .build();
     return {
-      emotions: await this.emotionService.findByDay(day.id),
+      data: { emotions: await this.emotionService.findByDay(day.id) },
       links
     };
   }
