@@ -24,7 +24,9 @@ async function bootstrap() {
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector))
   );
-  app.useGlobalFilters(new EntityNotFoundExceptionFilter());
+  app.useGlobalFilters(
+    new EntityNotFoundExceptionFilter()
+  );
 
   // Setup swagger
   const swaggerOptions = new DocumentBuilder()
