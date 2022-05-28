@@ -1,23 +1,17 @@
 import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
-import { DatabaseModule } from './modules/database/database.module';
-import { DayModule } from './modules/days/day.module';
-import { EmotionModule } from './modules/emotions/emotion.module';
-import { HateoasModule } from './modules/hateoas/hateoas.module';
-import { AccessLogger } from './modules/logger/access.logger';
-import { AppLogger } from './modules/logger/app.logger';
-import { LoggerModule } from './modules/logger/logger.module';
-import { UserModule } from './modules/users/user.module';
 import { ConfigModule } from './modules/config/config.module';
 import { NodeEnv } from './modules/config/global';
 import { LoggingConfig } from './modules/config/logging';
-import { AuthModule } from './modules/auth/auth.module';
-import { StorageModule } from './modules/storage/storage.module';
-import { AttachmentModule } from './modules/attachments/attachment.module';
+import { ControllerModule } from './modules/controllers/controller.module';
+import { DatabaseModule } from './modules/database/database.module';
+import { AccessLogger } from './modules/logger/access.logger';
+import { AppLogger } from './modules/logger/app.logger';
+import { LoggerModule } from './modules/logger/logger.module';
 
 /**
- * App module
+ * Application module
  * 
  * This is the application root module.
  */
@@ -26,14 +20,7 @@ import { AttachmentModule } from './modules/attachments/attachment.module';
     ConfigModule,
     DatabaseModule,
     LoggerModule,
-    UserModule,
-    EmotionModule,
-    DayModule,
-    HateoasModule,
-    ConfigModule,
-    AuthModule,
-    StorageModule,
-    AttachmentModule
+    ControllerModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {

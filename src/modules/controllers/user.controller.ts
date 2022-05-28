@@ -3,10 +3,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { HateoasService } from '../hateoas/hateoas.service';
-import { IdToUserPipe } from './id-to-user.pipe';
-import { UpdateUserDto } from './user.dto';
-import { User } from './user.entity';
-import { UserService } from './user.service';
+import { IdToUserPipe } from '../users/id-to-user.pipe';
+import { UpdateUserDto } from '../users/user.dto';
+import { User } from '../users/user.entity';
+import { UserService } from '../users/user.service';
 
 /**
  * User controller

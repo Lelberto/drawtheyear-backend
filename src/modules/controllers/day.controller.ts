@@ -1,7 +1,7 @@
 import { Controller, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { DayService } from './day.service';
+import { DayService } from '../days/day.service';
 
 /**
  * Day controller

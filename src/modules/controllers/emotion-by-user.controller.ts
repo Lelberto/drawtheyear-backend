@@ -4,8 +4,8 @@ import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
-import { CreateEmotionDto } from './emotion.dto';
-import { EmotionService } from './emotion.service';
+import { CreateEmotionDto } from '../emotions/emotion.dto';
+import { EmotionService } from '../emotions/emotion.service';
 
 /**
  * Emotion by user controller

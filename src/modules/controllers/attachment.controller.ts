@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Res, StreamableFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Response } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { UpdateAttachmentDto } from './attachment.dto';
-import { Attachment } from './attachment.entity';
-import { AttachmentService } from './attachment.service';
-import { IdToAttachmentPipe } from './id-to-attachment.pipe';
+import { UpdateAttachmentDto } from '../attachments/attachment.dto';
+import { Attachment } from '../attachments/attachment.entity';
+import { AttachmentService } from '../attachments/attachment.service';
+import { IdToAttachmentPipe } from '../attachments/id-to-attachment.pipe';
 
 /**
  * Attachment controller

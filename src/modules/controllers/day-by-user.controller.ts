@@ -8,10 +8,10 @@ import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
-import { CreateDayDto, UpdateDayDto, UserDaysQueryDto } from './day.dto';
-import { Day } from './day.entity';
-import { DayService } from './day.service';
-import { ResolveDayIdPipe } from './resolve-day-id.pipe';
+import { CreateDayDto, UpdateDayDto, UserDaysQueryDto } from '../days/day.dto';
+import { Day } from '../days/day.entity';
+import { DayService } from '../days/day.service';
+import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
 
 /**
  * Day by user controller

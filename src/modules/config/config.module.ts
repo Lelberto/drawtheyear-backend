@@ -20,7 +20,6 @@ import storageConfig from './storage';
       envFilePath: ['.env.development', '.env'],
       load: [globalConfig, serverConfig, databaseConfig, storageConfig, loggingConfig, authConfig]
     }),
-  ],
-  exports: [NestConfigModule]
+  ]
 })
 export class ConfigModule {}

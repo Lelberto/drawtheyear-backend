@@ -4,10 +4,10 @@ import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { UserService } from '../users/user.service';
-import { UpdateEmotionDto } from './emotion.dto';
-import { Emotion } from './emotion.entity';
-import { EmotionService } from './emotion.service';
-import { IdToEmotionPipe } from './id-to-emotion.pipe';
+import { UpdateEmotionDto } from '../emotions/emotion.dto';
+import { Emotion } from '../emotions/emotion.entity';
+import { EmotionService } from '../emotions/emotion.service';
+import { IdToEmotionPipe } from '../emotions/id-to-emotion.pipe';
 
 /**
  * Emotion controller
