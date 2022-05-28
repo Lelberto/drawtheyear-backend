@@ -1,7 +1,6 @@
 import * as moment from 'moment';
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, FindOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from '../users/user.entity';
-import { UserDaysQueryDto } from './day.dto';
 import { Day } from './day.entity';
 
 /**
@@ -22,25 +21,12 @@ export class DayRepository extends Repository<Day> {
     return (await this.findOne({ user: { id: userId }, date: moment(date).format('YYYY-MM-DD') }, { select: { id: true } })).id;
   }
 
-  /**
-   * Finds days by user.
-   * 
-   * @param userId User ID
-   * @param query Query
-   * @returns User's days
-   */
-  public async findByUser(userId: User['id'], query?: UserDaysQueryDto): Promise<Day[]> {
-    if (!query) {
-      return await this.find({ userId });
-    }
-    return await this.find({
+  public findInterval(from: Date, to: Date, options?: FindOptions<Day> | FindOptionsWhere<Day>): Promise<Day[]> {
+    return this.find({
+      ...options,
       where: {
-        userId,
         date: {
-          $between: [
-            query.from || moment(new Date(0)).format('YYYY-MM-DD') as unknown as Date,
-            query.to || moment(new Date()).format('YYYY-MM-DD') as unknown as Date
-          ]
+          $between: [from, to]
         }
       }
     });

@@ -2,7 +2,9 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { CreateDayDto, UpdateDayDto, UserDaysQueryDto } from '../days/day.dto';
+import { PaginationPipe } from '../../pagination/pagination.pipe';
+import { DayQueryPipe } from '../days/day-query.pipe';
+import { CreateDayDto, DaysQueryDto, UpdateDayDto } from '../days/day.dto';
 import { Day } from '../days/day.entity';
 import { DayService } from '../days/day.service';
 import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
@@ -33,7 +35,7 @@ export class UserDayController {
   }
 
   @Get()
-  public async find(@Param('userId') userId: User['id'], @Query() query: UserDaysQueryDto) {
+  public async find(@Param('userId') userId: User['id'], @Query(PaginationPipe, DayQueryPipe) query: DaysQueryDto) {
     return { days: await this.dayService.findByUser(userId, query) };
   }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { PaginationDto } from '../../pagination/pagination.dto';
 import { Day } from '../days/day.entity';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
@@ -38,18 +39,12 @@ export class EmotionService {
   /**
    * Finds emotions
    * 
-   * @param ids Emotion IDs
+   * @param pagination Pagination
    * @returns Emotions
    * @async
    */
-  public async find(...ids: Emotion['id'][]): Promise<Emotion[]> {
-    if (ids.length > 0) {
-      if (!await this.exists(...ids)) {
-        throw new EntityNotFoundError(Emotion, ids);
-      }
-      return await this.emotionRepo.findByIds(ids);
-    }
-    return await this.emotionRepo.find();
+  public async find(pagination: PaginationDto): Promise<Emotion[]> {
+    return await this.emotionRepo.find({ skip: pagination.offset, take: pagination.limit });
   }
 
   /**
