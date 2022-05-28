@@ -45,7 +45,7 @@ export class StorageModule {
   private static getStorageServiceType(type: StorageModuleOptions['type']) {
     switch (type) {
       case 'local': return LocalStorageService;
-      case 's3': return S3StorageService; // TODO Implement S3 storage
+      case 's3': return S3StorageService;
       default: throw new Error(`Unknown storage type: ${type}`);
     }
   }
