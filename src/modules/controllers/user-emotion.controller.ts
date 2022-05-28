@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
+import { PaginationDto } from '../../pagination/pagination.dto';
+import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { CreateEmotionDto } from '../emotions/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
@@ -30,12 +32,12 @@ export class UserEmotionController {
   }
 
   @Get()
-  public async find(@Req() req: Request, @Param('userId') userId: User['id']) {
+  public async find(@Req() req: Request, @Param('userId') userId: User['id'], @Query(PaginationPipe) pagination: PaginationDto) {
     const links = this.hateoas.createActionBuilder(req)
       .add(new UserSelfAction(userId))
       .build();
     return {
-      emotions: await this.emotionService.findByUser(userId),
+      emotions: await this.emotionService.findByUser(userId, pagination),
       links
     };
   }
