@@ -15,13 +15,7 @@ export class Attachment {
     type: 'varchar'
   })
   @Exclude({ toPlainOnly: true })
-  public path: string;
-
-  @Column({
-    type: 'varchar',
-    length: 5
-  })
-  public extension: string;
+  public filename: string;
 
   @Column({
     type: 'varchar',
@@ -43,4 +37,8 @@ export class Attachment {
 
   @ManyToOne(() => Day, day => day.attachments)
   public day?: Day;
+
+  public get extension(): string {
+    return this.filename.substring(this.filename.lastIndexOf('.') + 1).toLowerCase();
+  }
 }

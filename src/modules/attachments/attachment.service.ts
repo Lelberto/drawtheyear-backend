@@ -39,9 +39,8 @@ export class AttachmentService {
       mimetype: file.mimetype
     });
     const attachment = this.attachmentRepo.create({
-      path: filename,
+      filename,
       mimetype: file.mimetype,
-      extension,
       day: await this.dayService.findOne(dayId)
     });
     await this.attachmentRepo.save(attachment);
@@ -108,6 +107,6 @@ export class AttachmentService {
    */
   public async download(id: Attachment['id']): Promise<Readable> {
     const attachment = await this.findOne(id);
-    return this.storageAdapter.get(attachment.path);
+    return this.storageAdapter.get(attachment.filename);
   }
 }
