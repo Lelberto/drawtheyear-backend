@@ -1,16 +1,10 @@
 import { User } from '../modules/users/user.entity';
 
-/**
- * Constructor type
- */
+/** Constructor type */
 export type Constructor<T> = { new(): T };
 
-/**
- * Access token payload
- */
+/** Access token payload */
 export type AccessTokenPayload = { sub: User['id'], email: User['email'] };
 
-/**
- * Refresh token payload
- */
+/** Refresh token payload */
 export type RefreshTokenPayload = { sub: User['id'], email: User['email'] };
