@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
+import { PaginationDto } from '../../pagination/pagination.dto';
+import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from '../users/id-to-user.pipe';
 import { UpdateUserDto } from '../users/user.dto';
@@ -28,8 +30,8 @@ export class UserController {
   }
 
   @Get()
-  public async find() {
-    return { users: await this.userService.find() };
+  public async find(@Query(PaginationPipe) pagination: PaginationDto) {
+    return { users: await this.userService.find(pagination) };
   }
 
   @Get(':id')

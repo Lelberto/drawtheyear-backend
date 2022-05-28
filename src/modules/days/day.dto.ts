@@ -1,8 +1,9 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsDate, IsOptional, IsString } from 'class-validator';
 import * as moment from 'moment';
 import { IsSpecificDate } from '../../decorators/is-specific-date.decorator';
+import { PaginationDto } from '../../pagination/pagination.dto';
 
 /**
  * DTO for day creation
@@ -24,19 +25,24 @@ export class CreateDayDto {
 export class UpdateDayDto extends OmitType(CreateDayDto, ['date']) {}
 
 /**
- * DTO for user days between two dates query
+ * DTO for day query
  */
-export class UserDaysQueryDto {
+export class DayQueryDto {
 
   @ApiProperty()
-  @IsDate()
   @IsOptional()
+  @IsDate()
   @Transform(({ value }) => moment(value, 'YYYY-MM-DD').toDate())
   public readonly from: Date;
 
   @ApiProperty()
-  @IsDate()
   @IsOptional()
+  @IsDate()
   @Transform(({ value }) => moment(value, 'YYYY-MM-DD').toDate())
   public readonly to: Date;
 }
+
+/**
+ * DTO for day query with pagination
+ */
+export class DaysQueryDto extends IntersectionType(DayQueryDto, PaginationDto) {}

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { PaginationDto } from '../../pagination/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -31,12 +32,14 @@ export class UserService {
   }
 
   /**
-   * Finds all users
+   * Finds users
    * 
-   * @returns All users
+   * @param pagination Pagination
+   * @returns Users
+   * @async
    */
-  public async find(): Promise<User[]> {
-    return await this.userRepo.find();
+  public async find(pagination: PaginationDto): Promise<User[]> {
+    return await this.userRepo.find({ skip: pagination.offset, take: pagination.limit });
   }
 
   /**

@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { remove } from 'lodash';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { PaginationDto } from '../../pagination/pagination.dto';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
-import { CreateDayDto, UserDaysQueryDto } from './day.dto';
+import { CreateDayDto, DaysQueryDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayRepository } from './day.repository';
 
@@ -55,18 +56,12 @@ export class DayService {
   /**
    * Finds days
    * 
-   * @param ids Day ID(s)
+   * @param pagination Pagination
    * @returns Days
    * @async
    */
-   public async find(...ids: Day['id'][]): Promise<Day[]> {
-     if (ids.length > 0) {
-      if (!await this.exists(...ids)) {
-        throw new EntityNotFoundError(Day, ids);
-      }
-      return await this.dayRepo.findByIds(ids);
-    }
-    return await this.dayRepo.find();
+   public async find(pagination: PaginationDto): Promise<Day[]> {
+    return await this.dayRepo.find({ skip: pagination.offset, take: pagination.limit });
   }
 
   /**
@@ -89,8 +84,8 @@ export class DayService {
    * @returns User's days
    * @async
    */
-  public async findByUser(userId: User['id'], query?: UserDaysQueryDto): Promise<Day[]> {
-    return await this.dayRepo.findByUser(userId, query);
+  public async findByUser(userId: User['id'], query: DaysQueryDto): Promise<Day[]> {
+    return await this.dayRepo.findInterval(query.from, query.to, { userId, skip: query.offset, take: query.limit });
   }
 
   /**
