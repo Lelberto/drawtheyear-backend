@@ -2,12 +2,13 @@ import { Body, Controller, Get, Param, Post, Req, UseInterceptors, UsePipes, Val
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { HateoasService } from '../hateoas/hateoas.service';
-import { User } from '../users/user.entity';
 import { CreateEmotionDto } from '../emotions/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
 import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
+import { UserSelfAction } from '../hateoas/actions/user-self.action';
+import { HateoasService } from '../hateoas/hateoas.service';
+import { User } from '../users/user.entity';
 
 /**
  * User emotion controller
@@ -29,8 +30,14 @@ export class UserEmotionController {
   }
 
   @Get()
-  public async find(@Param('userId') userId: User['id']) {
-    return { emotions: await this.emotionService.findByUser(userId) };
+  public async find(@Req() req: Request, @Param('userId') userId: User['id']) {
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new UserSelfAction(userId))
+      .build();
+    return {
+      emotions: await this.emotionService.findByUser(userId),
+      links
+    };
   }
 
   @Post()
@@ -39,6 +46,7 @@ export class UserEmotionController {
     const links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
       .add(new UserEmotionsAction(userId))
+      .add(new UserSelfAction(userId))
       .build();
     return { emotion, links };
   }

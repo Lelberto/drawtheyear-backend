@@ -43,10 +43,7 @@ export class UserController {
       .add(new UserEmotionsAction(user.id))
       .add(new UserDaysAction(user.id))
       .build();
-    return {
-      user,
-      links
-    };
+    return { user, links };
   }
 
   @Patch(':id')
@@ -54,8 +51,6 @@ export class UserController {
     await this.userService.update(id, body);
     const links = this.hateoas.createActionBuilder(req)
       .add(new UserSelfAction(id))
-      .add(new UserEmotionsAction(id))
-      .add(new UserDaysAction(id))
       .build();
     return { links };
   }
