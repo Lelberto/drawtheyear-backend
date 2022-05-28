@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AttachmentModule } from '../attachments/attachment.module';
 import { DayModule } from '../days/day.module';
-import { EmotionByUserController } from './emotion-by-user.controller';
+import { UserEmotionController } from './user-emotion.controller';
 import { EmotionController } from './emotion.controller';
 import { EmotionModule } from '../emotions/emotion.module';
 import { HateoasModule } from '../hateoas/hateoas.module';
 import { UserModule } from '../users/user.module';
 import { UserController } from './user.controller';
-import { DayByUserController } from './day-by-user.controller';
+import { UserDayController } from './user-day.controller';
 import { DayController } from './day.controller';
 import { AttachmentController } from './attachment.controller';
 import { MulterModule } from '@nestjs/platform-express';
@@ -16,6 +16,7 @@ import { StorageConfig } from '../config/storage';
 import { StorageException } from '../storage/storage.exception';
 import { AuthController } from './auth.controller';
 import { AuthModule } from '../auth/auth.module';
+import { UserDayAttachmentController } from './user-day-attachment.controller';
 
 @Module({
   imports: [
@@ -48,8 +49,11 @@ import { AuthModule } from '../auth/auth.module';
   controllers: [
     AuthController,
     UserController,
-    EmotionController, EmotionByUserController,
-    DayController, DayByUserController,
+    UserEmotionController,
+    UserDayController,
+    UserDayAttachmentController,
+    EmotionController,
+    DayController,
     AttachmentController
   ]
 })

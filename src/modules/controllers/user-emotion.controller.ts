@@ -8,7 +8,7 @@ import { CreateEmotionDto } from '../emotions/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
 
 /**
- * Emotion by user controller
+ * User emotion controller
  * 
  * Path : `/users/:userId/emotions`
  */
@@ -16,7 +16,7 @@ import { EmotionService } from '../emotions/emotion.service';
 @Controller('users/:userId/emotions')
 @UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
-export class EmotionByUserController {
+export class UserEmotionController {
 
   private readonly emotionService: EmotionService;
   private readonly hateoas: HateoasService;

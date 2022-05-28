@@ -1,20 +1,18 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { AttachmentService } from '../attachments/attachment.service';
-import { Emotion } from '../emotions/emotion.entity';
-import { EmotionService } from '../emotions/emotion.service';
-import { HateoasService } from '../hateoas/hateoas.service';
-import { User } from '../users/user.entity';
 import { CreateDayDto, UpdateDayDto, UserDaysQueryDto } from '../days/day.dto';
 import { Day } from '../days/day.entity';
 import { DayService } from '../days/day.service';
 import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
+import { Emotion } from '../emotions/emotion.entity';
+import { EmotionService } from '../emotions/emotion.service';
+import { HateoasService } from '../hateoas/hateoas.service';
+import { User } from '../users/user.entity';
 
 /**
- * Day by user controller
+ * User day controller
  * 
  * Path : `/users/:userId/days`
  */
@@ -22,17 +20,15 @@ import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
 @Controller('users/:userId/days')
 @UseInterceptors(TransformInterceptor)
 @UsePipes(ValidationPipe)
-export class DayByUserController {
+export class UserDayController {
 
   private readonly dayService: DayService;
   private readonly emotionService: EmotionService;
-  private readonly attachmentService: AttachmentService;
   private readonly hateoas: HateoasService;
 
-  public constructor(dayService: DayService, emotionService: EmotionService, attachmentService: AttachmentService, hateoas: HateoasService) {
+  public constructor(dayService: DayService, emotionService: EmotionService, hateoas: HateoasService) {
     this.dayService = dayService;
     this.emotionService = emotionService;
-    this.attachmentService = attachmentService;
     this.hateoas = hateoas;
   }
 
@@ -77,11 +73,5 @@ export class DayByUserController {
   @Put(':date/emotions/remove/:emotionId')
   public async removeEmotion(@Param(ResolveDayIdPipe) id: Day['id'], @Param('emotionId') emotionId: Emotion['id']) {
     await this.dayService.removeEmotion(id, emotionId);
-  }
-
-  @Post(':date/attachments')
-  @UseInterceptors(FileInterceptor('attachment'))
-  public async uploadAttachment(@Param(ResolveDayIdPipe) id: Day['id'], @UploadedFile() file: Express.Multer.File) {
-    return { attachment: await this.attachmentService.create(id, file) };
   }
 }
