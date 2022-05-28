@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import moment from 'moment';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Attachment } from '../attachments/attachment.entity';
 import { Emotion } from '../emotions/emotion.entity';
@@ -57,4 +58,8 @@ export class Day {
 
   @OneToMany(() => Attachment, attachment => attachment.day)
   public attachments?: Attachment[];
+
+  public get formatedDate(): string {
+    return moment(this.date).format('YYYY-MM-DD');
+  }
 }

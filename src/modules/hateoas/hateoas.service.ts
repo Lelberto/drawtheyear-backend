@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { HateoasError } from './hateoas.error';
-import { Link, Method, Rel, RelParams } from './hateoas.types';
+import { ActionBuilder } from './actions/action.builder';
 
 
 /**
@@ -20,56 +19,25 @@ export class HateoasService {
   }
 
   /**
-   * Creates a HATEOAS link
+   * Creates a new action builder
    * 
    * @param req Request
-   * @param rel Rel
-   * @param params Link parameters
-   * @returns Link
+   * @returns Created action builder
    */
-  public createLink<T extends Rel>(req: Request, rel: T, params: RelParams[T]): Link {
-    let method: Method;
-    let href: string;
-
-    switch (rel) {
-      case 'user-self':
-        method = 'GET';
-        href = `/users/${(params as RelParams['user-self']).userId}`;
-        break;
-      case 'user-emotions':
-        method = 'GET';
-        href = `/users/${(params as RelParams['user-emotions']).userId}/emotions`;
-        break;
-      case 'user-days':
-        method = 'GET';
-        href = `/users/${(params as RelParams['user-days']).userId}/days`;
-        break;
-      case 'emotion-self':
-        method = 'GET';
-        href = `/emotions/${(params as RelParams['emotion-self']).emotionId}`;
-        break;
-      case 'day-self':
-        const { userId, dayDate } = params as RelParams['day-self'];
-        method = 'GET';
-        href = `/users/${userId}/days/${dayDate}`;
-        break;
-      default: throw new HateoasError(rel);
-    }
-
-    return { rel, method, href: this.formatHref(req, href) };
+  public createActionBuilder(req: Request): ActionBuilder {
+    return new ActionBuilder({ hrefPrefix: this.createHrefPrefix(req) });
   }
 
   /**
-   * Formats a href
+   * Creates a href prefix from the given request 
    * 
-   * This method will add protocol, hostname and port (if not 80) to the href.
+   * This method will return protocol, hostname and port (if not 80).
    * 
    * @param req Request
-   * @param href href url
-   * @returns Formatted href
+   * @returns Formatted href prefix to `protocol://hostname:port`
    */
-  private formatHref(req: Request, href: string): string {
-    return `${req.protocol}://${req.hostname}${this.formatPort()}${href}`;
+  private createHrefPrefix(req: Request): string {
+    return `${req.protocol}://${req.hostname}${this.formatPort()}`;
   }
 
   /**

@@ -10,6 +10,8 @@ import { DayService } from '../days/day.service';
 import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
+import { DaySelfAction } from '../hateoas/actions/day-self.action';
+import { UserDaysAction } from '../hateoas/actions/user-days.action';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
 
@@ -42,13 +44,11 @@ export class UserDayController {
   @Post()
   public async create(@Req() req: Request, @Param('userId') userId: User['id'], @Body() dto: CreateDayDto) {
     const day = await this.dayService.create(userId, dto);
-    return {
-      day,
-      links: [
-        this.hateoas.createLink(req, 'day-self', { userId, dayDate: day.date }),
-        this.hateoas.createLink(req, 'user-days', { userId }),
-      ]
-    };
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new DaySelfAction(userId, day.formatedDate))
+      .add(new UserDaysAction(userId))
+      .build();
+    return { day, links };
   }
 
   @Patch(':date')

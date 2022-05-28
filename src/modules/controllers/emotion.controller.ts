@@ -8,6 +8,9 @@ import { UpdateEmotionDto } from '../emotions/emotion.dto';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { IdToEmotionPipe } from '../emotions/id-to-emotion.pipe';
+import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
+import { UserSelfAction } from '../hateoas/actions/user-self.action';
+import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 
 /**
  * Emotion controller
@@ -33,24 +36,24 @@ export class EmotionController {
   @Get(':id')
   public async findById(@Req() req: Request, @Param('id', IdToEmotionPipe) emotion: Emotion) {
     const user = await this.userService.findById(emotion.userId);
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new EmotionSelfAction(emotion.id))
+      .add(new UserSelfAction(user.id))
+      .add(new UserEmotionsAction(user.id))
+      .build();
     return {
       emotion,
-      links: [
-        this.hateoas.createLink(req, 'emotion-self', { emotionId: emotion.id }),
-        this.hateoas.createLink(req, 'user-self', { userId: user.id }),
-        this.hateoas.createLink(req, 'user-emotions', { userId: user.id })
-      ]
+      links
     };
   }
 
   @Patch(':id')
   public async update(@Req() req: Request, @Param('id') id: string, @Body() body: UpdateEmotionDto = {}) {
     await this.emotionService.update(id, body);
-    return {
-      links: [
-        this.hateoas.createLink(req, 'emotion-self', { emotionId: id }),
-      ]
-    }
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new EmotionSelfAction(id))
+      .build();
+    return { links };
   }
 
   @Delete(':id')

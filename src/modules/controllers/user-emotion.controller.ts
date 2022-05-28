@@ -6,6 +6,8 @@ import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
 import { CreateEmotionDto } from '../emotions/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
+import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
+import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 
 /**
  * User emotion controller
@@ -34,12 +36,10 @@ export class UserEmotionController {
   @Post()
   public async create(@Req() req: Request, @Param('userId') userId: User['id'], @Body() dto: CreateEmotionDto) {
     const emotion = await this.emotionService.create(userId, dto);
-    return {
-      emotion,
-      links: [
-        this.hateoas.createLink(req, 'emotion-self', { emotionId: emotion.id }),
-        this.hateoas.createLink(req, 'user-emotions', { userId }),
-      ]
-    };
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new EmotionSelfAction(emotion.id))
+      .add(new UserEmotionsAction(userId))
+      .build();
+    return { emotion, links };
   }
 }
