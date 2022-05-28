@@ -4,6 +4,9 @@ import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
+import { UserDaysAction } from '../hateoas/actions/user-days.action';
+import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
+import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { IdToUserPipe } from '../users/id-to-user.pipe';
 import { UpdateUserDto } from '../users/user.dto';
@@ -36,25 +39,20 @@ export class UserController {
 
   @Get(':id')
   public findById(@Req() req: Request, @Param('id', IdToUserPipe) user: User) {
-    return {
-      user,
-      links: [
-        this.hateoas.createLink(req, 'user-emotions', { userId: user.id }),
-        this.hateoas.createLink(req, 'user-days', { userId: user.id })
-      ]
-    };
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new UserEmotionsAction(user.id))
+      .add(new UserDaysAction(user.id))
+      .build();
+    return { user, links };
   }
 
   @Patch(':id')
   public async update(@Req() req: Request, @Param('id') id: string, @Body() body: UpdateUserDto) {
     await this.userService.update(id, body);
-    return {
-      links: [
-        this.hateoas.createLink(req, 'user-self', { userId: id }),
-        this.hateoas.createLink(req, 'user-emotions', { userId: id }),
-        this.hateoas.createLink(req, 'user-days', { userId: id })
-      ]
-    };
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new UserSelfAction(id))
+      .build();
+    return { links };
   }
 
   @Delete(':id')

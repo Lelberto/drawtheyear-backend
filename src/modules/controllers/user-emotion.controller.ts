@@ -1,11 +1,16 @@
-import { Body, Controller, Get, Param, Post, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { TransformInterceptor } from '../../interceptors/transform.interceptor';
-import { HateoasService } from '../hateoas/hateoas.service';
-import { User } from '../users/user.entity';
+import { PaginationDto } from '../../pagination/pagination.dto';
+import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { CreateEmotionDto } from '../emotions/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
+import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
+import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
+import { UserSelfAction } from '../hateoas/actions/user-self.action';
+import { HateoasService } from '../hateoas/hateoas.service';
+import { User } from '../users/user.entity';
 
 /**
  * User emotion controller
@@ -27,19 +32,24 @@ export class UserEmotionController {
   }
 
   @Get()
-  public async find(@Param('userId') userId: User['id']) {
-    return { emotions: await this.emotionService.findByUser(userId) };
+  public async find(@Req() req: Request, @Param('userId') userId: User['id'], @Query(PaginationPipe) pagination: PaginationDto) {
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new UserSelfAction(userId))
+      .build();
+    return {
+      emotions: await this.emotionService.findByUser(userId, pagination),
+      links
+    };
   }
 
   @Post()
   public async create(@Req() req: Request, @Param('userId') userId: User['id'], @Body() dto: CreateEmotionDto) {
     const emotion = await this.emotionService.create(userId, dto);
-    return {
-      emotion,
-      links: [
-        this.hateoas.createLink(req, 'emotion-self', { emotionId: emotion.id }),
-        this.hateoas.createLink(req, 'user-emotions', { userId }),
-      ]
-    };
+    const links = this.hateoas.createActionBuilder(req)
+      .add(new EmotionSelfAction(emotion.id))
+      .add(new UserEmotionsAction(userId))
+      .add(new UserSelfAction(userId))
+      .build();
+    return { emotion, links };
   }
 }

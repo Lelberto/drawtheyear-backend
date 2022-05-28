@@ -66,8 +66,8 @@ export class EmotionService {
    * @returns User's emotions
    * @async
    */
-  public async findByUser(userId: User['id']): Promise<Emotion[]> {
-    return await this.emotionRepo.findByUser(userId);
+  public async findByUser(userId: User['id'], pagination: PaginationDto): Promise<Emotion[]> {
+    return await this.emotionRepo.findByUser(userId, { skip: pagination.offset, take: pagination.limit });
   }
 
   /**

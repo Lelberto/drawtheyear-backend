@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, FindOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { Day } from '../days/day.entity';
 import { User } from '../users/user.entity';
 import { Emotion } from './emotion.entity';
@@ -13,10 +13,11 @@ export class EmotionRepository extends Repository<Emotion> {
    * Finds emotions by user.
    * 
    * @param userId User ID
+   * @param options Options
    * @returns User's emotions
    */
-  public async findByUser(userId: User['id']): Promise<Emotion[]> {
-    return await this.find({ user: { id: userId } });
+  public async findByUser(userId: User['id'], options?: FindOptions<Emotion> | FindOptionsWhere<Emotion>): Promise<Emotion[]> {
+    return await this.find({ userId, ...options });
   }
 
   /**

@@ -1,12 +1,8 @@
-import { Day } from '../days/day.entity';
-import { Emotion } from '../emotions/emotion.entity';
-import { User } from '../users/user.entity';
-
 /**
  * HATEOAS link
  */
 export type Link = {
-  rel: Rel;
+  rel: string;
   method: Method;
   href: string;
 }
@@ -14,20 +10,10 @@ export type Link = {
 /**
  * HTTP methods
  */
-export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-
-/**
- * HATEOAS rel parameters
- */
-export type RelParams = {
-  'user-self': { userId: User['id'] };
-  'user-emotions': { userId: User['id'] };
-  'user-days': { userId: User['id'] };
-  'emotion-self': { emotionId: Emotion['id'] };
-  'day-self': { userId: User['id'], dayDate: Day['date'] };
+export enum Method {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  Patch = 'PATCH',
+  DELETE = 'DELETE'
 }
-
-/**
- * HATEOAS rel
- */
-export type Rel = keyof RelParams;
