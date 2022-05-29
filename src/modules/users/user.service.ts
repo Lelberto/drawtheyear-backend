@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -86,13 +85,9 @@ export class UserService {
    * 
    * @param id User ID
    * @param dto DTO
-   * @throws NotFoundException If the user is not found
    * @async
    */
   public async update(id: User['id'], dto: UpdateUserDto): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(User, id);
-    }
     await this.userRepo.update({ id }, dto);
   }
 
@@ -100,13 +95,9 @@ export class UserService {
    * Deletes an user
    * 
    * @param id User ID
-   * @throws NotFoundException If the user is not found
    * @async
    */
   public async delete(id: User['id']): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(User, id);
-    }
     await this.userRepo.delete({ id });
   }
 
