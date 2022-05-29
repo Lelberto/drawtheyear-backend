@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { Day } from '../days/day.entity';
 import { User } from '../users/user.entity';
-import { UserService } from '../users/user.service';
 import { CreateEmotionDto, UpdateEmotionDto } from './emotion.dto';
 import { Emotion } from './emotion.entity';
 import { EmotionRepository } from './emotion.repository';
@@ -15,11 +13,9 @@ import { EmotionRepository } from './emotion.repository';
 export class EmotionService {
 
   private readonly emotionRepo: EmotionRepository;
-  private readonly userService: UserService;
 
-  public constructor(emotionRepo: EmotionRepository, userService: UserService) {
+  public constructor(emotionRepo: EmotionRepository) {
     this.emotionRepo = emotionRepo;
-    this.userService = userService;
   }
 
   /**
@@ -31,7 +27,7 @@ export class EmotionService {
    * @async
    */
   public async create(userId: User['id'], dto: CreateEmotionDto): Promise<Emotion> {
-    const emotion = this.emotionRepo.create({ ...dto, user: await this.userService.findById(userId) });
+    const emotion = this.emotionRepo.create({ ...dto, userId });
     await this.emotionRepo.save(emotion);
     return emotion;
   }
@@ -86,13 +82,9 @@ export class EmotionService {
    * 
    * @param id Emotion ID
    * @param dto DTO
-   * @throws NotFoundException If the emotion is not found
    * @async
    */
   public async update(id: Emotion['id'], dto: UpdateEmotionDto): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Emotion, id);
-    }
     await this.emotionRepo.update({ id }, dto);
   }
 
@@ -100,13 +92,9 @@ export class EmotionService {
    * Deletes an emotion
    * 
    * @param id Emotion ID
-   * @throws NotFoundException If the emotion is not found
    * @async
    */
   public async delete(id: Emotion['id']): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Emotion, id);
-    }
     await this.emotionRepo.delete({ id });
   }
 
