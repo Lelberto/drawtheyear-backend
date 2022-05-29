@@ -18,7 +18,7 @@ async function bootstrap() {
   // Setup application
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: [VERSION_NEUTRAL, '1']
+    defaultVersion: [VERSION_NEUTRAL]
   });
   app.useLogger(logger);
   app.useGlobalInterceptors(
