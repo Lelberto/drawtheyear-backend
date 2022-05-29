@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AccessTokenAuthGuard } from '../auth/access-token-auth.guard';
 import { AuthService } from '../auth/auth.service';
@@ -11,6 +12,7 @@ import { User } from '../users/user.entity';
  * 
  * Path : `/auth`
  */
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 

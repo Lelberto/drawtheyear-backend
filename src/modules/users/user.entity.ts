@@ -25,7 +25,8 @@ export class User {
   public googleId: string;
 
   @ApiProperty({
-    description: 'User email'
+    description: 'User email',
+    format: 'email'
   })
   @Column({
     type: 'varchar',
@@ -33,14 +34,23 @@ export class User {
   })
   public email: string;
 
+  @ApiProperty({
+    description: 'Username',
+    pattern: '^[a-zA-Z0-9]+$',
+    minLength: 3,
+    maxLength: 24
+  })
   @Column({
     type: 'varchar',
-    unique: true
+    unique: true,
+    length: 24
   })
   public username: string;
 
   @ApiProperty({
-    description: 'User name'
+    description: 'User name',
+    minLength: 3,
+    maxLength: 30
   })
   @Column({
     type: 'varchar',
@@ -55,6 +65,10 @@ export class User {
   @OneToMany(() => Emotion, emotion => emotion.user)
   public emotions?: Emotion[];
 
+  @ApiProperty({
+    type: () => [Day],
+    description: 'User days'
+  })
   @OneToMany(() => Day, day => day.user)
   public days?: Day[];
 }

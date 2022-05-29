@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Req, Res, StreamableFile, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { UpdateAttachmentDto } from '../attachments/attachment.dto';
 import { Attachment } from '../attachments/attachment.entity';
@@ -16,6 +17,7 @@ import { HateoasService } from '../hateoas/hateoas.service';
  * 
  * Path: `/attachments`
  */
+@ApiTags('attachments')
 @Controller('attachments')
 @UsePipes(ValidationPipe)
 export class AttachmentController {

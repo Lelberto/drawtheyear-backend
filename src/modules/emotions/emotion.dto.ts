@@ -6,12 +6,17 @@ import { IsHexColor, IsString, Length } from 'class-validator';
  */
 export class CreateEmotionDto {
   
-  @ApiProperty()
+  @ApiProperty({
+    minLength: 1,
+    maxLength: 50
+  })
   @IsString()
   @Length(1, 50)
   public readonly name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'hex'
+  })
   @IsHexColor()
   public readonly color: string;
 }

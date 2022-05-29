@@ -10,7 +10,9 @@ import { PaginationDto } from '../../pagination/pagination.dto';
  */
 export class CreateDayDto {
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'YYYY-MM-DD'
+  })
   @IsSpecificDate()
   public readonly date: Date;
 
@@ -29,13 +31,17 @@ export class UpdateDayDto extends OmitType(CreateDayDto, ['date']) {}
  */
 export class DayQueryDto {
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'YYYY-MM-DD'
+  })
   @IsOptional()
   @IsDate()
   @Transform(({ value }) => moment(value, 'YYYY-MM-DD').toDate())
   public readonly from: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    format: 'YYYY-MM-DD'
+  })
   @IsOptional()
   @IsDate()
   @Transform(({ value }) => moment(value, 'YYYY-MM-DD').toDate())
