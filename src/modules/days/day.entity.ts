@@ -60,9 +60,7 @@ export class Day {
   @OneToMany(() => Attachment, attachment => attachment.day)
   public attachments?: Attachment[];
 
-  /**
-   * Returns day date in format `YYYY-MM-DD`
-   */
+  /** Returns day date in format `YYYY-MM-DD` */
   public get formatedDate(): string {
     return moment(this.date).format('YYYY-MM-DD');
   }

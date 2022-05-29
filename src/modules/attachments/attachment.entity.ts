@@ -44,6 +44,7 @@ export class Attachment {
   @ManyToOne(() => Day, day => day.attachments)
   public day?: Day;
 
+  /** Gets the filename extension */
   public get extension(): string {
     return this.filename.substring(this.filename.lastIndexOf('.') + 1).toLowerCase();
   }
