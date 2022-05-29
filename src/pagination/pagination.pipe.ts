@@ -24,8 +24,8 @@ export class PaginationPipe implements PipeTransform<any, PaginationDto> {
       throw new InternalServerErrorException(`${this.constructor.name} can only be used in @Query() decorator`);
     }
     const { pagination } = this.config;
-    const offset = parseInt(query?.offset, 10) || 0;
-    let limit = parseInt(query?.limit, 10) || pagination.maxLimit;
+    const offset = query?.offset || 0;
+    let limit = query?.limit || pagination.maxLimit;
     if (limit > pagination.maxLimit) {
       limit = pagination.maxLimit;
     }
