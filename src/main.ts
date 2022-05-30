@@ -20,6 +20,9 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: [VERSION_NEUTRAL]
   });
+  app.enableCors({
+    origin: serverConfig.cors.origin
+  });
   app.useLogger(logger);
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector))
