@@ -25,7 +25,8 @@ export class Emotion {
   public name: string;
 
   @ApiProperty({
-    description: 'Emotion color'
+    description: 'Emotion color',
+    format: 'hex'
   })
   @Column({
     type: 'varchar',

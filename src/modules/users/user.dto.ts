@@ -6,16 +6,25 @@ import { IsEmail, IsString, Length, Matches } from 'class-validator';
  */
 export class CreateUserDto {
   
-  @ApiProperty()
+  @ApiProperty({
+    format: 'email'
+  })
   @IsEmail()
   public readonly email: string;
   
-  @ApiProperty()
+  @ApiProperty({
+    pattern: '^[a-zA-Z0-9]+$',
+    minLength: 3,
+    maxLength: 24
+  })
   @Matches(/^[a-zA-Z0-9]+$/)
   @Length(3, 24)
   public readonly username: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    minLength: 3,
+    maxLength: 50
+  })
   @IsString()
   @Length(3, 50)
   public readonly name: string;

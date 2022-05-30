@@ -1,5 +1,6 @@
 import { Controller, Param, Post, Req, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AttachmentService } from '../attachments/attachment.service';
 import { Day } from '../days/day.entity';
@@ -16,6 +17,7 @@ import { HateoasService } from '../hateoas/hateoas.service';
  * 
  * Path : `/users/:userId/days/:date/attachments`
  */
+@ApiTags('attachments')
 @Controller('users/:userId/days/:date/attachments')
 @UsePipes(ValidationPipe)
 export class UserDayAttachmentController {
