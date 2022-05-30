@@ -6,7 +6,6 @@ import { PaginationDto } from '../../pagination/pagination.dto';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
 import { User } from '../users/user.entity';
-import { UserService } from '../users/user.service';
 import { CreateDayDto, DaysQueryDto } from './day.dto';
 import { Day } from './day.entity';
 import { DayRepository } from './day.repository';
@@ -18,12 +17,10 @@ import { DayRepository } from './day.repository';
 export class DayService {
 
   private readonly dayRepo: DayRepository;
-  private readonly userService: UserService;
   private readonly emotionService: EmotionService;
 
-  public constructor(dayRepo: DayRepository, userService: UserService, emotionService: EmotionService) {
+  public constructor(dayRepo: DayRepository, emotionService: EmotionService) {
     this.dayRepo = dayRepo;
-    this.userService = userService;
     this.emotionService = emotionService;
   }
 
@@ -48,7 +45,7 @@ export class DayService {
    * @async
    */
   public async create(userId: User['id'], dto: CreateDayDto): Promise<Day> {
-    const day = this.dayRepo.create({ ...dto, user: await this.userService.findById(userId) });
+    const day = this.dayRepo.create({ ...dto, userId });
     await this.dayRepo.save(day);
     return day;
   }

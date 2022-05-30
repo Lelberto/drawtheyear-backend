@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
+import { ServerConfig } from '../config/server';
 import { ActionBuilder } from './actions/action.builder';
 
 
@@ -15,7 +16,7 @@ export class HateoasService {
   private readonly port: number;
 
   public constructor(config: ConfigService) {
-    this.port = config.get('PORT');
+    this.port = config.get<ServerConfig>('server').port;
   }
 
   /**
@@ -43,11 +44,17 @@ export class HateoasService {
   /**
    * Formats the port
    * 
-   * This methos will format the port, except if it is 80.
+   * This methos will format the port, except if it is 80 or 443.
    * 
    * @returns Formatted port
    */
   private formatPort(): string {
-    return this.port === 80 ? '' : `:${this.port}`;
+    switch (this.port) {
+      case 80:
+      case 443:
+        return '';
+      default:
+        return `:${this.port}`;
+    }
   }
 }

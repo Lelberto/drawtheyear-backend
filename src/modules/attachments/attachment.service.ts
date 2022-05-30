@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { Readable } from 'stream';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { Day } from '../days/day.entity';
-import { DayService } from '../days/day.service';
 import { AttachmentStorageAdapter } from './attachment-storage.adapter';
 import { UpdateAttachmentDto } from './attachment.dto';
 import { Attachment } from './attachment.entity';
@@ -16,12 +14,10 @@ import { AttachmentRepository } from './attachment.repository';
 export class AttachmentService {
 
   private readonly attachmentRepo: AttachmentRepository;
-  private readonly dayService: DayService;
   private readonly storageAdapter: AttachmentStorageAdapter;
 
-  public constructor(attachmentsRepo: AttachmentRepository, dayService: DayService, storageAdapter: AttachmentStorageAdapter) {
+  public constructor(attachmentsRepo: AttachmentRepository, storageAdapter: AttachmentStorageAdapter) {
     this.attachmentRepo = attachmentsRepo;
-    this.dayService = dayService;
     this.storageAdapter = storageAdapter;
   }
 
@@ -41,41 +37,10 @@ export class AttachmentService {
     const attachment = this.attachmentRepo.create({
       filename,
       mimetype: file.mimetype,
-      day: await this.dayService.findOne(dayId)
+      dayId
     });
     await this.attachmentRepo.save(attachment);
     return attachment;
-  }
-
-  /**
-   * Updates an attachment
-   * 
-   * @param id Attachment ID
-   * @param dto DTO
-   * @async
-   */
-  public async update(id: Attachment['id'], dto: UpdateAttachmentDto): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Attachment, id);
-    }
-    await this.attachmentRepo.update({ id }, dto);
-  }
-
-  /**
-   * Finds attachments
-   * 
-   * @param ids Day ID(s)
-   * @returns Days
-   * @async
-   */
-   public async find(...ids: Attachment['id'][]): Promise<Attachment[]> {
-     if (ids.length > 0) {
-      if (!await this.exists(...ids)) {
-        throw new EntityNotFoundError(Day, ids);
-      }
-      return await this.attachmentRepo.findByIds(ids);
-    }
-    return await this.attachmentRepo.find();
   }
 
   /**
@@ -86,6 +51,17 @@ export class AttachmentService {
    */
   public async findOne(id: Attachment['id']): Promise<Attachment> {
     return this.attachmentRepo.findOne({ id });
+  }
+
+  /**
+   * Updates an attachment
+   * 
+   * @param id Attachment ID
+   * @param dto DTO
+   * @async
+   */
+  public async update(id: Attachment['id'], dto: UpdateAttachmentDto): Promise<void> {
+    await this.attachmentRepo.update({ id }, dto);
   }
 
   /**
