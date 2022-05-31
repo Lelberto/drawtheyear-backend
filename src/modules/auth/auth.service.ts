@@ -49,16 +49,18 @@ export class AuthService {
   }
 
   /**
-   * Creates an user from a google profile
+   * Gets an user from a google profile
+   * 
+   * This method will create the user if he doesn't exist.
    * 
    * @param profile Google profile
-   * @returns Created user
+   * @returns User
    */
   public async getUserFromGoogle(profile: Profile) {
-    const { emails, displayName } = profile;
-    const user = await this.userService.findByGoogleId(profile.id);
+    const { id, emails, displayName } = profile;
+    const user = await this.userService.findByGoogleId(id);
     return user || await this.userService.create({
-      googleId: profile.id,
+      googleId: id,
       email: emails[0].value,
       username: await this.userService.generateUsername(displayName),
       name: displayName
