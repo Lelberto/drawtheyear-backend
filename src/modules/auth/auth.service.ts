@@ -13,12 +13,12 @@ import { UserService } from '../users/user.service';
 @Injectable()
 export class AuthService {
 
-  private readonly config: AuthConfig['jwt']['refreshToken'];
+  private readonly config: AuthConfig;
   private readonly userService: UserService;
   private readonly jwtService: JwtService;
 
   public constructor(configService: ConfigService, userService: UserService, jwtService: JwtService) {
-    this.config = configService.get<AuthConfig>('auth').jwt.refreshToken;
+    this.config = configService.get('auth');
     this.userService = userService;
     this.jwtService = jwtService;
   }
@@ -43,8 +43,8 @@ export class AuthService {
   public async generateRefreshToken(user: User) {
     const payload: RefreshTokenPayload = { sub: user.id, email: user.email };
     return this.jwtService.signAsync(payload, {
-      secret: this.config.secretKey,
-      expiresIn: this.config.expiration
+      secret: this.config.jwt.refreshToken.secretKey,
+      expiresIn: this.config.jwt.refreshToken.expiration
     });
   }
 
@@ -65,5 +65,19 @@ export class AuthService {
       username: await this.userService.generateUsername(displayName),
       name: displayName
     });
+  }
+
+  /**
+   * Gets the callback URL from a specified platform
+   * 
+   * A platform callback URL is not an OAuth2 callback URL. This is just the URL of the specified
+   * platform used by the `AuthController` to make redirections after user logged in with success.
+   * 
+   * @param platform DTY platform
+   * @returns Callback URL of the platform, or `null` if the platform is not supported
+   */
+  public getCallbackUrl(platform: string) {
+    const url = this.config.platformCallbackUrls[platform];
+    return url ? `${this.config.platformCallbackUrls[platform]}` : null;
   }
 }

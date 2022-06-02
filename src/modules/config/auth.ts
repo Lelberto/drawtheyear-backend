@@ -16,6 +16,10 @@ export type AuthConfig = {
     clientSecret: string;
     callbackUrl: string;
   };
+  platformCallbackUrls: {
+    web: string;
+    mobile: string;
+  };
 }
 
 export default (): { auth: AuthConfig } => ({
@@ -34,6 +38,10 @@ export default (): { auth: AuthConfig } => ({
       clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
       clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
       callbackUrl: process.env.AUTH_GOOGLE_CALLBACK_URL
+    },
+    platformCallbackUrls: {
+      web: process.env.AUTH_PLATFORM_CALLBACK_URL_WEB,
+      mobile: process.env.AUTH_PLATFORM_CALLBACK_URL_MOBILE
     }
   }
 });
