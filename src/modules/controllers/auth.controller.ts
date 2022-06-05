@@ -48,7 +48,6 @@ export class AuthController {
       access_token: await this.authService.generateAccessToken(req.user as User),
       refresh_token: await this.authService.generateRefreshToken(req.user as User)
     }
-    console.log('url : ', platformCallbackUrl, platform)
     return platformCallbackUrl
       ? res.redirect(`${platformCallbackUrl}?accessToken=${data.access_token}&refreshToken=${data.refresh_token}`)
       : { data };
@@ -58,6 +57,8 @@ export class AuthController {
   @UseGuards(AccessTokenAuthGuard)
   @Get('profile')
   public async getProfile(@Req() req: Request) {
-    return req.user;
+    return {
+      data: { user: req.user }
+    };
   }
 }
