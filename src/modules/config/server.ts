@@ -12,7 +12,7 @@ export type ServerConfig = {
 
 export default (): { server: ServerConfig } => ({
   server: {
-    port: parseInt(process.env.PORT, 10) || 3000,
+    port: parseInt(process.env.PORT, 10) || 8080,
     cors: {
       origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : false
     },
