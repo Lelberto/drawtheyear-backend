@@ -6,14 +6,14 @@ import { Action } from './action';
  */
 export class UserDaysAction extends Action {
 
-  private readonly userId: string;
+  private readonly username: string;
 
-  public constructor(userId: string) {
+  public constructor(username: string) {
     super('user-days', Method.GET);
-    this.userId = userId;
+    this.username = username;
   }
 
   public buildHref(): string {
-    return `/users/${this.userId}/days`;
+    return `/users/${this.username}/days`;
   }
 }

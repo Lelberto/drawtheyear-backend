@@ -25,16 +25,6 @@ export class User {
   public googleId: string;
 
   @ApiProperty({
-    description: 'User email',
-    format: 'email'
-  })
-  @Column({
-    type: 'varchar',
-    unique: true
-  })
-  public email: string;
-
-  @ApiProperty({
     description: 'Username',
     pattern: '^[a-zA-Z0-9]+$',
     minLength: 3,
@@ -46,6 +36,16 @@ export class User {
     length: 24
   })
   public username: string;
+
+  @ApiProperty({
+    description: 'User email',
+    format: 'email'
+  })
+  @Column({
+    type: 'varchar',
+    unique: true
+  })
+  public email: string;
 
   @ApiProperty({
     description: 'User name',

@@ -7,10 +7,11 @@ import { UserDaysAction } from '../hateoas/actions/user-days.action';
 import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
-import { IdToUserPipe } from '../users/id-to-user.pipe';
 import { UpdateUserDto } from '../users/user.dto';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
+import { UsernameToIdPipe } from '../users/username-to-id.pipe';
+import { UsernameToUserPipe } from '../users/username-to-user.pipe';
 
 /**
  * User controller
@@ -37,11 +38,11 @@ export class UserController {
     };
   }
 
-  @Get(':id')
-  public findById(@Req() req: Request, @Param('id', IdToUserPipe) user: User) {
+  @Get(':username')
+  public findById(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User) {
     const links = this.hateoas.createActionBuilder(req)
-      .add(new UserEmotionsAction(user.id))
-      .add(new UserDaysAction(user.id))
+      .add(new UserEmotionsAction(user.username))
+      .add(new UserDaysAction(user.username))
       .build();
     return {
       data: { user },
@@ -49,17 +50,17 @@ export class UserController {
     };
   }
 
-  @Patch(':id')
-  public async update(@Req() req: Request, @Param('id') id: string, @Body() body: UpdateUserDto) {
-    await this.userService.update(id, body);
+  @Patch(':username')
+  public async update(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() body: UpdateUserDto) {
+    await this.userService.update(user.id, body);
     const links = this.hateoas.createActionBuilder(req)
-      .add(new UserSelfAction(id))
+      .add(new UserSelfAction(user.username))
       .build();
     return { links };
   }
 
-  @Delete(':id')
-  public async delete(@Param('id') id: string) {
+  @Delete(':username')
+  public async delete(@Param('username', UsernameToIdPipe) id: string) {
     await this.userService.delete(id);
   }
 }

@@ -6,16 +6,16 @@ import { Action } from './action';
  */
 export class DaySelfAction extends Action {
 
-  private readonly userId: string;
+  private readonly username: string;
   private readonly dayDate: string;
 
-  public constructor(userId: string, dayDate: string) {
+  public constructor(username: string, dayDate: string) {
     super('day-self', Method.GET);
-    this.userId = userId;
+    this.username = username;
     this.dayDate = dayDate;
   }
 
   public buildHref(): string {
-    return `/users/${this.userId}/days/${this.dayDate}`;
+    return `/users/${this.username}/days/${this.dayDate}`;
   }
 }

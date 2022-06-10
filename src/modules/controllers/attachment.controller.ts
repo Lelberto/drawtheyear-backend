@@ -11,6 +11,7 @@ import { DayAttachmentsAction } from '../hateoas/actions/day-attachments.action'
 import { DaySelfAction } from '../hateoas/actions/day-self.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
+import { UserService } from '../users/user.service';
 
 /**
  * Attachment controller
@@ -23,11 +24,13 @@ import { HateoasService } from '../hateoas/hateoas.service';
 export class AttachmentController {
 
   private readonly attachmentService: AttachmentService;
+  private readonly userService: UserService;
   private readonly dayService: DayService;
   private readonly hateoas: HateoasService;
 
-  public constructor(attachmentsService: AttachmentService, dayService: DayService, hateoas: HateoasService) {
+  public constructor(attachmentsService: AttachmentService, userService: UserService, dayService: DayService, hateoas: HateoasService) {
     this.attachmentService = attachmentsService;
+    this.userService = userService;
     this.dayService = dayService;
     this.hateoas = hateoas;
   }
@@ -35,10 +38,11 @@ export class AttachmentController {
   @Get(':id')
   public async findOne(@Req() req: Request, @Param('id', IdToAttachmentPipe) attachment: Attachment) {
     const day = await this.dayService.findOne(attachment.dayId);
+    const user = await this.userService.findById(day.userId);
     const links = this.hateoas.createActionBuilder(req)
       .add(new DayAttachmentsAction(day.formatedDate))
-      .add(new DaySelfAction(day.userId, day.formatedDate))
-      .add(new UserSelfAction(day.userId))
+      .add(new DaySelfAction(user.username, day.formatedDate))
+      .add(new UserSelfAction(user.username))
       .build();
     return {
       data: { attachment },
@@ -59,11 +63,12 @@ export class AttachmentController {
   public async update(@Req() req: Request, @Param('id', IdToAttachmentPipe) attachment: Attachment, @Body() dto: UpdateAttachmentDto) {
     await this.attachmentService.update(attachment.id, dto);
     const day = await this.dayService.findOne(attachment.dayId);
+    const user = await this.userService.findById(day.userId);
     const links = this.hateoas.createActionBuilder(req)
       .add(new AttachmentSelfAction(attachment.id))
       .add(new DayAttachmentsAction(day.formatedDate))
-      .add(new DaySelfAction(day.userId, day.formatedDate))
-      .add(new UserSelfAction(day.userId))
+      .add(new DaySelfAction(user.username, day.formatedDate))
+      .add(new UserSelfAction(user.username))
       .build();
     return { links };
   }

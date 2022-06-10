@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { IsEmail, IsString, Length, Matches } from 'class-validator';
 
 /**
@@ -37,4 +37,4 @@ export class CreateUserDto {
 /**
  * DTO for user update
  */
-export class UpdateUserDto extends OmitType(CreateUserDto, []) {}
+export class UpdateUserDto extends PartialType(OmitType(CreateUserDto, ['googleId'])) {}
