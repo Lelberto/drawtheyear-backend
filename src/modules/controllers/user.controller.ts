@@ -54,7 +54,7 @@ export class UserController {
   public async update(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() body: UpdateUserDto) {
     await this.userService.update(user.id, body);
     const links = this.hateoas.createActionBuilder(req)
-      .add(new UserSelfAction(user.username))
+      .add(new UserSelfAction(body.username || user.username))
       .build();
     return { links };
   }
