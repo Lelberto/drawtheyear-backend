@@ -10,14 +10,15 @@ import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
+import { UsernameToUserPipe } from '../users/username-to-user.pipe';
 
 /**
  * User emotion controller
  * 
- * Path : `/users/:userId/emotions`
+ * Path : `/users/:username/emotions`
  */
 @ApiTags('emotions')
-@Controller('users/:userId/emotions')
+@Controller('users/:username/emotions')
 @UsePipes(ValidationPipe)
 export class UserEmotionController {
 
@@ -30,23 +31,23 @@ export class UserEmotionController {
   }
 
   @Get()
-  public async find(@Req() req: Request, @Param('userId') userId: User['id'], @Query(PaginationPipe) pagination: PaginationDto) {
+  public async find(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Query(PaginationPipe) pagination: PaginationDto) {
     const links = this.hateoas.createActionBuilder(req)
-      .add(new UserSelfAction(userId))
+      .add(new UserSelfAction(user.username))
       .build();
     return {
-      data: { emotions: await this.emotionService.findByUser(userId, pagination) },
+      data: { emotions: await this.emotionService.findByUser(user.id, pagination) },
       links
     };
   }
 
   @Post()
-  public async create(@Req() req: Request, @Param('userId') userId: User['id'], @Body() dto: CreateEmotionDto) {
-    const emotion = await this.emotionService.create(userId, dto);
+  public async create(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() dto: CreateEmotionDto) {
+    const emotion = await this.emotionService.create(user.id, dto);
     const links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
-      .add(new UserEmotionsAction(userId))
-      .add(new UserSelfAction(userId))
+      .add(new UserEmotionsAction(user.username))
+      .add(new UserSelfAction(user.username))
       .build();
     return {
       data: { emotion },

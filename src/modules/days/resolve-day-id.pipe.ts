@@ -1,25 +1,27 @@
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 import * as moment from 'moment';
-import { User } from '../users/user.entity';
+import { UserService } from '../users/user.service';
 import { Day } from './day.entity';
 import { DayService } from './day.service';
 
 /**
  * Resolve day ID pipe
  * 
- * This pipe will resolves the day ID from the user ID and the day date.
+ * This pipe will resolves the day ID from the username and the day date.
  */
 @Injectable()
-export class ResolveDayIdPipe implements PipeTransform<{ userId: User['id'], date: string }, Promise<Day['id']>> {
+export class ResolveDayIdPipe implements PipeTransform<{ username: string, date: string }, Promise<Day['id']>> {
 
+  private readonly userService: UserService;
   private readonly dayService: DayService;
 
-  public constructor(dayService: DayService) {
+  public constructor(userService: UserService, dayService: DayService) {
+    this.userService = userService;
     this.dayService = dayService;
   }
 
-  public async transform(value: { userId: User['id'], date: string }, metadata: ArgumentMetadata): Promise<Day['id']> {
-    return await this.dayService.resolveId(value.userId, this.transformDate(value.date));
+  public async transform(value: { username: string, date: string }): Promise<Day['id']> {
+    return await this.dayService.resolveId(await this.userService.resolveId(value.username), this.transformDate(value.date));
   }
 
   /**

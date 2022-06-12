@@ -11,14 +11,16 @@ import { DayAttachmentsAction } from '../hateoas/actions/day-attachments.action'
 import { DaySelfAction } from '../hateoas/actions/day-self.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
+import { User } from '../users/user.entity';
+import { UsernameToUserPipe } from '../users/username-to-user.pipe';
 
 /**
  * User day attachment controller
  * 
- * Path : `/users/:userId/days/:date/attachments`
+ * Path : `/users/:username/days/:date/attachments`
  */
 @ApiTags('attachments')
-@Controller('users/:userId/days/:date/attachments')
+@Controller('users/:username/days/:date/attachments')
 @UsePipes(ValidationPipe)
 export class UserDayAttachmentController {
   
@@ -32,13 +34,13 @@ export class UserDayAttachmentController {
 
   @Post()
   @UseInterceptors(FileInterceptor('attachment'))
-  public async uploadAttachment(@Req() req: Request, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @UploadedFile() file: Express.Multer.File) {
+  public async uploadAttachment(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @UploadedFile() file: Express.Multer.File) {
     const attachment = await this.attachmentService.create(day.id, file);
     const links = this.hateoas.createActionBuilder(req)
       .add(new AttachmentSelfAction(attachment.id))
       .add(new DayAttachmentsAction(day.formatedDate))
-      .add(new DaySelfAction(day.userId, day.formatedDate))
-      .add(new UserSelfAction(day.userId))
+      .add(new DaySelfAction(user.username, day.formatedDate))
+      .add(new UserSelfAction(user.username))
       .build();
     return {
       data: { attachment },

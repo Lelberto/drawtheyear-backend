@@ -8,6 +8,17 @@ import { User } from './user.entity';
 export class UserRepository extends Repository<User> {
 
   /**
+   * Resolves the user ID an username
+   * 
+   * @param username Username
+   * @returns Resolved user ID
+   * @async
+   */
+   public async resolveId(username: User['username']): Promise<User['id']> {
+    return (await this.findOne({ username }, { select: { id: true } })).id;
+  }
+
+  /**
    * Checks if user(s) exists
    * 
    * @param ids User IDs

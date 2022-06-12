@@ -18,6 +18,17 @@ export class UserService {
   }
 
   /**
+   * Resolves the user ID from an username
+   * 
+   * @param username Username
+   * @returns Resolved user ID
+   * @async
+   */
+  public async resolveId(username: string): Promise<User['id']> {
+    return await this.userRepo.resolveId(username);
+  }
+
+  /**
    * Creates a new user
    * 
    * @param dto DTO
@@ -66,6 +77,19 @@ export class UserService {
     const user = await this.userRepo.findOne({ googleId });
     return user;
   }
+  
+  /**
+   * Finds an user by his username
+   * 
+   * @param username Username
+   * @returns User
+   * @throws NotFoundException If the user is not found
+   * @async
+   */
+  public async findByUsername(username: string): Promise<User> {
+    const user = await this.userRepo.findOne({ username });
+    return user;
+  }
 
   /**
    * Finds an user by email
@@ -112,6 +136,7 @@ export class UserService {
     return await this.userRepo.exists(...ids);
   }
 
+  // TODO Update ID generation to avoid infinite loops if all tags have been reached
   /**
    * Generates an unique username from a given base
    * 
