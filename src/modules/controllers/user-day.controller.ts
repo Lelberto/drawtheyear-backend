@@ -10,6 +10,7 @@ import { IdToDayPipe } from '../days/id-to-day.pipe';
 import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
+import { DayEmotionsAction } from '../hateoas/actions/day-emotions.action';
 import { DaySelfAction } from '../hateoas/actions/day-self.action';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
 import { UserDaysAction } from '../hateoas/actions/user-days.action';
@@ -45,6 +46,7 @@ export class UserDayController {
         days: (await this.dayService.findByUser(user.id, query)).map(day => {
           day._links = this.hateoas.createActionBuilder(req)
             .add(new UserSelfAction(user.username))
+            .add(new DayEmotionsAction(user.username, day.formatedDate))
             .build();
           return day;
         })
