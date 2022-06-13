@@ -1,13 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../days/day.entity';
+import { Hateoas } from '../hateoas/hateoas.interface';
+import { Link } from '../hateoas/hateoas.types';
 import { User } from '../users/user.entity';
 
 /**
  * Emotion entity
  */
 @Entity()
-export class Emotion {
+export class Emotion implements Hateoas {
 
   @ApiProperty({
     description: 'Emotion ID'
@@ -52,4 +54,6 @@ export class Emotion {
   })
   @ManyToMany(() => Day, day => day.emotions)
   public days?: Day[];
+
+  public _links: Link[] = [];
 }

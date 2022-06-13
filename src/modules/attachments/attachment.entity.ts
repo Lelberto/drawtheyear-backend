@@ -2,12 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../days/day.entity';
+import { Hateoas } from '../hateoas/hateoas.interface';
+import { Link } from '../hateoas/hateoas.types';
 
 /**
  * Attachment entity
  */
 @Entity()
-export class Attachment {
+export class Attachment implements Hateoas {
 
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
@@ -43,6 +45,8 @@ export class Attachment {
 
   @ManyToOne(() => Day, day => day.attachments)
   public day?: Day;
+
+  public _links: Link[] = [];
 
   /** Gets the filename extension */
   public get extension(): string {

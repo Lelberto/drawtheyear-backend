@@ -4,13 +4,15 @@ import * as moment from 'moment';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Attachment } from '../attachments/attachment.entity';
 import { Emotion } from '../emotions/emotion.entity';
+import { Hateoas } from '../hateoas/hateoas.interface';
+import { Link } from '../hateoas/hateoas.types';
 import { User } from '../users/user.entity';
 
 /**
  * Day entity
  */
 @Entity()
-export class Day {
+export class Day implements Hateoas {
 
   @ApiProperty({
     description: 'Day ID'
@@ -59,6 +61,8 @@ export class Day {
 
   @OneToMany(() => Attachment, attachment => attachment.day)
   public attachments?: Attachment[];
+
+  public _links: Link[] = [];
 
   /** Returns day date in format `YYYY-MM-DD` */
   public get formatedDate(): string {
