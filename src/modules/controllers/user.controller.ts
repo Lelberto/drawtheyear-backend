@@ -36,42 +36,48 @@ export class UserController {
   @UseGuards(AccessTokenAuthGuard)
   public async profile(@Req() req: Request) {
     const user = req.user as User;
-    const links = this.hateoas.createActionBuilder(req)
+    user._links = this.hateoas.createActionBuilder(req)
       .add(new UserEmotionsAction(user.username))
       .add(new UserDaysAction(user.username))
       .build();
     return {
-      data: { user: req.user },
-      links
+      data: { user: req.user }
     };
   }
 
   @Get()
-  public async find(@Query(PaginationPipe) pagination: PaginationDto) {
+  public async find(@Req() req: Request, @Query(PaginationPipe) pagination: PaginationDto) {
     return {
-      data: { users: await this.userService.find(pagination) }
+      data: {
+        users: (await this.userService.find(pagination)).map(user => {
+          user._links = this.hateoas.createActionBuilder(req)
+            .add(new UserEmotionsAction(user.username))
+            .add(new UserDaysAction(user.username))
+            .build();
+          return user;
+        })
+      }
     };
   }
 
   @Get(':username')
   public findById(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User) {
-    const links = this.hateoas.createActionBuilder(req)
+    user._links = this.hateoas.createActionBuilder(req)
       .add(new UserEmotionsAction(user.username))
       .add(new UserDaysAction(user.username))
       .build();
     return {
-      data: { user },
-      links
+      data: { user }
     };
   }
 
   @Patch(':username')
   public async update(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() body: UpdateUserDto) {
     await this.userService.update(user.id, body);
-    const links = this.hateoas.createActionBuilder(req)
+    user._links = this.hateoas.createActionBuilder(req)
       .add(new UserSelfAction(body.username || user.username))
       .build();
-    return { links };
+    return { user };
   }
 
   @Delete(':username')

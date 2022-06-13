@@ -30,26 +30,25 @@ export class EmotionController {
 
   @Get(':id')
   public async findById(@Req() req: Request, @Param('id', IdToEmotionPipe) emotion: Emotion) {
-    const links = this.hateoas.createActionBuilder(req)
+    emotion._links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
       .add(new UserEmotionsAction(emotion.userId))
       .add(new UserSelfAction(emotion.userId))
       .build();
     return {
-      data: { emotion },
-      links
+      data: { emotion }
     };
   }
 
   @Patch(':id')
   public async update(@Req() req: Request, @Param('id', IdToEmotionPipe) emotion: Emotion, @Body() body: UpdateEmotionDto = {}) {
     await this.emotionService.update(emotion.id, body);
-    const links = this.hateoas.createActionBuilder(req)
+    emotion._links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
       .add(new UserEmotionsAction(emotion.userId))
       .add(new UserSelfAction(emotion.userId))
       .build();
-    return { links };
+    return { emotion };
   }
 
   @Delete(':id')

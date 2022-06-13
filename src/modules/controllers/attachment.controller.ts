@@ -39,14 +39,13 @@ export class AttachmentController {
   public async findOne(@Req() req: Request, @Param('id', IdToAttachmentPipe) attachment: Attachment) {
     const day = await this.dayService.findOne(attachment.dayId);
     const user = await this.userService.findById(day.userId);
-    const links = this.hateoas.createActionBuilder(req)
+    attachment._links = this.hateoas.createActionBuilder(req)
       .add(new DayAttachmentsAction(day.formatedDate))
       .add(new DaySelfAction(user.username, day.formatedDate))
       .add(new UserSelfAction(user.username))
       .build();
     return {
-      data: { attachment },
-      links
+      data: { attachment }
     };
   }
 
@@ -64,12 +63,12 @@ export class AttachmentController {
     await this.attachmentService.update(attachment.id, dto);
     const day = await this.dayService.findOne(attachment.dayId);
     const user = await this.userService.findById(day.userId);
-    const links = this.hateoas.createActionBuilder(req)
+    attachment._links = this.hateoas.createActionBuilder(req)
       .add(new AttachmentSelfAction(attachment.id))
       .add(new DayAttachmentsAction(day.formatedDate))
       .add(new DaySelfAction(user.username, day.formatedDate))
       .add(new UserSelfAction(user.username))
       .build();
-    return { links };
+    return { attachment };
   }
 }

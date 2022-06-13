@@ -6,7 +6,6 @@ import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { CreateEmotionDto } from '../emotions/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
-import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { User } from '../users/user.entity';
@@ -32,26 +31,29 @@ export class UserEmotionController {
 
   @Get()
   public async find(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Query(PaginationPipe) pagination: PaginationDto) {
-    const links = this.hateoas.createActionBuilder(req)
+    user._links = this.hateoas.createActionBuilder(req)
       .add(new UserSelfAction(user.username))
       .build();
     return {
-      data: { emotions: await this.emotionService.findByUser(user.id, pagination) },
-      links
+      data: {
+        emotions: (await this.emotionService.findByUser(user.id, pagination)).map(emotion => {
+          emotion._links = this.hateoas.createActionBuilder(req)
+            .add(new EmotionSelfAction(emotion.id))
+            .build();
+          return emotion;
+        })
+      }
     };
   }
 
   @Post()
   public async create(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() dto: CreateEmotionDto) {
     const emotion = await this.emotionService.create(user.id, dto);
-    const links = this.hateoas.createActionBuilder(req)
+    emotion._links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
-      .add(new UserEmotionsAction(user.username))
-      .add(new UserSelfAction(user.username))
       .build();
     return {
-      data: { emotion },
-      links
+      data: { emotion }
     };
   }
 }

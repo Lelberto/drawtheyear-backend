@@ -36,15 +36,14 @@ export class UserDayAttachmentController {
   @UseInterceptors(FileInterceptor('attachment'))
   public async uploadAttachment(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @UploadedFile() file: Express.Multer.File) {
     const attachment = await this.attachmentService.create(day.id, file);
-    const links = this.hateoas.createActionBuilder(req)
+    attachment._links = this.hateoas.createActionBuilder(req)
       .add(new AttachmentSelfAction(attachment.id))
       .add(new DayAttachmentsAction(day.formatedDate))
       .add(new DaySelfAction(user.username, day.formatedDate))
       .add(new UserSelfAction(user.username))
       .build();
     return {
-      data: { attachment },
-      links
+      data: { attachment }
     };
   }
 }
