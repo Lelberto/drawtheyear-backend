@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { AccessTokenAuthGuard } from '../auth/access-token-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { GoogleAuthGuard } from '../auth/google-auth.guard';
 import { RefreshTokenAuthGuard } from '../auth/refresh-token-auth.guard';
@@ -51,14 +50,5 @@ export class AuthController {
     return platformCallbackUrl
       ? res.redirect(`${platformCallbackUrl}?accessToken=${data.access_token}&refreshToken=${data.refresh_token}`)
       : { data };
-  }
-
-  // TODO Remove this endpoint
-  @UseGuards(AccessTokenAuthGuard)
-  @Get('profile')
-  public async getProfile(@Req() req: Request) {
-    return {
-      data: { user: req.user }
-    };
   }
 }
