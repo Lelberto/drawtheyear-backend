@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Attachment } from '../attachments/attachment.entity';
 import { Emotion } from '../emotions/emotion.entity';

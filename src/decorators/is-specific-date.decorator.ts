@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
-import * as moment from 'moment';
+import moment from 'moment';
 
 /**
  * Decorator for specific date checking (YYYY-MM-DD)
