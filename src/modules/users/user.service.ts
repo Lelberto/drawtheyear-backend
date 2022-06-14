@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';

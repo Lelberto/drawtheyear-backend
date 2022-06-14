@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as morgan from 'morgan';
+import morgan from 'morgan';
 import { ConfigModule } from './modules/config/config.module';
 import { NodeEnv } from './modules/config/global';
 import { LoggingConfig } from './modules/config/logging';

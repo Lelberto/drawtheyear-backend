@@ -1,5 +1,5 @@
 import { ArgumentMetadata, Injectable, InternalServerErrorException, PipeTransform } from '@nestjs/common';
-import * as moment from 'moment';
+import moment from 'moment';
 import { DayQueryDto } from './day.dto';
 
 /**

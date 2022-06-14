@@ -2,6 +2,7 @@ import { ClassSerializerInterceptor, VersioningType, VERSION_NEUTRAL } from '@ne
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
 import { ServerConfig } from './modules/config/server';
@@ -23,6 +24,7 @@ async function bootstrap() {
   app.enableCors({
     origin: serverConfig.cors.origin
   });
+  app.use(helmet());
   app.useLogger(logger);
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector))

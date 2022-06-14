@@ -2,8 +2,8 @@ import { ConsoleLogger, Injectable, LoggerService, LogLevel } from '@nestjs/comm
 import { ConfigService } from '@nestjs/config';
 import { LoggingConfig } from 'src/modules/config/logging';
 import { appendFile, mkdir, stat } from 'fs/promises';
-import * as moment from 'moment';
-import * as path from 'path';
+import moment from 'moment';
+import path from 'path';
 
 /**
  * Application logger

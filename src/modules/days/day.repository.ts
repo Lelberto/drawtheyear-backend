@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import { EntityRepository, FindOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Day } from './day.entity';
