@@ -11,7 +11,6 @@ import { HateoasService } from '../hateoas/hateoas.service';
 import { UpdateUserDto } from '../users/user.dto';
 import { User } from '../users/user.entity';
 import { UserService } from '../users/user.service';
-import { UsernameToIdPipe } from '../users/username-to-id.pipe';
 import { UsernameToUserPipe } from '../users/username-to-user.pipe';
 
 /**
@@ -73,7 +72,7 @@ export class UserController {
 
   @Patch(':username')
   public async update(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() body: UpdateUserDto) {
-    await this.userService.update(user.id, body);
+    await this.userService.update(user, body);
     user._links = this.hateoas.createActionBuilder(req)
       .add(new UserSelfAction(body.username || user.username))
       .build();
@@ -81,7 +80,7 @@ export class UserController {
   }
 
   @Delete(':username')
-  public async delete(@Param('username', UsernameToIdPipe) id: string) {
-    await this.userService.delete(id);
+  public async delete(@Param('username', UsernameToUserPipe) user: User) {
+    await this.userService.delete(user);
   }
 }

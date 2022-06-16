@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
+import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
@@ -22,10 +23,15 @@ export class UserService {
    * 
    * @param username Username
    * @returns Resolved user ID
+   * @throws EntityNotFoundException If the user is not found
    * @async
    */
   public async resolveId(username: string): Promise<User['id']> {
-    return await this.userRepo.resolveId(username);
+    const id = await this.userRepo.resolveId(username);
+    if (!id) {
+      throw new EntityNotFoundException(User);
+    }
+    return id;
   }
 
   /**
@@ -57,11 +63,14 @@ export class UserService {
    * 
    * @param id User ID
    * @returns User
-   * @throws NotFoundException If the user is not found
+   * @throws EntityNotFoundException If the user is not found
    * @async
    */
   public async findById(id: User['id']): Promise<User> {
     const user = await this.userRepo.findOne({ id });
+    if (!user) {
+      throw new EntityNotFoundException(User);
+    }
     return user;
   }
 
@@ -70,11 +79,14 @@ export class UserService {
    * 
    * @param googleId Google user ID
    * @returns User
-   * @throws NotFoundException If the user is not found
+   * @throws EntityNotFoundException If the user is not found
    * @async
    */
   public async findByGoogleId(googleId: User['googleId']): Promise<User> {
     const user = await this.userRepo.findOne({ googleId });
+    if (!user) {
+      throw new EntityNotFoundException(User);
+    }
     return user;
   }
   
@@ -83,11 +95,14 @@ export class UserService {
    * 
    * @param username Username
    * @returns User
-   * @throws NotFoundException If the user is not found
+   * @throws EntityNotFoundException If the user is not found
    * @async
    */
   public async findByUsername(username: string): Promise<User> {
     const user = await this.userRepo.findOne({ username });
+    if (!user) {
+      throw new EntityNotFoundException(User);
+    }
     return user;
   }
 
@@ -96,33 +111,36 @@ export class UserService {
    * 
    * @param email User email
    * @returns User
-   * @throws NotFoundException If the user is not found
+   * @throws EntityNotFoundException If the user is not found
    * @async
    */
   public async findByEmail(email: User['email']): Promise<User> {
     const user = await this.userRepo.findOne({ email });
+    if (!user) {
+      throw new EntityNotFoundException(User);
+    }
     return user;
   }
 
   /**
    * Updates an user
    * 
-   * @param id User ID
+   * @param user User
    * @param dto DTO
    * @async
    */
-  public async update(id: User['id'], dto: UpdateUserDto): Promise<void> {
-    await this.userRepo.update({ id }, dto);
+  public async update(user: User, dto: UpdateUserDto): Promise<void> {
+    await this.userRepo.update({ id: user.id }, dto);
   }
 
   /**
    * Deletes an user
    * 
-   * @param id User ID
+   * @param user User
    * @async
    */
-  public async delete(id: User['id']): Promise<void> {
-    await this.userRepo.delete({ id });
+  public async delete(user: User): Promise<void> {
+    await this.userRepo.delete({ id: user.id });
   }
 
   /**

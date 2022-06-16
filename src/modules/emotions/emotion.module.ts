@@ -9,7 +9,7 @@ import { EmotionService } from './emotion.service';
  */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Emotion, EmotionRepository]),
+    TypeOrmModule.forFeature([Emotion, EmotionRepository])
   ],
   providers: [EmotionService],
   exports: [EmotionService]

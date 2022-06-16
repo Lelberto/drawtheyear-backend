@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { remove } from 'lodash';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
@@ -27,25 +27,30 @@ export class DayService {
   /**
    * Resolves the day ID from an user ID and a day date
    * 
-   * @param userId User ID
+   * @param user User
    * @param date Day date
    * @returns Resolved day ID
+   * @throws EntityNotFoundException If the day is not found
    * @async
    */
-  public async resolveId(userId: User['id'], date: Day['date']): Promise<Day['id']> {
-    return this.dayRepo.resolveId(userId, date);
+  public async resolveId(user: User, date: Day['date']): Promise<Day['id']> {
+    const id = await this.dayRepo.resolveId(user.id, date);
+    if (!id) {
+      throw new EntityNotFoundException(Day);
+    }
+    return id;
   }
 
   /**
    * Creates a new day
    * 
-   * @param userId User ID
+   * @param user User
    * @param dto DTO
    * @returns Created day
    * @async
    */
-  public async create(userId: User['id'], dto: CreateDayDto): Promise<Day> {
-    const day = this.dayRepo.create({ ...dto, userId });
+  public async create(user: User, dto: CreateDayDto): Promise<Day> {
+    const day = this.dayRepo.create({ ...dto, userId: user.id });
     await this.dayRepo.save(day);
     return day;
   }
@@ -66,96 +71,84 @@ export class DayService {
    * 
    * @param id Day ID
    * @returns Day
-   * @throws NotFoundException If the day is not found
+   * @throws EntityNotFoundException If the day is not found
    * @async
    */
   public async findOne(id: Day['id']): Promise<Day> {
-    return await this.dayRepo.findOne({ id });
+    const day = await this.dayRepo.findOne({ id });
+    if (!day) {
+      throw new EntityNotFoundException(Day);
+    }
+    return day;
   }
 
   /**
    * Finds user's days
    * 
-   * @param userId User ID
+   * @param user User
    * @param query Query
    * @returns User's days
    * @async
    */
-  public async findByUser(userId: User['id'], query: DaysQueryDto): Promise<Day[]> {
-    return await this.dayRepo.findInterval(query.from, query.to, { userId, skip: query.offset, take: query.limit });
+  public async findByUser(user: User, query: DaysQueryDto): Promise<Day[]> {
+    return await this.dayRepo.findInterval(query.from, query.to, { userId: user.id, skip: query.offset, take: query.limit });
   }
 
   /**
    * Updates a day
    * 
-   * @param id Day ID
+   * @param day Day
    * @param dto DTO
-   * @throws NotFoundException If the user or day are not found
    * @async
    */
-  public async update(id: Day['id'], data: QueryDeepPartialEntity<Day>): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Day, id);
-    }
-    await this.dayRepo.update({ id }, data);
+  public async update(day: Day, data: QueryDeepPartialEntity<Day>): Promise<void> {
+    await this.dayRepo.update({ id: day.id }, data);
   }
 
   /**
    * Adds an emotion to a day
    * 
-   * @param id Day ID
-   * @param emotionId Emotion ID
-   * @throws NotFoundException If the day or emotion are not found
+   * @param day Day
+   * @param emotion Emotion
+   * @throws BadRequestException If the emotion is already included to the day
    * @async
    */
-  public async addEmotion(id: Day['id'], emotionId: Emotion['id']): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Day, id);
+  public async addEmotion(day: Day, emotion: Emotion): Promise<void> {
+    const emotions = await this.emotionService.findByDay(day);
+    if (emotions.some(includedEmotion => includedEmotion.id === emotion.id)) {
+      throw new BadRequestException('Emotion is already included to the day');
     }
-    const emotions = await this.emotionService.findByDay(id);
-    if (!emotions.some(emotion => emotion.id === emotionId)) {
-      const emotion = await this.emotionService.findOne(emotionId);
-      emotions.push(emotion);
-      const updatedDay = await this.dayRepo.preload({ id, emotions });
-      await this.dayRepo.save(updatedDay);
-    }
+    emotions.push(emotion);
+    const updatedDay = await this.dayRepo.preload({ id: day.id, emotions });
+    await this.dayRepo.save(updatedDay);
   }
 
   /**
    * Removes an emotion from a day
    * 
-   * @param id Day ID
-   * @param emotionId Emotion ID
-   * @throws NotFoundException If the day or emotion are not found
+   * @param day Day
+   * @param emotion Emotion
+   * @throws BadRequestException If the emotion is not included to the day
    * @async
    */
-  public async removeEmotion(id: Day['id'], emotionId: Emotion['id']): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Day, id);
+  public async removeEmotion(day: Day, emotion: Emotion): Promise<void> {
+    const emotions = await this.emotionService.findByDay(day);
+    if (!emotions.some(includedEmotion => includedEmotion.id === emotion.id)) {
+      throw new BadRequestException('Emotion is not included to the day');
     }
-    if (!await this.emotionService.exists(emotionId)) {
-      throw new EntityNotFoundError(Emotion, emotionId);
-    }
-    const emotions = await this.emotionService.findByDay(id);
-    if (emotions.some(emotion => emotion.id === emotionId)) {
-      remove(emotions, emotion => emotion.id === emotionId);
-      const updatedDay = await this.dayRepo.preload({ id, emotions });
-      await this.dayRepo.save(updatedDay);
-    }
+    remove(emotions, includedEmotion => includedEmotion.id === emotion.id);
+    const updatedDay = await this.dayRepo.preload({ id: day.id, emotions });
+    await this.dayRepo.save(updatedDay);
   }
 
   /**
    * Deletes a day
    * 
-   * @param id Day ID
-   * @throws NotFoundException If the day is not found
+   * @param day Day
    * @async
    */
-  public async delete(id: Day['id']): Promise<void> {
-    if (!await this.exists(id)) {
-      throw new EntityNotFoundError(Day, id);
-    }
-    await this.dayRepo.delete({ id });
+  public async delete(day: Day): Promise<void> {
+    await this.dayRepo.delete({ id: day.id });
   }
 
   /**

@@ -42,7 +42,7 @@ export class EmotionController {
 
   @Patch(':id')
   public async update(@Req() req: Request, @Param('id', IdToEmotionPipe) emotion: Emotion, @Body() body: UpdateEmotionDto = {}) {
-    await this.emotionService.update(emotion.id, body);
+    await this.emotionService.update(emotion, body);
     emotion._links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
       .add(new UserEmotionsAction(emotion.userId))
@@ -53,7 +53,7 @@ export class EmotionController {
 
   @Delete(':id')
   @HttpCode(204)
-  public async delete(@Param('id') id: string) {
-    await this.emotionService.delete(id);
+  public async delete(@Param('id', IdToEmotionPipe) emotion: Emotion) {
+    await this.emotionService.delete(emotion);
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { Day } from '../days/day.entity';
 import { User } from '../users/user.entity';
@@ -21,13 +22,13 @@ export class EmotionService {
   /**
    * Creates a new emotion
    * 
-   * @param userId User ID
+   * @param user User
    * @param dto DTO
    * @returns Created emotion
    * @async
    */
-  public async create(userId: User['id'], dto: CreateEmotionDto): Promise<Emotion> {
-    const emotion = this.emotionRepo.create({ ...dto, userId });
+  public async create(user: User, dto: CreateEmotionDto): Promise<Emotion> {
+    const emotion = this.emotionRepo.create({ ...dto, userId: user.id });
     await this.emotionRepo.save(emotion);
     return emotion;
   }
@@ -48,54 +49,58 @@ export class EmotionService {
    * 
    * @param id Emotion ID
    * @returns Emotion
-   * @throws NotFoundException If the emotion is not found
+   * @throws EntityNotFoundException If the emotion is not found
    * @async
    */
   public async findOne(id: Emotion['id']): Promise<Emotion> {
-    return await this.emotionRepo.findOne({ id });
+    const emotion = await this.emotionRepo.findOne({ id });
+    if (!emotion) {
+      throw new EntityNotFoundException(Emotion);
+    }
+    return emotion;
   }
 
   /**
    * Finds user's emotions
    * 
-   * @param userId User ID
+   * @param user User
    * @returns User's emotions
    * @async
    */
-  public async findByUser(userId: User['id'], pagination: PaginationDto): Promise<Emotion[]> {
-    return await this.emotionRepo.findByUser(userId, { skip: pagination.offset, take: pagination.limit });
+  public async findByUser(user: User, pagination: PaginationDto): Promise<Emotion[]> {
+    return await this.emotionRepo.findByUser(user.id, { skip: pagination.offset, take: pagination.limit });
   }
 
   /**
    * Finds day's emotions
    * 
-   * @param dayId Day ID
+   * @param day Day
    * @returns Day's emotions
    * @async
    */
-  public async findByDay(dayId: Day['id']): Promise<Emotion[]> {
-    return await this.emotionRepo.findByDay(dayId);
+  public async findByDay(day: Day): Promise<Emotion[]> {
+    return await this.emotionRepo.findByDay(day.id);
   }
 
   /**
    * Updates an emotion
    * 
-   * @param id Emotion ID
+   * @param emotion Emotion
    * @param dto DTO
    * @async
    */
-  public async update(id: Emotion['id'], dto: UpdateEmotionDto): Promise<void> {
-    await this.emotionRepo.update({ id }, dto);
+  public async update(emotion: Emotion, dto: UpdateEmotionDto): Promise<void> {
+    await this.emotionRepo.update({ id: emotion.id }, dto);
   }
 
   /**
    * Deletes an emotion
    * 
-   * @param id Emotion ID
+   * @param emotion Emotion
    * @async
    */
-  public async delete(id: Emotion['id']): Promise<void> {
-    await this.emotionRepo.delete({ id });
+  public async delete(emotion: Emotion): Promise<void> {
+    await this.emotionRepo.delete({ id: emotion.id });
   }
 
   /**

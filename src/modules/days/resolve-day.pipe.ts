@@ -5,12 +5,12 @@ import { Day } from './day.entity';
 import { DayService } from './day.service';
 
 /**
- * Resolve day ID pipe
+ * Resolve day pipe
  * 
- * This pipe will resolves the day ID from the username and the day date.
+ * This pipe will resolves the day from the username and the day date.
  */
 @Injectable()
-export class ResolveDayIdPipe implements PipeTransform<{ username: string, date: string }, Promise<Day['id']>> {
+export class ResolveDayPipe implements PipeTransform<{ username: string, date: string }, Promise<Day>> {
 
   private readonly userService: UserService;
   private readonly dayService: DayService;
@@ -20,8 +20,12 @@ export class ResolveDayIdPipe implements PipeTransform<{ username: string, date:
     this.dayService = dayService;
   }
 
-  public async transform(value: { username: string, date: string }): Promise<Day['id']> {
-    return await this.dayService.resolveId(await this.userService.findByUsername(value.username), this.transformDate(value.date));
+  public async transform(value: { username: string, date: string }): Promise<Day> {
+    return await this.dayService.findOne(
+      await this.dayService.resolveId(
+        await this.userService.findByUsername(value.username), this.transformDate(value.date)
+      )
+    );
   }
 
   /**

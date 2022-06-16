@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { Readable } from 'stream';
+import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { Day } from '../days/day.entity';
 import { AttachmentStorageAdapter } from './attachment-storage.adapter';
 import { UpdateAttachmentDto } from './attachment.dto';
@@ -24,11 +25,11 @@ export class AttachmentService {
   /**
    * Creates a new attachment
    * 
-   * @param dayId Day ID
+   * @param day Day
    * @returns Created attachment
    * @async
    */
-  public async create(dayId: Day['id'], file: Express.Multer.File): Promise<Attachment> {
+  public async create(day: Day, file: Express.Multer.File): Promise<Attachment> {
     const extension = file.originalname.substring(file.originalname.lastIndexOf('.') + 1).toLowerCase();
     const filename = `${file.filename}.${extension}`;
     await this.storageAdapter.store(createReadStream(file.path), filename, {
@@ -37,7 +38,7 @@ export class AttachmentService {
     const attachment = this.attachmentRepo.create({
       filename,
       mimetype: file.mimetype,
-      dayId
+      dayId: day.id
     });
     await this.attachmentRepo.save(attachment);
     return attachment;
@@ -47,21 +48,27 @@ export class AttachmentService {
    * Finds one attachment
    * 
    * @param id Attachment ID
+   * @throws EntityNotFoundException If the attachment is not found
    * @returns Attachment
+   * @async
    */
   public async findOne(id: Attachment['id']): Promise<Attachment> {
-    return this.attachmentRepo.findOne({ id });
+    const attachment = await this.attachmentRepo.findOne({ id });
+    if (!attachment) {
+      throw new EntityNotFoundException(Attachment);
+    }
+    return attachment;
   }
 
   /**
    * Updates an attachment
    * 
-   * @param id Attachment ID
+   * @param attachment Attachment
    * @param dto DTO
    * @async
    */
-  public async update(id: Attachment['id'], dto: UpdateAttachmentDto): Promise<void> {
-    await this.attachmentRepo.update({ id }, dto);
+  public async update(attachment: Attachment, dto: UpdateAttachmentDto): Promise<void> {
+    await this.attachmentRepo.update({ id: attachment.id }, dto);
   }
 
   /**
@@ -78,11 +85,10 @@ export class AttachmentService {
   /**
    * Downloads an attachment
    * 
-   * @param id Attachment ID
-   * @returns Downloaded attachment stream
+   * @param attachment Attachment
+   * @returns Download attachment stream
    */
-  public async download(id: Attachment['id']): Promise<Readable> {
-    const attachment = await this.findOne(id);
+  public download(attachment: Attachment): Readable {
     return this.storageAdapter.get(attachment.filename);
   }
 }
