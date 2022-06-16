@@ -36,7 +36,7 @@ export class UserEmotionController {
       .build();
     return {
       data: {
-        emotions: (await this.emotionService.findByUser(user.id, pagination)).map(emotion => {
+        emotions: (await this.emotionService.findByUser(user, pagination)).map(emotion => {
           emotion._links = this.hateoas.createActionBuilder(req)
             .add(new EmotionSelfAction(emotion.id))
             .build();
@@ -48,7 +48,7 @@ export class UserEmotionController {
 
   @Post()
   public async create(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() dto: CreateEmotionDto) {
-    const emotion = await this.emotionService.create(user.id, dto);
+    const emotion = await this.emotionService.create(user, dto);
     emotion._links = this.hateoas.createActionBuilder(req)
       .add(new EmotionSelfAction(emotion.id))
       .build();

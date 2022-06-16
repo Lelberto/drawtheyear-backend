@@ -8,8 +8,10 @@ import { Day } from '../days/day.entity';
 import { DayService } from '../days/day.service';
 import { IdToDayPipe } from '../days/id-to-day.pipe';
 import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
+import { ResolveDayPipe } from '../days/resolve-day.pipe';
 import { Emotion } from '../emotions/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
+import { IdToEmotionPipe } from '../emotions/id-to-emotion.pipe';
 import { DayEmotionsAction } from '../hateoas/actions/day-emotions.action';
 import { DaySelfAction } from '../hateoas/actions/day-self.action';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
@@ -43,7 +45,7 @@ export class UserDayController {
   public async find(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Query(PaginationPipe, DayQueryPipe) query: DaysQueryDto) {
     return {
       data: {
-        days: (await this.dayService.findByUser(user.id, query)).map(day => {
+        days: (await this.dayService.findByUser(user, query)).map(day => {
           day._links = this.hateoas.createActionBuilder(req)
             .add(new UserSelfAction(user.username))
             .add(new DayEmotionsAction(user.username, day.formatedDate))
@@ -56,7 +58,7 @@ export class UserDayController {
 
   @Post()
   public async create(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Body() dto: CreateDayDto) {
-    const day = await this.dayService.create(user.id, dto);
+    const day = await this.dayService.create(user, dto);
     day._links = this.hateoas.createActionBuilder(req)
       .add(new DaySelfAction(user.username, day.formatedDate))
       .add(new UserDaysAction(user.username))
@@ -69,7 +71,7 @@ export class UserDayController {
 
   @Patch(':date')
   public async update(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @Body() body: UpdateDayDto) {
-    await this.dayService.update(day.id, body);
+    await this.dayService.update(day, body);
     day._links = this.hateoas.createActionBuilder(req)
       .add(new DaySelfAction(user.username, day.formatedDate))
       .add(new UserDaysAction(user.username))
@@ -80,15 +82,15 @@ export class UserDayController {
 
   @Delete(':date')
   @HttpCode(204)
-  public async delete(@Param(ResolveDayIdPipe) id: Day['id']) {
-    await this.dayService.delete(id);
+  public async delete(@Param(ResolveDayPipe) day: Day) {
+    await this.dayService.delete(day);
   }
 
   @Get(':date/emotions')
   public async findEmotions(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day) {
       return {
         data: {
-          emotions: (await this.emotionService.findByDay(day.id)).map(emotion => {
+          emotions: (await this.emotionService.findByDay(day)).map(emotion => {
             emotion._links = this.hateoas.createActionBuilder(req)
               .add(new EmotionSelfAction(emotion.id))
               .build();
@@ -99,8 +101,8 @@ export class UserDayController {
   }
 
   @Put(':date/emotions/add/:emotionId')
-  public async addEmotion(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @Param('emotionId') emotionId: Emotion['id']) {
-    await this.dayService.addEmotion(day.id, emotionId);
+  public async addEmotion(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @Param('emotionId', IdToEmotionPipe) emotion: Emotion) {
+    await this.dayService.addEmotion(day, emotion);
     day._links = this.hateoas.createActionBuilder(req)
       .add(new DaySelfAction(user.id, day.formatedDate))
       .add(new UserDaysAction(user.username))
@@ -110,8 +112,8 @@ export class UserDayController {
   }
 
   @Put(':date/emotions/remove/:emotionId')
-  public async removeEmotion(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @Param('emotionId') emotionId: Emotion['id']) {
-    await this.dayService.removeEmotion(day.id, emotionId);
+  public async removeEmotion(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User, @Param(ResolveDayIdPipe, IdToDayPipe) day: Day, @Param('emotionId', IdToEmotionPipe) emotion: Emotion) {
+    await this.dayService.removeEmotion(day, emotion);
     day._links = this.hateoas.createActionBuilder(req)
       .add(new DaySelfAction(user.id, day.formatedDate))
       .add(new UserDaysAction(user.username))

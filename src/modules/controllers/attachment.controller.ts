@@ -51,7 +51,7 @@ export class AttachmentController {
 
   @Get(':id/download')
   public async download(@Res({ passthrough: true }) res: Response, @Param('id', IdToAttachmentPipe) attachment: Attachment) {
-    const stream = await this.attachmentService.download(attachment.id);
+    const stream = this.attachmentService.download(attachment);
     res.set({
       'Content-Disposition': `attachment; filename="${attachment.title || attachment.id}.${attachment.extension}"`
     });
@@ -60,7 +60,7 @@ export class AttachmentController {
 
   @Patch(':id')
   public async update(@Req() req: Request, @Param('id', IdToAttachmentPipe) attachment: Attachment, @Body() dto: UpdateAttachmentDto) {
-    await this.attachmentService.update(attachment.id, dto);
+    await this.attachmentService.update(attachment, dto);
     const day = await this.dayService.findOne(attachment.dayId);
     const user = await this.userService.findById(day.userId);
     attachment._links = this.hateoas.createActionBuilder(req)

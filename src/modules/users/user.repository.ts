@@ -15,7 +15,7 @@ export class UserRepository extends Repository<User> {
    * @async
    */
    public async resolveId(username: User['username']): Promise<User['id']> {
-    return (await this.findOne({ username }, { select: { id: true } })).id;
+    return (await this.findOne({ username }, { select: { id: true } }))?.id;
   }
 
   /**

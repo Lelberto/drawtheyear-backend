@@ -4,7 +4,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import { EntityNotFoundExceptionFilter } from './filters/entity-not-found-exception.filter';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ServerConfig } from './modules/config/server';
 import { AppLogger } from './modules/logger/app.logger';
 
@@ -30,7 +30,7 @@ async function bootstrap() {
     new ClassSerializerInterceptor(app.get(Reflector))
   );
   app.useGlobalFilters(
-    new EntityNotFoundExceptionFilter()
+    new HttpExceptionFilter(logger)
   );
 
   // Setup swagger
