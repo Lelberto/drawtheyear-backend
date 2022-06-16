@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../days/day.entity';
-import { Hateoas } from '../hateoas/hateoas.interface';
+import { Hateoas } from '../hateoas/hateoas.types';
 import { Link } from '../hateoas/hateoas.types';
-import { User } from '../users/user.entity';
+import { User } from '../users/entities/user.entity';
 
 /**
  * Emotion entity

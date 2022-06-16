@@ -3,15 +3,15 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
-import { AccessTokenAuthGuard } from '../auth/access-token-auth.guard';
+import { AccessTokenAuthGuard } from '../auth/jwt/guards/access-token-auth.guard';
 import { UserDaysAction } from '../hateoas/actions/user-days.action';
 import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
-import { UpdateUserDto } from '../users/user.dto';
-import { User } from '../users/user.entity';
+import { UpdateUserDto } from '../users/entities/user.dto';
+import { User } from '../users/entities/user.entity';
 import { UserService } from '../users/user.service';
-import { UsernameToUserPipe } from '../users/username-to-user.pipe';
+import { UsernameToUserPipe } from '../users/pipes/username-to-user.pipe';
 
 /**
  * User controller

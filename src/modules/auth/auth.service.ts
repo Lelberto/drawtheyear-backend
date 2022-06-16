@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Profile } from 'passport-google-oauth20';
 import { AccessTokenPayload, RefreshTokenPayload } from '../../utils/types';
 import { AuthConfig } from '../config/auth';
-import { User } from '../users/user.entity';
+import { User } from '../users/entities/user.entity';
 import { UserService } from '../users/user.service';
 
 /**

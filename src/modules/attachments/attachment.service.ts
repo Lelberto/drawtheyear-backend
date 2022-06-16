@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { Readable } from 'stream';
 import { EntityNotFoundException } from '../../exceptions/entity.exception';
-import { Day } from '../days/day.entity';
+import { Day } from '../days/entities/day.entity';
 import { AttachmentStorageAdapter } from './attachment-storage.adapter';
-import { UpdateAttachmentDto } from './attachment.dto';
-import { Attachment } from './attachment.entity';
-import { AttachmentRepository } from './attachment.repository';
+import { UpdateAttachmentDto } from './entities/attachment.dto';
+import { Attachment } from './entities/attachment.entity';
+import { AttachmentRepository } from './entities/attachment.repository';
 
 /**
  * Attachment service

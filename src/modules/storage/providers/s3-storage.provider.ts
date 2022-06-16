@@ -2,14 +2,14 @@ import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
 import { posix, sep } from 'path';
 import { Readable } from 'stream';
-import { StorageService, StoreOptions } from './storage.service';
+import { StorageProvider, StoreOptions } from './storage.provider';
 
 /**
  * S3 storage service
  * 
  * This service uses Amazon S3 for storage.
  */
-export class S3StorageService extends StorageService {
+export class S3StorageService extends StorageProvider {
 
   private readonly s3: S3;
 

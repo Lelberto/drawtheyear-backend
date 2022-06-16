@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { StoreOptions } from './storage.service';
+import { StoreOptions } from './providers/storage.provider';
 
 /**
  * Storage interface

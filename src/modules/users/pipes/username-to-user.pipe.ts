@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { User } from './user.entity';
-import { UserService } from './user.service';
+import { User } from '../entities/user.entity';
+import { UserService } from '../user.service';
 
 /**
  * Username to user pipe

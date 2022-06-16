@@ -1,9 +1,9 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { StorageConfig } from '../config/storage';
-import { LocalStorageService } from './local-storage.service';
-import { S3StorageService } from './s3-storage.service';
-import { StorageService } from './storage.service';
+import { LocalStorageService } from './providers/local-storage.provider';
+import { S3StorageService } from './providers/s3-storage.provider';
+import { StorageProvider } from './providers/storage.provider';
 
 /**
  * Storage module
@@ -23,11 +23,11 @@ export class StorageModule {
       imports: [ScheduleModule.forRoot()],
       providers: [
         {
-          provide: StorageService,
+          provide: StorageProvider,
           useClass: StorageModule.getStorageServiceType(options.type)
         }
       ],
-      exports: [StorageService]
+      exports: [StorageProvider]
     }
   }
 

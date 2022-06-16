@@ -2,9 +2,9 @@ import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { AuthService } from '../auth/auth.service';
-import { GoogleAuthGuard } from '../auth/google-auth.guard';
-import { RefreshTokenAuthGuard } from '../auth/refresh-token-auth.guard';
-import { User } from '../users/user.entity';
+import { GoogleAuthGuard } from '../auth/google/guards/google-auth.guard';
+import { RefreshTokenAuthGuard } from '../auth/jwt/guards/refresh-token-auth.guard';
+import { User } from '../users/entities/user.entity';
 
 /**
  * Authentication controller

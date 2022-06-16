@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Day } from './day.entity';
-import { DayService } from './day.service';
+import { Day } from '../entities/day.entity';
+import { DayService } from '../day.service';
 
 /**
  * ID to emotion pipe

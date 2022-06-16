@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { UpdateEmotionDto } from '../emotions/emotion.dto';
-import { Emotion } from '../emotions/emotion.entity';
+import { UpdateEmotionDto } from '../emotions/entities/emotion.dto';
+import { Emotion } from '../emotions/entities/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
-import { IdToEmotionPipe } from '../emotions/id-to-emotion.pipe';
+import { IdToEmotionPipe } from '../emotions/pipes/id-to-emotion.pipe';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
 import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';

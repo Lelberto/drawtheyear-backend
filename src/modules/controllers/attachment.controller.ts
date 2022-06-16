@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Req, Res, StreamableFile, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { UpdateAttachmentDto } from '../attachments/attachment.dto';
-import { Attachment } from '../attachments/attachment.entity';
+import { UpdateAttachmentDto } from '../attachments/entities/attachment.dto';
+import { Attachment } from '../attachments/entities/attachment.entity';
 import { AttachmentService } from '../attachments/attachment.service';
-import { IdToAttachmentPipe } from '../attachments/id-to-attachment.pipe';
+import { IdToAttachmentPipe } from '../attachments/pipes/id-to-attachment.pipe';
 import { DayService } from '../days/day.service';
 import { AttachmentSelfAction } from '../hateoas/actions/attachment-self.action';
 import { DayAttachmentsAction } from '../hateoas/actions/day-attachments.action';

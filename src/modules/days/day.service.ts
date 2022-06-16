@@ -3,12 +3,12 @@ import { remove } from 'lodash';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
-import { Emotion } from '../emotions/emotion.entity';
+import { Emotion } from '../emotions/entities/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
-import { User } from '../users/user.entity';
-import { CreateDayDto, DaysQueryDto } from './day.dto';
-import { Day } from './day.entity';
-import { DayRepository } from './day.repository';
+import { User } from '../users/entities/user.entity';
+import { CreateDayDto, DaysQueryDto } from './entities/day.dto';
+import { Day } from './entities/day.entity';
+import { DayRepository } from './entities/day.repository';
 
 /**
  * Days service

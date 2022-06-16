@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EmotionRepository } from './emotion.repository';
+import { EmotionRepository } from './entities/emotion.repository';
 import { EmotionService } from './emotion.service';
 
 describe('EmotionService', () => {

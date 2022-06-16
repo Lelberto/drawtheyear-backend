@@ -1,6 +1,6 @@
 import { EntityRepository, FindOptions, FindOptionsWhere, Repository } from 'typeorm';
-import { Day } from '../days/day.entity';
-import { User } from '../users/user.entity';
+import { Day } from '../../days/entities/day.entity';
+import { User } from '../../users/entities/user.entity';
 import { Emotion } from './emotion.entity';
 
 /**

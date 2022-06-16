@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
-import { Day } from '../days/day.entity';
-import { User } from '../users/user.entity';
-import { CreateEmotionDto, UpdateEmotionDto } from './emotion.dto';
-import { Emotion } from './emotion.entity';
-import { EmotionRepository } from './emotion.repository';
+import { Day } from '../days/entities/day.entity';
+import { User } from '../users/entities/user.entity';
+import { CreateEmotionDto, UpdateEmotionDto } from './entities/emotion.dto';
+import { Emotion } from './entities/emotion.entity';
+import { EmotionRepository } from './entities/emotion.repository';
 
 /**
  * Emotions service

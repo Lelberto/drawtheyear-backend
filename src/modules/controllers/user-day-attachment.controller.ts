@@ -3,16 +3,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AttachmentService } from '../attachments/attachment.service';
-import { Day } from '../days/day.entity';
-import { IdToDayPipe } from '../days/id-to-day.pipe';
-import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
+import { Day } from '../days/entities/day.entity';
+import { IdToDayPipe } from '../days/pipes/id-to-day.pipe';
+import { ResolveDayIdPipe } from '../days/pipes/resolve-day-id.pipe';
 import { AttachmentSelfAction } from '../hateoas/actions/attachment-self.action';
 import { DayAttachmentsAction } from '../hateoas/actions/day-attachments.action';
 import { DaySelfAction } from '../hateoas/actions/day-self.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
-import { User } from '../users/user.entity';
-import { UsernameToUserPipe } from '../users/username-to-user.pipe';
+import { User } from '../users/entities/user.entity';
+import { UsernameToUserPipe } from '../users/pipes/username-to-user.pipe';
 
 /**
  * User day attachment controller

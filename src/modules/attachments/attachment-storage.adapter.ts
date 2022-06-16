@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { join } from 'path';
 import { Readable } from 'stream';
-import { Storage } from '../storage/storage';
-import { StorageService, StoreOptions } from '../storage/storage.service';
+import { Storage } from '../storage/storage.interface';
+import { StorageProvider, StoreOptions } from '../storage/providers/storage.provider';
 
 /**
  * Attachment storage adapter
@@ -12,9 +12,9 @@ import { StorageService, StoreOptions } from '../storage/storage.service';
 @Injectable()
 export class AttachmentStorageAdapter implements Storage {
 
-  private readonly storageService: StorageService;
+  private readonly storageService: StorageProvider;
 
-  public constructor(storageService: StorageService) {
+  public constructor(storageService: StorageProvider) {
     this.storageService = storageService;
   }
 

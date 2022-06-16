@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DayRepository } from './day.repository';
+import { DayRepository } from './entities/day.repository';
 import { DayService } from './day.service';
 
 describe('DayService', () => {

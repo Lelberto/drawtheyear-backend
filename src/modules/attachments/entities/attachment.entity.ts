@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Day } from '../days/day.entity';
-import { Hateoas } from '../hateoas/hateoas.interface';
-import { Link } from '../hateoas/hateoas.types';
+import { Day } from '../../days/entities/day.entity';
+import { Hateoas } from '../../hateoas/hateoas.types';
+import { Link } from '../../hateoas/hateoas.types';
 
 /**
  * Attachment entity

@@ -2,8 +2,8 @@ import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsDate, IsOptional, IsString } from 'class-validator';
 import moment from 'moment';
-import { IsSpecificDate } from '../../decorators/is-specific-date.decorator';
-import { PaginationDto } from '../../pagination/pagination.dto';
+import { IsSpecificDate } from '../../../decorators/is-specific-date.decorator';
+import { PaginationDto } from '../../../pagination/pagination.dto';
 
 /**
  * DTO for day creation

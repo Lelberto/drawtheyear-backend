@@ -4,10 +4,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthConfig } from '../config/auth';
 import { UserModule } from '../users/user.module';
-import { AccessTokenStrategy } from './access-token.strategy';
+import { AccessTokenStrategy } from './jwt/strategies/access-token.strategy';
 import { AuthService } from './auth.service';
-import { GoogleStrategy } from './google.strategy';
-import { RefreshTokenStrategy } from './refresh-token.strategy';
+import { GoogleStrategy } from './google/strategies/google.strategy';
+import { RefreshTokenStrategy } from './jwt/strategies/refresh-token.strategy';
 
 /**
  * Authentication module

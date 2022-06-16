@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import _ from 'lodash';
 import { EntityNotFoundException } from '../../exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
-import { User } from './user.entity';
-import { UserRepository } from './user.repository';
+import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
+import { User } from './entities/user.entity';
+import { UserRepository } from './entities/user.repository';
 
 /**
  * User service

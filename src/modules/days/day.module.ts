@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmotionModule } from '../emotions/emotion.module';
-import { Day } from './day.entity';
-import { DayRepository } from './day.repository';
+import { Day } from './entities/day.entity';
+import { DayRepository } from './entities/day.repository';
 import { DayService } from './day.service';
 
 /**

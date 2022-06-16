@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { Attachment } from '../attachments/attachment.entity';
+import { Attachment } from '../attachments/entities/attachment.entity';
 import { DatabaseConfig } from '../config/database';
 import { NodeEnv } from '../config/global';
-import { Day } from '../days/day.entity';
-import { Emotion } from '../emotions/emotion.entity';
+import { Day } from '../days/entities/day.entity';
+import { Emotion } from '../emotions/entities/emotion.entity';
 import { DatabaseLogger } from '../logger/database.logger';
-import { User } from '../users/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   imports: [

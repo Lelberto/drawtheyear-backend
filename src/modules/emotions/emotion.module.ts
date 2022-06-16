@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Emotion } from './emotion.entity';
-import { EmotionRepository } from './emotion.repository';
+import { Emotion } from './entities/emotion.entity';
+import { EmotionRepository } from './entities/emotion.repository';
 import { EmotionService } from './emotion.service';
 
 /**

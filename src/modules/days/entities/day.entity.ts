@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import moment from 'moment';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Attachment } from '../attachments/attachment.entity';
-import { Emotion } from '../emotions/emotion.entity';
-import { Hateoas } from '../hateoas/hateoas.interface';
-import { Link } from '../hateoas/hateoas.types';
-import { User } from '../users/user.entity';
+import { Attachment } from '../../attachments/entities/attachment.entity';
+import { Emotion } from '../../emotions/entities/emotion.entity';
+import { Hateoas } from '../../hateoas/hateoas.types';
+import { Link } from '../../hateoas/hateoas.types';
+import { User } from '../../users/entities/user.entity';
 
 /**
  * Day entity

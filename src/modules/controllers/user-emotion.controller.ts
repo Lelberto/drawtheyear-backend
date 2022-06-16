@@ -3,13 +3,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
-import { CreateEmotionDto } from '../emotions/emotion.dto';
+import { CreateEmotionDto } from '../emotions/entities/emotion.dto';
 import { EmotionService } from '../emotions/emotion.service';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
-import { User } from '../users/user.entity';
-import { UsernameToUserPipe } from '../users/username-to-user.pipe';
+import { User } from '../users/entities/user.entity';
+import { UsernameToUserPipe } from '../users/pipes/username-to-user.pipe';
 
 /**
  * User emotion controller

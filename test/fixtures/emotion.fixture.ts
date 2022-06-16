@@ -1,7 +1,7 @@
 import faker from '@faker-js/faker';
-import { CreateEmotionDto } from '../../src/modules/emotions/emotion.dto';
-import { Emotion } from '../../src/modules/emotions/emotion.entity';
-import { User } from '../../src/modules/users/user.entity';
+import { CreateEmotionDto } from '../../src/modules/emotions/entities/emotion.dto';
+import { Emotion } from '../../src/modules/emotions/entities/emotion.entity';
+import { User } from '../../src/modules/users/entities/user.entity';
 import { Fixture } from './fixture';
 import { UserFixture } from './user.fixture';
 

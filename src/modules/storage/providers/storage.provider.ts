@@ -4,14 +4,16 @@ import { Cron } from '@nestjs/schedule';
 import { lstat, readdir, rmdir, unlink } from 'fs/promises';
 import { join } from 'path';
 import { Readable } from 'stream';
-import { StorageConfig } from '../config/storage';
-import { Storage } from './storage';
+import { StorageConfig } from '../../config/storage';
+import { Storage } from '../storage.interface';
 
 /**
- * Storage service
+ * Abstract storage provider
+ * 
+ * A storage provider is a storage engine like Amazon S3, Google Cloud, or simply the local filesystem.
  */
 @Injectable()
-export abstract class StorageService implements Storage {
+export abstract class StorageProvider implements Storage {
 
   protected readonly config: StorageConfig;
 

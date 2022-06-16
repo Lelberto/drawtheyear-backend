@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Emotion } from './emotion.entity';
-import { EmotionService } from './emotion.service';
+import { Emotion } from '../entities/emotion.entity';
+import { EmotionService } from '../emotion.service';
 
 /**
  * ID to emotion pipe

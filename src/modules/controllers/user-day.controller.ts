@@ -2,24 +2,24 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
-import { DayQueryPipe } from '../days/day-query.pipe';
-import { CreateDayDto, DaysQueryDto, UpdateDayDto } from '../days/day.dto';
-import { Day } from '../days/day.entity';
+import { DayQueryPipe } from '../days/pipes/day-query.pipe';
+import { CreateDayDto, DaysQueryDto, UpdateDayDto } from '../days/entities/day.dto';
+import { Day } from '../days/entities/day.entity';
 import { DayService } from '../days/day.service';
-import { IdToDayPipe } from '../days/id-to-day.pipe';
-import { ResolveDayIdPipe } from '../days/resolve-day-id.pipe';
-import { ResolveDayPipe } from '../days/resolve-day.pipe';
-import { Emotion } from '../emotions/emotion.entity';
+import { IdToDayPipe } from '../days/pipes/id-to-day.pipe';
+import { ResolveDayIdPipe } from '../days/pipes/resolve-day-id.pipe';
+import { ResolveDayPipe } from '../days/pipes/resolve-day.pipe';
+import { Emotion } from '../emotions/entities/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';
-import { IdToEmotionPipe } from '../emotions/id-to-emotion.pipe';
+import { IdToEmotionPipe } from '../emotions/pipes/id-to-emotion.pipe';
 import { DayEmotionsAction } from '../hateoas/actions/day-emotions.action';
 import { DaySelfAction } from '../hateoas/actions/day-self.action';
 import { EmotionSelfAction } from '../hateoas/actions/emotion-self.action';
 import { UserDaysAction } from '../hateoas/actions/user-days.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
-import { User } from '../users/user.entity';
-import { UsernameToUserPipe } from '../users/username-to-user.pipe';
+import { User } from '../users/entities/user.entity';
+import { UsernameToUserPipe } from '../users/pipes/username-to-user.pipe';
 
 /**
  * User day controller

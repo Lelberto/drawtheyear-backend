@@ -2,9 +2,9 @@ import faker from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import mocks from '../../../test/mocks';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
-import { User } from './user.entity';
-import { UserRepository } from './user.repository';
+import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
+import { User } from './entities/user.entity';
+import { UserRepository } from './entities/user.repository';
 import { UserService } from './user.service';
 
 describe('UserService', () => {

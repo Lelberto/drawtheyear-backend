@@ -1,6 +1,6 @@
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { Attachment } from './attachment.entity';
-import { AttachmentService } from './attachment.service';
+import { Attachment } from '../entities/attachment.entity';
+import { AttachmentService } from '../attachment.service';
 
 /**
  * ID to attachment pipe
