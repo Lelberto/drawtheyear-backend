@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
 /**
  * Storage exception
  */
-export class StorageException extends HttpException {
+export class StorageException extends BadRequestException {
 
   public constructor(message: string) {
-    super(message, HttpStatus.BAD_REQUEST);
+    super(message);
   }
 }
