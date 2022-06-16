@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import * as moment from 'moment';
+import moment from 'moment';
 import { UserService } from '../users/user.service';
 import { Day } from './day.entity';
 import { DayService } from './day.service';
