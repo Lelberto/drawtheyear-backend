@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundException } from '../../exceptions/entity.exception';
+import { EntityNotFoundException } from '../../global/exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { Day } from '../days/entities/day.entity';
 import { User } from '../users/entities/user.entity';

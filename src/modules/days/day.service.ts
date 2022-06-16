@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { remove } from 'lodash';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { EntityNotFoundException } from '../../exceptions/entity.exception';
+import { EntityNotFoundException } from '../../global/exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { EmotionService } from '../emotions/emotion.service';

@@ -2,7 +2,7 @@ import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsDate, IsOptional, IsString } from 'class-validator';
 import moment from 'moment';
-import { IsSpecificDate } from '../../../decorators/is-specific-date.decorator';
+import { IsSpecificDate } from '../../../global/decorators/is-specific-date.decorator';
 import { PaginationDto } from '../../../pagination/pagination.dto';
 
 /**

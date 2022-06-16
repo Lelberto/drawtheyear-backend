@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import _ from 'lodash';
-import { EntityNotFoundException } from '../../exceptions/entity.exception';
+import { EntityNotFoundException } from '../../global/exceptions/entity.exception';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
 import { User } from './entities/user.entity';

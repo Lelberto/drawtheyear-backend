@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AppLogger } from '../modules/logger/app.logger';
-import { ErrorResponse } from '../utils/types';
+import { AppLogger } from '../../modules/logger/app.logger';
+import { ErrorResponse } from '../../utils/types';
 
 /**
  * Filter for all HTTP exceptions

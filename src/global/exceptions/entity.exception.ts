@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { Constructor } from '../utils/types';
+import { Constructor } from '../../utils/types';
 
 /**
  * Entity not found exception
