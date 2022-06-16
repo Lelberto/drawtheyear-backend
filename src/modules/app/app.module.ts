@@ -1,14 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import morgan from 'morgan';
-import { ConfigModule } from './modules/config/config.module';
-import { NodeEnv } from './modules/config/global';
-import { LoggingConfig } from './modules/config/logging';
-import { ControllerModule } from './modules/controllers/controller.module';
-import { DatabaseModule } from './modules/database/database.module';
-import { AccessLogger } from './modules/logger/access.logger';
-import { AppLogger } from './modules/logger/app.logger';
-import { LoggerModule } from './modules/logger/logger.module';
+import { ConfigModule } from '../config/config.module';
+import { NodeEnv } from '../config/global';
+import { LoggingConfig } from '../config/logging';
+import { ControllerModule } from '../controllers/controller.module';
+import { DatabaseModule } from '../database/database.module';
+import { AccessLogger } from '../logger/access.logger';
+import { AppLogger } from '../logger/app.logger';
+import { LoggerModule } from '../logger/logger.module';
 
 /**
  * Application module
