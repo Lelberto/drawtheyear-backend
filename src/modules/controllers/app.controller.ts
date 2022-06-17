@@ -22,6 +22,8 @@ export class AppController {
     const _links = this.hateoas.createActionBuilder(req)
       .add(new UsersAction())
       .build();
-    return { _links }
+    return {
+      data: { _links }
+    }
   }
 }
