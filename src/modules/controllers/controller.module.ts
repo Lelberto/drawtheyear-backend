@@ -17,6 +17,7 @@ import { StorageException } from '../storage/storage.exception';
 import { AuthController } from './auth.controller';
 import { AuthModule } from '../auth/auth.module';
 import { UserDayAttachmentController } from './user-day-attachment.controller';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UserDayAttachmentController } from './user-day-attachment.controller';
     AttachmentModule
   ],
   controllers: [
+    AppController,
     AuthController,
     UserController,
     UserEmotionController,
