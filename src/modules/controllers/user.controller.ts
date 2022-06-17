@@ -1,17 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Patch, Query, Req, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PaginationDto } from '../../pagination/pagination.dto';
 import { PaginationPipe } from '../../pagination/pagination.pipe';
 import { AccessTokenAuthGuard } from '../auth/jwt/guards/access-token-auth.guard';
+import { AppConfig } from '../config/app';
 import { UserDaysAction } from '../hateoas/actions/user-days.action';
 import { UserEmotionsAction } from '../hateoas/actions/user-emotions.action';
 import { UserSelfAction } from '../hateoas/actions/user-self.action';
 import { HateoasService } from '../hateoas/hateoas.service';
 import { UpdateUserDto } from '../users/entities/user.dto';
 import { User } from '../users/entities/user.entity';
-import { UserService } from '../users/user.service';
 import { UsernameToUserPipe } from '../users/pipes/username-to-user.pipe';
+import { UserService } from '../users/user.service';
 
 /**
  * User controller
@@ -25,20 +27,25 @@ export class UserController {
 
   private readonly userService: UserService;
   private readonly hateoas: HateoasService;
+  private readonly appConfig: AppConfig;
 
-  public constructor (userService: UserService, hateoas: HateoasService) {
+  public constructor (userService: UserService, hateoas: HateoasService, config: ConfigService) {
     this.userService = userService;
     this.hateoas = hateoas;
+    this.appConfig = config.get('app');
   }
 
   @Get('profile')
   @UseGuards(AccessTokenAuthGuard)
   public async profile(@Req() req: Request) {
     const user = req.user as User;
-    user._links = this.hateoas.createActionBuilder(req)
+    const actions = this.hateoas.createActionBuilder(req)
       .add(new UserEmotionsAction(user.username))
-      .add(new UserDaysAction(user.username))
-      .build();
+      .add(new UserEmotionsAction(user.username));
+    for (let year = this.appConfig.days.startYear; year <= new Date().getFullYear(); year++) {
+      actions.add(new UserDaysAction(user.username, year));
+    }
+    user._links = actions.build();
     return {
       data: { user: req.user }
     };
@@ -49,10 +56,13 @@ export class UserController {
     return {
       data: {
         users: (await this.userService.find(pagination)).map(user => {
-          user._links = this.hateoas.createActionBuilder(req)
+          const actions = this.hateoas.createActionBuilder(req)
             .add(new UserEmotionsAction(user.username))
-            .add(new UserDaysAction(user.username))
-            .build();
+            .add(new UserEmotionsAction(user.username));
+          for (let year = this.appConfig.days.startYear; year <= new Date().getFullYear(); year++) {
+            actions.add(new UserDaysAction(user.username, year));
+          }
+          user._links = actions.build();
           return user;
         })
       }
@@ -61,10 +71,13 @@ export class UserController {
 
   @Get(':username')
   public findById(@Req() req: Request, @Param('username', UsernameToUserPipe) user: User) {
-    user._links = this.hateoas.createActionBuilder(req)
+    const actions = this.hateoas.createActionBuilder(req)
       .add(new UserEmotionsAction(user.username))
-      .add(new UserDaysAction(user.username))
-      .build();
+      .add(new UserEmotionsAction(user.username));
+    for (let year = this.appConfig.days.startYear; year <= new Date().getFullYear(); year++) {
+      actions.add(new UserDaysAction(user.username, year));
+    }
+    user._links = actions.build();
     return {
       data: { user }
     };
