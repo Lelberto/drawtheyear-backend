@@ -6,6 +6,7 @@ import { NodeEnv } from '../config/global';
 import { LoggingConfig } from '../config/logging';
 import { ControllerModule } from '../controllers/controller.module';
 import { DatabaseModule } from '../database/database.module';
+import { ExsceptionModule } from '../exceptions/exception.module';
 import { AccessLogger } from '../logger/access.logger';
 import { AppLogger } from '../logger/app.logger';
 import { LoggerModule } from '../logger/logger.module';
@@ -20,7 +21,8 @@ import { LoggerModule } from '../logger/logger.module';
     ConfigModule,
     DatabaseModule,
     LoggerModule,
-    ControllerModule
+    ControllerModule,
+    ExsceptionModule
   ]
 })
 export class AppModule implements NestModule, OnApplicationBootstrap {

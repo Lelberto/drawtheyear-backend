@@ -4,8 +4,10 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './modules/app/app.module';
-import { HttpExceptionFilter } from './global/filters/http-exception.filter';
 import { ServerConfig } from './modules/config/server';
+import { ExceptionService } from './modules/exceptions/exception.service';
+import { HttpExceptionFilter } from './modules/exceptions/filters/http.filter';
+import { TypeOrmExceptionFilter } from './modules/exceptions/filters/typeorm.filter';
 import { AppLogger } from './modules/logger/app.logger';
 
 /**
@@ -15,6 +17,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   const serverConfig = app.get(ConfigService).get<ServerConfig>('server');
   const logger = app.get(AppLogger);
+  const exceptionService = app.get(ExceptionService);
 
   // Setup application
   app.enableVersioning({
@@ -30,7 +33,8 @@ async function bootstrap() {
     new ClassSerializerInterceptor(app.get(Reflector))
   );
   app.useGlobalFilters(
-    new HttpExceptionFilter(logger)
+    new HttpExceptionFilter(exceptionService),
+    new TypeOrmExceptionFilter(exceptionService)
   );
 
   // Setup swagger

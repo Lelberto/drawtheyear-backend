@@ -1,7 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AppLogger } from '../../modules/logger/app.logger';
-import { ErrorResponse } from '../../utils/types';
+import { ExceptionService } from '../exception.service';
 
 /**
  * Filter for all HTTP exceptions
@@ -11,22 +10,16 @@ import { ErrorResponse } from '../../utils/types';
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
 
-  private readonly logger: AppLogger;
+  private readonly exceptionService: ExceptionService;
 
-  public constructor(logger: AppLogger) {
-    this.logger = logger;
+  public constructor(exceptionService: ExceptionService) {
+    this.exceptionService = exceptionService;
   }
 
   public catch(err: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
-    const body: ErrorResponse = {
-      message: err.message,
-      from: req.url
-    }
-
-    this.logger.error(`${err.name}: ${err.message}`, err.stack, this.constructor.name);
-    return res.status(err.getStatus()).json(body);
+    return res.status(err.getStatus()).json(this.exceptionService.createResponseBody(req, err));
   }
 }
