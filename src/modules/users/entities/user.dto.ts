@@ -19,7 +19,7 @@ export class CreateUserDto {
   })
   @Matches(/^[a-zA-Z0-9]+$/)
   @Length(3, 24)
-  public readonly username: string;
+  public readonly username: string; // TODO When updating username, check if the new username is valid
 
   @ApiProperty({
     minLength: 3,
