@@ -25,7 +25,7 @@ export class AuthService {
     if (await this.userService.exists({ googleId: id })) {
       return await this.userService.findByGoogleId(id);
     }
-    return await this.userService.create({ googleId: id, email: emails[0].value, username: displayName });
+    return await this.userService.create({ googleId: id, email: emails[0].value, username: displayName }); // TODO Modify username
   }
 
   public async generateAccessToken(user: User): Promise<string> {

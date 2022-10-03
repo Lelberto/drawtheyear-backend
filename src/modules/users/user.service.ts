@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { validate } from 'class-validator';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './entities/user.dto';
 import { User } from './entities/user.entity';
@@ -14,6 +15,7 @@ export class UserService {
   }
 
   public async create(dto: CreateUserDto): Promise<User> {
+    console.log(dto, await validate(dto)); // TODO Resolve validation
     const user = this.userRepo.create(dto);
     return await this.userRepo.save(user);
   }

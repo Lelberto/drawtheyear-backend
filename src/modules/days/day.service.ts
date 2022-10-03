@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Emotion } from '../emotions/entities/emotion.entity';
@@ -16,6 +16,9 @@ export class DayService {
   }
 
   public async create(dto: CreateDayDto, user: User): Promise<Day> {
+    if (await this.exists(user, dto.date)) {
+      throw new BadRequestException(`Day with date ${dto.date} for user ${user.username} already exists`);
+    }
     const day = this.dayRepo.create({ ...dto, user });
     return await this.dayRepo.save(day);
   }
@@ -40,5 +43,9 @@ export class DayService {
   public async removeEmotion(day: Day, emotion: Emotion): Promise<Day> {
     day.emotions = day.emotions.filter(currentEmotion => currentEmotion.id !== emotion.id);
     return await this.dayRepo.save(day);
+  }
+
+  public async exists(user: User, date: Date): Promise<boolean> {
+    return await this.dayRepo.countBy({ user, date }) > 0;
   }
 }

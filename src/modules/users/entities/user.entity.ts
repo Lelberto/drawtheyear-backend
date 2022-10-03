@@ -15,13 +15,15 @@ export class User {
 
   @Column({
     type: 'varchar',
-    length: 100
+    length: 100,
+    unique: true
   })
   public email: string;
 
   @Column({
     type: 'varchar',
-    length: 16
+    length: 16,
+    unique: true
   })
   public username: string;
 
