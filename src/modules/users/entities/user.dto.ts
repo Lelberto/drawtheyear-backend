@@ -6,4 +6,7 @@ export class CreateUserDto {
 
   @IsString()
   public username: string;
+
+  @IsString()
+  public googleId: string;
 }

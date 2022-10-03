@@ -8,6 +8,12 @@ export class User {
 
   @Column({
     type: 'varchar',
+    length: 255
+  })
+  public googleId: string;
+
+  @Column({
+    type: 'varchar',
     length: 100
   })
   public email: string;
