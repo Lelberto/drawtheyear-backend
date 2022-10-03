@@ -1,4 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Day } from '../../days/entities/day.entity';
 import { Emotion } from '../../emotions/entities/emotion.entity';
 
 @Entity()
@@ -26,4 +27,7 @@ export class User {
 
   @OneToMany(() => Emotion, emotion => emotion.user)
   public emotions: Emotion[];
+
+  @OneToMany(() => Day, day => day.user)
+  public days: Day[];
 }

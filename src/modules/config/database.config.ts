@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import { Day } from '../days/entities/day.entity';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { User } from '../users/entities/user.entity';
 
@@ -9,7 +10,7 @@ const config = registerAs('database', () => ({
   name: process.env.DATABASE_NAME,
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
-  entities: [User, Emotion]
+  entities: [User, Emotion, Day]
 }));
 
 export type DatabaseConfig = typeof config;

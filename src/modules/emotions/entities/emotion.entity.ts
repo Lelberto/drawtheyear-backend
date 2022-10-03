@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Day } from '../../days/entities/day.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -20,4 +21,7 @@ export class Emotion {
 
   @ManyToOne(() => User, user => user.emotions)
   public user: User;
+
+  @ManyToMany(() => Day, day => day.emotions)
+  public days: Day[];
 }

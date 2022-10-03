@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CreateEmotionDto } from './entities/emotion.dto';
 import { Emotion } from './entities/emotion.entity';
@@ -19,8 +19,8 @@ export class EmotionService {
     return await this.emotionRepo.save(emotion);
   }
 
-  public async find(): Promise<Emotion[]> {
-    return await this.emotionRepo.find();
+  public async find(where?: FindManyOptions<Emotion>): Promise<Emotion[]> {
+    return await this.emotionRepo.find(where);
   }
 
   public async findById(id: string): Promise<Emotion> {
