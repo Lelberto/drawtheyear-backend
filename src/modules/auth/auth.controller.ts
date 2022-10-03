@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { RefreshTokenAuthGuard } from './guards/refresh-token-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -14,14 +15,14 @@ export class AuthController {
   }
 
   @Get('google')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   public async googleAuth() {
     // Guard redirection to Google connection page
     // TODO Move this process to the frontend and keep only the google/callback route
   }
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   public async googleRedirect(@Req() req: Request) {
     const data = {
       accessToken: await this.authService.generateAccessToken(req.user as User),
@@ -31,7 +32,7 @@ export class AuthController {
   }
 
   @Post('accessToken')
-  @UseGuards(AuthGuard('refresh-token'))
+  @UseGuards(RefreshTokenAuthGuard)
   public async accessToken(@Req() req: Request) {
     const data = {
       accessToken: await this.authService.generateAccessToken(req.user as User),
