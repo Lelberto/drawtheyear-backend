@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from '../auth/auth.module';
 import { ConfigModule } from '../config/config.module';
+import { ControllerModule } from '../controllers/controller.module';
 import { DatabaseModule } from '../database/database.module';
-import { EmotionModule } from '../emotions/emotion.module';
-import { UserModule } from '../users/user.module';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, AuthModule, UserModule, EmotionModule],
+  imports: [ConfigModule, DatabaseModule, ControllerModule],
   controllers: [],
   providers: [AppService],
 })
