@@ -22,14 +22,14 @@ export class AuthService {
 
   public async getUserFromGoogle(profile: Profile): Promise<User> {
     const { id, emails, displayName } = profile;
-    console.log(profile);
     if (await this.userService.exists({ googleId: id })) {
       return await this.userService.findByGoogleId(id);
     }
     return await this.userService.create({
       googleId: id,
       email: emails[0].value,
-      username: await this.userService.generateUsername(displayName)
+      username: await this.userService.generateUsername(displayName),
+      name: displayName.substring(0, 30)
     });
   }
 

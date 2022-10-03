@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, InternalServerErrorException } from '@ne
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { CreateUserDto } from './entities/user.dto';
+import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -54,6 +54,13 @@ export class UserService {
       throw new NotFoundException(`User with username ${username} not found`);
     }
     return user;
+  }
+
+  public async update(user: User, dto: UpdateUserDto): Promise<User> {
+    if (dto.username) {
+      dto.username = await this.generateUsername(dto.username);
+    }
+    return await this.userRepo.save({ ...user, ...dto });
   }
 
   public async resolveId(username: string): Promise<string> {

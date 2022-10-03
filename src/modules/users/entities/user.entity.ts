@@ -4,12 +4,14 @@ import { Emotion } from '../../emotions/entities/emotion.entity';
 
 @Entity()
 export class User {
+
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
   @Column({
     type: 'varchar',
-    length: 255
+    length: 255,
+    nullable: true
   })
   public googleId: string;
 
@@ -26,6 +28,12 @@ export class User {
     unique: true
   })
   public username: string;
+
+  @Column({
+    type: 'varchar',
+    length: '30'
+  })
+  public name: string;
 
   @OneToMany(() => Emotion, emotion => emotion.user)
   public emotions: Emotion[];
