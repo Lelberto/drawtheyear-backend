@@ -3,7 +3,7 @@ import { User } from '../entities/user.entity';
 import { UserService } from '../user.service';
 
 @Injectable()
-export class ResolveUserPipe implements PipeTransform<string, Promise<User>> {
+export class ResolveUserIdPipe implements PipeTransform<string, Promise<User>> {
 
   private readonly userService: UserService;
 

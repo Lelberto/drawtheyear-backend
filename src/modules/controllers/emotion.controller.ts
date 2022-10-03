@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { EmotionService } from '../emotions/emotion.service';
 import { Emotion } from '../emotions/entities/emotion.entity';
-import { ResolveEmotionPipe } from '../emotions/pipes/resolve-emotion.pipe';
+import { ResolveEmotionIdPipe } from '../emotions/pipes/resolve-emotion-id.pipe';
 
 @Controller('emotions')
 export class EmotionController {
@@ -12,8 +12,8 @@ export class EmotionController {
     this.emotionService = emotionService;
   }
 
-  @Get(':id')
-  public async findById(@Param('id', ResolveEmotionPipe) emotion: Emotion) {
+  @Get(':emotionId')
+  public async findById(@Param('emotionId', ResolveEmotionIdPipe) emotion: Emotion) {
     return emotion;
   }
 }

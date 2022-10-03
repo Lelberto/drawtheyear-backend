@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CreateUserDto } from './entities/user.dto';
@@ -24,23 +24,39 @@ export class UserService {
   }
 
   public async findById(id: string): Promise<User> {
-    return await this.userRepo.findOneBy({ id });
+    const user = await this.userRepo.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
   public async findByGoogleId(googleId: string): Promise<User> {
-    return await this.userRepo.findOneBy({ googleId });
+    const user = await this.userRepo.findOneBy({ googleId });
+    if (!user) {
+      throw new NotFoundException(`User with Google ID ${googleId} not found`);
+    }
+    return user;
   }
 
   public async findByEmail(email: string): Promise<User> {
-    return await this.userRepo.findOneBy({ email });
+    const user = await this.userRepo.findOneBy({ email });
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return user;
   }
 
   public async findByUsername(username: string): Promise<User> {
-    return await this.userRepo.findOneBy({ username });
+    const user = await this.userRepo.findOneBy({ username });
+    if (!user) {
+      throw new NotFoundException(`User with username ${username} not found`);
+    }
+    return user;
   }
 
   public async resolveId(username: string): Promise<string> {
-    return (await this.userRepo.findOneBy({ username })).id
+    return (await this.findByUsername(username)).id
   }
 
   public async exists(where: FindOptionsWhere<User>): Promise<boolean> {

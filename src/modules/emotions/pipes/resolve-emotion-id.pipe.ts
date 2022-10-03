@@ -3,7 +3,7 @@ import { EmotionService } from '../emotion.service';
 import { Emotion } from '../entities/emotion.entity';
 
 @Injectable()
-export class ResolveEmotionPipe implements PipeTransform<string, Promise<Emotion>> {
+export class ResolveEmotionIdPipe implements PipeTransform<string, Promise<Emotion>> {
 
   private readonly emotionService: EmotionService;
 

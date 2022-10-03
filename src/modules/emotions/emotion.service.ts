@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
@@ -25,7 +25,11 @@ export class EmotionService {
   }
 
   public async findById(id: string): Promise<Emotion> {
-    return await this.emotionRepo.findOneBy({ id });
+    const emotion = await this.emotionRepo.findOneBy({ id });
+    if (!emotion) {
+      throw new NotFoundException(`Emotion with ID ${id} not found`);
+    }
+    return emotion;
   }
 
   public async findByUser(user: User): Promise<Emotion[]> {
