@@ -15,8 +15,7 @@ export class UserService {
 
   public async create(dto: CreateUserDto): Promise<User> {
     const user = this.userRepo.create(dto);
-    await this.userRepo.save(user);
-    return user;
+    return await this.userRepo.save(user);
   }
 
   public async find(): Promise<User[]> {

@@ -16,8 +16,7 @@ export class EmotionService {
 
   public async create(dto: CreateEmotionDto, user: User): Promise<Emotion> {
     const emotion = this.emotionRepo.create({ ...dto, user });
-    await this.emotionRepo.save(emotion);
-    return emotion;
+    return await this.emotionRepo.save(emotion);
   }
 
   public async find(): Promise<Emotion[]> {
