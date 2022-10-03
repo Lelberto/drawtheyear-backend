@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { FindOptionsWhere, Repository } from 'typeorm';
@@ -62,5 +62,18 @@ export class UserService {
 
   public async exists(where: FindOptionsWhere<User>): Promise<boolean> {
     return await this.userRepo.countBy(where) > 0;
+  }
+
+  public async generateUsername(name: string): Promise<string> {
+    let username = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().substring(0, 16);
+    let num = 0;
+    while (await this.exists({ username })) {
+      if (num === 10) {
+        throw new InternalServerErrorException(`The server could not generate an username for ${name}, all usernames are taken`);
+      }
+      username = username.substring(0, 15) + num;
+      num++;
+    }
+    return username;
   }
 }
