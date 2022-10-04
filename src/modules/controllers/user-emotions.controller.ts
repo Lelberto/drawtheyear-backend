@@ -3,16 +3,13 @@ import { EmotionService } from '../emotions/emotion.service';
 import { CreateEmotionDto } from '../emotions/entities/emotion.dto';
 import { User } from '../users/entities/user.entity';
 import { ResolveUsernamePipe } from '../users/pipes/resolve-username.pipe';
-import { UserService } from '../users/user.service';
 
 @Controller('users/:username/emotions')
 export class UserEmotionsController {
 
-  private readonly userService: UserService;
   private readonly emotionService: EmotionService;
 
-  public constructor(userService: UserService, emotionService: EmotionService) {
-    this.userService = userService;
+  public constructor(emotionService: EmotionService) {
     this.emotionService = emotionService;
   }
 

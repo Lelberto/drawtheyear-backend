@@ -19,7 +19,7 @@ export class UserService {
   }
 
   public async create(dto: CreateUserDto): Promise<User> {
-    console.log(dto, await validate(dto)); // TODO Resolve validation
+    console.log(dto, await validate(dto)); // TODO Resolve validation or remove CreateUserDto
     const user = this.userRepo.create(dto);
     return await this.userRepo.save(user);
   }

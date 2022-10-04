@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { DayService } from '../days/day.service';
-import { CreateDayDto } from '../days/entities/day.dto';
+import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto } from '../days/entities/day.dto';
 import { Day } from '../days/entities/day.entity';
 import { ResolveDayDatePipe } from '../days/pipes/resolve-day-date.pipe';
-import { Emotion } from '../emotions/entities/emotion.entity';
-import { ResolveEmotionIdPipe } from '../emotions/pipes/resolve-emotion-id.pipe';
+import { EmotionService } from '../emotions/emotion.service';
 import { User } from '../users/entities/user.entity';
 import { ResolveUsernamePipe } from '../users/pipes/resolve-username.pipe';
 
@@ -12,9 +11,11 @@ import { ResolveUsernamePipe } from '../users/pipes/resolve-username.pipe';
 export class UserDayController {
 
   private readonly dayService: DayService;
+  private readonly emotionService: EmotionService;
 
-  public constructor(dayService: DayService) {
+  public constructor(dayService: DayService, emotionService: EmotionService) {
     this.dayService = dayService;
+    this.emotionService = emotionService;
   }
 
   @Post()
@@ -28,12 +29,14 @@ export class UserDayController {
   }
 
   @Patch(':dayDate/emotions/add')
-  public async addEmotion(@Param(ResolveDayDatePipe) day: Day, @Body('emotionId', ResolveEmotionIdPipe) emotion: Emotion) {
+  public async addEmotion(@Param(ResolveDayDatePipe) day: Day, @Body() dto: AddEmotionToDayDto) {
+    const emotion = await this.emotionService.findById(dto.emotionId);
     return await this.dayService.addEmotion(day, emotion);
   }
 
   @Patch(':dayDate/emotions/remove')
-  public async removeEmotion(@Param(ResolveDayDatePipe) day: Day, @Body('emotionId', ResolveEmotionIdPipe) emotion: Emotion) {
+  public async removeEmotion(@Param(ResolveDayDatePipe) day: Day, @Body() dto: RemoveEmotionFromDayDto) {
+    const emotion = await this.emotionService.findById(dto.emotionId);
     return await this.dayService.removeEmotion(day, emotion);
   }
 }

@@ -10,3 +10,12 @@ export class CreateDayDto {
   @IsString()
   public resume: string;
 }
+
+export class AddEmotionToDayDto {
+  
+  @IsString()
+  @IsNotEmpty()
+  public emotionId: string;
+}
+
+export class RemoveEmotionFromDayDto extends AddEmotionToDayDto {}
