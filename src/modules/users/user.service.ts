@@ -1,7 +1,9 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException, Inject } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { FindOptionsWhere, Repository } from 'typeorm';
+import userConfig, { UserConfig } from '../config/user.config';
 import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
 import { User } from './entities/user.entity';
 
@@ -9,9 +11,11 @@ import { User } from './entities/user.entity';
 export class UserService {
   
   private readonly userRepo: Repository<User>;
+  private readonly config: ConfigType<UserConfig>;
 
-  public constructor(@InjectRepository(User) userRepo: Repository<User>) {
+  public constructor(@InjectRepository(User) userRepo: Repository<User>, @Inject(userConfig.KEY) config: ConfigType<UserConfig>) {
     this.userRepo = userRepo;
+    this.config = config;
   }
 
   public async create(dto: CreateUserDto): Promise<User> {
@@ -58,7 +62,11 @@ export class UserService {
 
   public async update(user: User, dto: UpdateUserDto): Promise<User> {
     if (dto.username) {
+      if (user.usernameChangeCountToday === this.config.usernameMaxChangeCountPerDay) {
+        throw new BadRequestException(`Username has been updated too many times for today`);
+      }
       dto.username = await this.generateUsername(dto.username);
+      user.usernameChangeCountToday++;
     }
     return await this.userRepo.save({ ...user, ...dto });
   }
@@ -82,5 +90,16 @@ export class UserService {
       num++;
     }
     return username;
+  }
+
+  public async resetUsernameChangeCount(): Promise<number> {
+    const query = await this.userRepo.createQueryBuilder()
+      .update()
+      .set({ usernameChangeCountToday: 0 })
+      .where('usernameChangeCountToday > :min', { min: 0 })
+      .execute();
+    const { affected } = query;
+    console.log(`Username change count has been reset for ${affected} user${affected === 1 ? '' : 's'}`);
+    return affected;
   }
 }

@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../../days/entities/day.entity';
 import { Emotion } from '../../emotions/entities/emotion.entity';
@@ -28,6 +29,13 @@ export class User {
     unique: true
   })
   public username: string;
+
+  @Column({
+    type: 'tinyint',
+    default: 0
+  })
+  @Exclude({ toPlainOnly: true })
+  public usernameChangeCountToday: number;
 
   @Column({
     type: 'varchar',
