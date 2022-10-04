@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { AuthUser } from '../../common/decorators/user.decorator';
-import { AccessTokenAuthGuard } from '../auth/guards/access-token-auth.guard';
-import { EmotionService } from '../emotions/emotion.service';
-import { CreateEmotionDto } from '../emotions/entities/emotion.dto';
-import { User } from '../users/entities/user.entity';
+import { AuthUser } from '../../../../common/decorators/user.decorator';
+import { AccessTokenAuthGuard } from '../../../auth/guards/access-token-auth.guard';
+import { EmotionService } from '../../../emotions/emotion.service';
+import { CreateEmotionDto } from '../../../emotions/entities/emotion.dto';
+import { User } from '../../../users/entities/user.entity';
 
 @Controller('me/emotions')
 @UseGuards(AccessTokenAuthGuard)

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
-import { UpdateUserDto } from '../users/entities/user.dto';
-import { User } from '../users/entities/user.entity';
-import { ResolveUsernamePipe } from '../users/pipes/resolve-username.pipe';
-import { UserService } from '../users/user.service';
+import { UpdateUserDto } from '../../users/entities/user.dto';
+import { User } from '../../users/entities/user.entity';
+import { ResolveUsernamePipe } from '../../users/pipes/resolve-username.pipe';
+import { UserService } from '../../users/user.service';
 
 @Controller('users')
 export class UserController {

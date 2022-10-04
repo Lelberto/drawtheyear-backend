@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { AuthUser } from '../../common/decorators/user.decorator';
-import { AccessTokenAuthGuard } from '../auth/guards/access-token-auth.guard';
-import { DayService } from '../days/day.service';
-import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto } from '../days/entities/day.dto';
-import { Day } from '../days/entities/day.entity';
-import { EmotionService } from '../emotions/emotion.service';
-import { User } from '../users/entities/user.entity';
+import { AuthUser } from '../../../../common/decorators/user.decorator';
+import { AccessTokenAuthGuard } from '../../../auth/guards/access-token-auth.guard';
+import { DayService } from '../../../days/day.service';
+import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto } from '../../../days/entities/day.dto';
+import { Day } from '../../../days/entities/day.entity';
+import { EmotionService } from '../../../emotions/emotion.service';
+import { User } from '../../../users/entities/user.entity';
 
 @Controller('me/days')
 @UseGuards(AccessTokenAuthGuard)

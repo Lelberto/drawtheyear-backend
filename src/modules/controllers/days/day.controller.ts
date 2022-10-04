@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { DayService } from '../days/day.service';
+import { DayService } from '../../days/day.service';
 
 @Controller('days')
 export class DayController {

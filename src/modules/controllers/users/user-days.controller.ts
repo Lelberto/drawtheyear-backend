@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { DayService } from '../days/day.service';
-import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto } from '../days/entities/day.dto';
-import { Day } from '../days/entities/day.entity';
-import { ResolveDayDatePipe } from '../days/pipes/resolve-day-date.pipe';
-import { EmotionService } from '../emotions/emotion.service';
-import { User } from '../users/entities/user.entity';
-import { ResolveUsernamePipe } from '../users/pipes/resolve-username.pipe';
+import { DayService } from '../../days/day.service';
+import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto } from '../../days/entities/day.dto';
+import { Day } from '../../days/entities/day.entity';
+import { ResolveDayDatePipe } from '../../days/pipes/resolve-day-date.pipe';
+import { EmotionService } from '../../emotions/emotion.service';
+import { User } from '../../users/entities/user.entity';
+import { ResolveUsernamePipe } from '../../users/pipes/resolve-username.pipe';
 
 @Controller('users/:username/days')
 export class UserDayController {

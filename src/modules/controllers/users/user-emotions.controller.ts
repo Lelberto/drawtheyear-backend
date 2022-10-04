@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { EmotionService } from '../emotions/emotion.service';
-import { CreateEmotionDto } from '../emotions/entities/emotion.dto';
-import { User } from '../users/entities/user.entity';
-import { ResolveUsernamePipe } from '../users/pipes/resolve-username.pipe';
+import { EmotionService } from '../../emotions/emotion.service';
+import { CreateEmotionDto } from '../../emotions/entities/emotion.dto';
+import { User } from '../../users/entities/user.entity';
+import { ResolveUsernamePipe } from '../../users/pipes/resolve-username.pipe';
 
 @Controller('users/:username/emotions')
 export class UserEmotionsController {

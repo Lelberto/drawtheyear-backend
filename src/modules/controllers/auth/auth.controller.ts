@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { User } from '../users/entities/user.entity';
-import { AuthService } from '../auth/auth.service';
-import { GoogleAuthGuard } from '../auth/guards/google-auth.guard';
-import { RefreshTokenAuthGuard } from '../auth/guards/refresh-token-auth.guard';
+import { User } from '../../users/entities/user.entity';
+import { AuthService } from '../../auth/auth.service';
+import { GoogleAuthGuard } from '../../auth/guards/google-auth.guard';
+import { RefreshTokenAuthGuard } from '../../auth/guards/refresh-token-auth.guard';
 
 @Controller('auth')
 export class AuthController {

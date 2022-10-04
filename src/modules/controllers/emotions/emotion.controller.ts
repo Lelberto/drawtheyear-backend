@@ -1,7 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { EmotionService } from '../emotions/emotion.service';
-import { Emotion } from '../emotions/entities/emotion.entity';
-import { ResolveEmotionIdPipe } from '../emotions/pipes/resolve-emotion-id.pipe';
+import { EmotionService } from '../../emotions/emotion.service';
+import { Emotion } from '../../emotions/entities/emotion.entity';
+import { ResolveEmotionIdPipe } from '../../emotions/pipes/resolve-emotion-id.pipe';
 
 @Controller('emotions')
 export class EmotionController {
