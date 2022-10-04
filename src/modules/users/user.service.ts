@@ -1,19 +1,19 @@
-import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException, Inject } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import userConfig, { UserConfig } from '../config/user.config';
 import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
 import { User } from './entities/user.entity';
+import { UserRepository } from './entities/user.repository';
 
 @Injectable()
 export class UserService {
   
-  private readonly userRepo: Repository<User>;
+  private readonly userRepo: UserRepository;
   private readonly config: ConfigType<UserConfig>;
 
-  public constructor(@InjectRepository(User) userRepo: Repository<User>, @Inject(userConfig.KEY) config: ConfigType<UserConfig>) {
+  public constructor(userRepo: UserRepository, @Inject(userConfig.KEY) config: ConfigType<UserConfig>) {
     this.userRepo = userRepo;
     this.config = config;
   }
@@ -93,12 +93,7 @@ export class UserService {
   }
 
   public async resetUsernameChangeCount(): Promise<number> {
-    const query = await this.userRepo.createQueryBuilder()
-      .update()
-      .set({ usernameChangeCountToday: 0 })
-      .where('usernameChangeCountToday > :min', { min: 0 })
-      .execute();
-    const { affected } = query;
+    const affected = await this.userRepo.resetUsernameChangeCount();
     console.log(`Username change count has been reset for ${affected} user${affected === 1 ? '' : 's'}`);
     return affected;
   }
