@@ -26,7 +26,9 @@ export class TaskService implements OnModuleInit {
 
   private async loadJobs(): Promise<void> {
     this.jobs.forEach(job => {
-      this.schedulerRegistry.addCronJob(job.name, new CronJob(job.time, job.execute));
+      const cronJob = new CronJob(job.time, job.execute);
+      this.schedulerRegistry.addCronJob(job.name, cronJob);
+      cronJob.start();
       console.log(`Loaded cron job ${job.name} (${job.time})`);
     });
   }
