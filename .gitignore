@@ -2,21 +2,15 @@
 /dist
 /node_modules
 
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# OS
-.DS_Store
-
-# Tests
+# Testing
 /coverage
 /.nyc_output
+
+# Environment
+.env*
+
+# Data
+/data
 
 # Editors
 /.idea
@@ -32,8 +26,14 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# Environment
-.env*
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# Data
-/data
+# OS
+.DS_Store
