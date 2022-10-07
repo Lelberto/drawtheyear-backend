@@ -23,12 +23,17 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  public async googleRedirect(@AuthUser() authUser: User, @Query('state') state: string, @Res() res: Response) {
+  public async googleRedirect(@AuthUser() authUser: User, @Query('state') state: string, @Res({ passthrough: true }) res: Response) {
     const platform = new URLSearchParams(state).get('platform');
-    const query = new URLSearchParams();
-    query.append('accessToken', await this.authService.generateAccessToken(authUser));
-    query.append('refreshToken', await this.authService.generateRefreshToken(authUser));
-    return res.redirect(`${this.authService.resolvePlatformLoginSuccessUrl(platform)}?${query.toString()}`);
+    const accessToken = await this.authService.generateAccessToken(authUser);
+    const refreshToken = await this.authService.generateRefreshToken(authUser);
+    if (platform) {
+      const query = new URLSearchParams();
+      query.append('accessToken', accessToken);
+      query.append('refreshToken', refreshToken);
+      return res.redirect(`${this.authService.resolvePlatformLoginSuccessUrl(platform)}?${query.toString()}`);
+    }
+    return { accessToken, refreshToken };
   }
 
   @Post('accessToken')
