@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthUser } from '../../../common/decorators/user.decorator';
 import { AuthService } from '../../auth/auth.service';
@@ -23,11 +23,12 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  public async googleRedirect(@AuthUser() authUser: User, @Res() res: Response) {
+  public async googleRedirect(@AuthUser() authUser: User, @Query('state') state: string, @Res() res: Response) {
+    const platform = new URLSearchParams(state).get('platform');
     const query = new URLSearchParams();
     query.append('accessToken', await this.authService.generateAccessToken(authUser));
     query.append('refreshToken', await this.authService.generateRefreshToken(authUser));
-    return res.redirect(`http://localhost:3000/login/callback?${query.toString()}`); // TODO Dynamic redirect URL (Web / Mobile)
+    return res.redirect(`${this.authService.resolvePlatformLoginSuccessUrl(platform)}?${query.toString()}`);
   }
 
   @Post('accessToken')
