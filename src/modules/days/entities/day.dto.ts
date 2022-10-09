@@ -1,7 +1,7 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { IsDayDate } from '../../../common/decorators/validation/is-day-date.decorator';
-import { Visibility } from './day.entity';
+import { Visibility } from './visibility.enum';
 
 export class CreateDayDto {
 

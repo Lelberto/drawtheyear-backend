@@ -1,12 +1,8 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Emotion } from '../../emotions/entities/emotion.entity';
 import { User } from '../../users/entities/user.entity';
+import { Visibility } from './visibility.enum';
 
-
-export enum Visibility {
-  PUBLIC = 'public',
-  PRIVATE = 'private'
-}
 @Entity()
 export class Day {
 
