@@ -1,6 +1,7 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { IsDayDate } from '../../../common/decorators/validation/is-day-date.decorator';
+import { Visibility } from './day.entity';
 
 export class CreateDayDto {
 
@@ -10,6 +11,9 @@ export class CreateDayDto {
 
   @IsString()
   public resume: string;
+
+  @IsEnum(Visibility)
+  public visibility: Visibility;
 }
 
 export class UpdateDayDto extends PartialType(OmitType(CreateDayDto, ['date'])) {}
