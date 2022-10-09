@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthConfig } from '../config/auth.config';
 import { UserModule } from '../users/user.module';
 import { AuthService } from './auth.service';
+import { RoleService } from './role.service';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
@@ -25,7 +26,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
       inject: [ConfigService]
     })
   ],
-  exports: [AuthService],
-  providers: [AuthService, GoogleStrategy, AccessTokenStrategy, RefreshTokenStrategy]
+  exports: [AuthService, RoleService],
+  providers: [AuthService, RoleService, GoogleStrategy, AccessTokenStrategy, RefreshTokenStrategy]
 })
 export class AuthModule {}

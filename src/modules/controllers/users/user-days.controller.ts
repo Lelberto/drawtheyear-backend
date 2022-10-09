@@ -1,4 +1,8 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { UsePermissions } from '../../../common/decorators/auth/use-permissions.decorator';
+import { Permission } from '../../../common/types/role.types';
+import { AccessTokenAuthGuard } from '../../auth/guards/jwt/access-token-auth.guard';
+import { RoleGuard } from '../../auth/guards/roles/role.guard';
 import { DayService } from '../../days/day.service';
 import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto, UpdateDayDto } from '../../days/entities/day.dto';
 import { Day } from '../../days/entities/day.entity';
@@ -8,6 +12,7 @@ import { User } from '../../users/entities/user.entity';
 import { ResolveUsernamePipe } from '../../users/pipes/resolve-username.pipe';
 
 @Controller('users/:username/days')
+@UseGuards(AccessTokenAuthGuard, RoleGuard)
 export class UserDayController {
 
   private readonly dayService: DayService;
@@ -19,6 +24,7 @@ export class UserDayController {
   }
 
   @Post()
+  @UsePermissions(Permission.DAY_CREATION)
   public async create(@Param('username', ResolveUsernamePipe) user: User, @Body() dto: CreateDayDto) {
     const day = await this.dayService.create(dto, user);
     return {
@@ -32,6 +38,7 @@ export class UserDayController {
   }
 
   @Patch(':dayDate')
+  @UsePermissions(Permission.DAY_UPDATE)
   public async update(@Param(ResolveDayDatePipe) day: Day, @Body() dto: UpdateDayDto) {
     await this.dayService.update(day, dto);
     return {
@@ -40,6 +47,7 @@ export class UserDayController {
   }
 
   @Patch(':dayDate/emotions/add')
+  @UsePermissions(Permission.DAY_UPDATE)
   public async addEmotion(@Param(ResolveDayDatePipe) day: Day, @Body() dto: AddEmotionToDayDto) {
     const emotion = await this.emotionService.findById(dto.emotionId);
     await this.dayService.addEmotion(day, emotion);
@@ -49,6 +57,7 @@ export class UserDayController {
   }
 
   @Patch(':dayDate/emotions/remove')
+  @UsePermissions(Permission.DAY_UPDATE)
   public async removeEmotion(@Param(ResolveDayDatePipe) day: Day, @Body() dto: RemoveEmotionFromDayDto) {
     const emotion = await this.emotionService.findById(dto.emotionId);
     await this.dayService.removeEmotion(day, emotion);

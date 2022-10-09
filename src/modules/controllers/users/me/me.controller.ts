@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { AuthUser } from '../../../../common/decorators/user.decorator';
-import { AccessTokenAuthGuard } from '../../../auth/guards/access-token-auth.guard';
+import { AccessTokenAuthGuard } from '../../../auth/guards/jwt/access-token-auth.guard';
 import { UpdateUserDto } from '../../../users/entities/user.dto';
 import { User } from '../../../users/entities/user.entity';
 import { UserService } from '../../../users/user.service';

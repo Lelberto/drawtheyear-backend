@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthUser } from '../../../../common/decorators/user.decorator';
-import { AccessTokenAuthGuard } from '../../../auth/guards/access-token-auth.guard';
+import { AccessTokenAuthGuard } from '../../../auth/guards/jwt/access-token-auth.guard';
 import { EmotionService } from '../../../emotions/emotion.service';
 import { CreateEmotionDto } from '../../../emotions/entities/emotion.dto';
 import { User } from '../../../users/entities/user.entity';
@@ -20,7 +20,7 @@ export class MeEmotionsController {
     const emotion = await this.emotionService.create(dto, authUser);
     return {
       id: emotion.id
-    }
+    };
   }
 
   @Get()

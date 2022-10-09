@@ -2,8 +2,8 @@ import { Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/commo
 import { Request, Response } from 'express';
 import { AuthUser } from '../../../common/decorators/user.decorator';
 import { AuthService } from '../../auth/auth.service';
-import { GoogleAuthGuard } from '../../auth/guards/google-auth.guard';
-import { RefreshTokenAuthGuard } from '../../auth/guards/refresh-token-auth.guard';
+import { GoogleAuthGuard } from '../../auth/guards/oauth/google-auth.guard';
+import { RefreshTokenAuthGuard } from '../../auth/guards/jwt/refresh-token-auth.guard';
 import { User } from '../../users/entities/user.entity';
 
 @Controller('auth')

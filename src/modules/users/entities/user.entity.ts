@@ -2,6 +2,7 @@ import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Day } from '../../days/entities/day.entity';
 import { Emotion } from '../../emotions/entities/emotion.entity';
+import { Role } from './../../../common/types/role.types';
 
 @Entity()
 export class User {
@@ -42,6 +43,15 @@ export class User {
     length: '30'
   })
   public name: string;
+
+  @Column({
+    // type: 'enum',
+    type: 'varchar', length: 10, // TODO type: 'enum' don't work with SQLite
+    enum: Object.values(Role),
+    default: Role.USER
+  })
+  @Exclude({ toPlainOnly: true })
+  public role: Role;
 
   @OneToMany(() => Emotion, emotion => emotion.user)
   public emotions: Emotion[];
