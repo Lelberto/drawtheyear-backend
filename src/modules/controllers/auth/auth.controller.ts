@@ -39,10 +39,9 @@ export class AuthController {
   @Post('accessToken')
   @UseGuards(RefreshTokenAuthGuard)
   public async accessToken(@Req() req: Request) {
-    const data = {
+    return {
       accessToken: await this.authService.generateAccessToken(req.user as User),
       refreshToken: await this.authService.generateRefreshToken(req.user as User)
-    }
-    return data;
+    };
   }
 }

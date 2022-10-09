@@ -60,7 +60,7 @@ export class UserService {
     return user;
   }
 
-  public async update(user: User, dto: UpdateUserDto): Promise<User> {
+  public async update(user: User, dto: UpdateUserDto): Promise<void> {
     if (dto.username) {
       if (user.usernameChangeCountToday === this.config.usernameMaxChangeCountPerDay) {
         throw new BadRequestException(`Username has been updated too many times for today`);
@@ -68,7 +68,7 @@ export class UserService {
       dto.username = await this.generateUsername(dto.username);
       user.usernameChangeCountToday++;
     }
-    return await this.userRepo.save({ ...user, ...dto });
+    await this.userRepo.save({ ...user, ...dto });
   }
 
   public async resolveId(username: string): Promise<string> {

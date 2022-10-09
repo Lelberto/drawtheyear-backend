@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { User } from '../users/entities/user.entity';
-import { CreateDayDto } from './entities/day.dto';
+import { CreateDayDto, UpdateDayDto } from './entities/day.dto';
 import { Day } from './entities/day.entity';
 
 @Injectable()
@@ -35,14 +35,18 @@ export class DayService {
     return day;
   }
 
-  public async addEmotion(day: Day, emotion: Emotion): Promise<Day> {
-    day.emotions = [...day.emotions, emotion];
-    return await this.dayRepo.save(day);
+  public async update(day: Day, dto: UpdateDayDto): Promise<void> {
+    await this.dayRepo.save({ ...day, ...dto });
   }
 
-  public async removeEmotion(day: Day, emotion: Emotion): Promise<Day> {
+  public async addEmotion(day: Day, emotion: Emotion): Promise<void> {
+    day.emotions = [...day.emotions, emotion];
+    await this.dayRepo.save(day);
+  }
+
+  public async removeEmotion(day: Day, emotion: Emotion): Promise<void> {
     day.emotions = day.emotions.filter(currentEmotion => currentEmotion.id !== emotion.id);
-    return await this.dayRepo.save(day);
+    await this.dayRepo.save(day);
   }
 
   public async exists(user: User, date: Date): Promise<boolean> {

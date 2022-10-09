@@ -22,6 +22,9 @@ export class MeController {
 
   @Patch()
   public async update(@AuthUser() authUser: User, @Body() dto: UpdateUserDto) {
-    return await this.userService.update(authUser, dto);
+    await this.userService.update(authUser, dto);
+    return {
+      id: authUser.id
+    };
   }
 }

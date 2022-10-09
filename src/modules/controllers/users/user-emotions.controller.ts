@@ -15,7 +15,10 @@ export class UserEmotionsController {
 
   @Post()
   public async create(@Param('username', ResolveUsernamePipe) user: User, @Body() dto: CreateEmotionDto) {
-    return await this.emotionService.create(dto, user);
+    const emotion = await this.emotionService.create(dto, user);
+    return {
+      id: emotion.id
+    }
   }
 
   @Get()

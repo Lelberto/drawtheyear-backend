@@ -20,6 +20,9 @@ export class UserController {
 
   @Patch(':username')
   public async update(@Param('username', ResolveUsernamePipe) user: User, @Body() dto: UpdateUserDto) {
-    return await this.userService.update(user, dto);
+    await this.userService.update(user, dto);
+    return {
+      id: user.id
+    };
   }
 }
