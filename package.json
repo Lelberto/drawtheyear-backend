@@ -12,6 +12,7 @@
     "start:dev": "set \"NODE_ENV=development\" && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
+    "cmd:import": "ts-node ./src/console.ts import -f abc.txt -m def.json",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
