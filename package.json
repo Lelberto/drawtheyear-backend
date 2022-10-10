@@ -12,7 +12,7 @@
     "start:dev": "set \"NODE_ENV=development\" && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "cmd:import": "set \"NODE_ENV=development\" && ts-node ./src/console.ts import -u db67a429-0c5f-401b-b35e-09eada92f064 -f data/test/dty-user-1.json",
+    "cmd:import": "set \"NODE_ENV=development\" && ts-node ./src/console.ts import -u <user-id> -f <file-path>",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

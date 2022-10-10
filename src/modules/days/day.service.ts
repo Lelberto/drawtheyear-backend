@@ -51,12 +51,12 @@ export class DayService {
   }
 
   public async addEmotion(day: Day, emotion: Emotion): Promise<void> {
-    day.emotions = [...day.emotions, emotion];
+    day.emotions = day.emotions ? [...day.emotions, emotion] : [emotion];
     await this.dayRepo.save(day);
   }
 
   public async removeEmotion(day: Day, emotion: Emotion): Promise<void> {
-    day.emotions = day.emotions.filter(currentEmotion => currentEmotion.id !== emotion.id);
+    day.emotions = day.emotions?.filter(currentEmotion => currentEmotion.id !== emotion.id);
     await this.dayRepo.save(day);
   }
 

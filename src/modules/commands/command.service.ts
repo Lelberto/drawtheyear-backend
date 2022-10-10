@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ImportCommand } from './import.command';
-import { Command } from './command';
+import { Command, ExitCode } from './command';
 
 @Injectable()
 export class CommandService {
@@ -20,7 +20,16 @@ export class CommandService {
     if (!cmd) {
       throw new Error(`Unknow command ${cmdName}`);
     }
-    await cmd.execute(this.buildArguments(args), this.buildOptions(args));
+    console.info(`Executing command ${cmd.name}`);
+    let code: ExitCode;
+    try {
+      code = await cmd.execute(this.buildArguments(args), this.buildOptions(args));
+    } catch (err) {
+      code = ExitCode.ERROR;
+      console.error(`Error when executing command ${cmd.name}`);
+      console.error(err);
+    }
+    console.info(`Command ${cmd.name} exited with code ${code}`);
   }
 
   private buildArguments(argv: string[]): string[] {
