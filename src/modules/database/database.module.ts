@@ -8,7 +8,7 @@ import { DatabaseConfig } from '../config/database.config';
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
-        const env = config.get('env');
+        const env = process.env.NODE_ENV;
         const dbConfig = config.get<ConfigType<DatabaseConfig>>('database');
         return {
           host: dbConfig.url,
