@@ -15,7 +15,8 @@ export class Day {
   public date: Date;
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   public resume: string;
 

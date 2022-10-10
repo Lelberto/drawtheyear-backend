@@ -10,10 +10,10 @@ export class CreateDayDto {
   public date: Date;
 
   @IsString()
-  public resume: string;
+  public resume?: string;
 
   @IsEnum(Visibility)
-  public visibility: Visibility;
+  public visibility?: Visibility;
 }
 
 export class UpdateDayDto extends PartialType(OmitType(CreateDayDto, ['date'])) {}

@@ -6,7 +6,7 @@ import { Role } from '../../../common/types/role.types';
 export class CreateUserDto {
 
   @IsString()
-  public googleId: string;
+  public googleId?: string;
 
   @IsEmail()
   @IsNotEmpty()
@@ -19,6 +19,7 @@ export class CreateUserDto {
 
   @IsString()
   @MaxLength(30)
+  @IsNotEmpty()
   public name: string;
 }
 
@@ -27,5 +28,6 @@ export class UpdateUserDto extends PartialType(PickType(CreateUserDto, ['usernam
 export class ChangeRoleDto {
   
   @IsEnum(Role)
+  @IsNotEmpty()
   public role: Role;
 }
