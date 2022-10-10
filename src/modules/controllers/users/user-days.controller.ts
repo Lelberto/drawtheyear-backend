@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UsePermissions } from '../../../common/decorators/auth/use-permissions.decorator';
+import { AuthUser } from '../../../common/decorators/user.decorator';
 import { Permission } from '../../../common/types/role.types';
 import { AccessTokenAuthGuard } from '../../auth/guards/jwt/access-token-auth.guard';
 import { RoleGuard } from '../../auth/guards/roles/role.guard';
@@ -33,8 +34,8 @@ export class UserDayController {
   }
 
   @Get()
-  public async find(@Param('username', ResolveUsernamePipe) user: User) {
-    return await this.dayService.findByUser(user);
+  public async find(@AuthUser() authUser: User, @Param('username', ResolveUsernamePipe) user: User) {
+    return await this.dayService.findByUser(user, authUser);
   }
 
   @Patch(':dayDate')

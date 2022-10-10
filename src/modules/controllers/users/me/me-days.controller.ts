@@ -28,7 +28,7 @@ export class MeDaysController {
 
   @Get()
   public async find(@AuthUser() authUser: User) {
-    return await this.dayService.findByUser(authUser);
+    return await this.dayService.findByUser(authUser, authUser);
   }
 
   @Patch(':dayDate')

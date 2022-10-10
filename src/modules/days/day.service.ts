@@ -1,18 +1,23 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Permission } from '../../common/types/role.types';
+import { RoleService } from '../auth/role.service';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateDayDto, UpdateDayDto } from './entities/day.dto';
 import { Day } from './entities/day.entity';
+import { Visibility } from './entities/visibility.enum';
 
 @Injectable()
 export class DayService {
 
   private readonly dayRepo: Repository<Day>;
+  private readonly roleService: RoleService;
 
-  public constructor(@InjectRepository(Day) dayRepo: Repository<Day>) {
+  public constructor(@InjectRepository(Day) dayRepo: Repository<Day>, roleService: RoleService) {
     this.dayRepo = dayRepo;
+    this.roleService = roleService;
   }
 
   public async create(dto: CreateDayDto, user: User): Promise<Day> {
@@ -23,8 +28,14 @@ export class DayService {
     return await this.dayRepo.save(day);
   }
 
-  public async findByUser(user: User): Promise<Day[]> {
-    return await this.dayRepo.find({ where: { user }, relations: { emotions: true } });
+  public async findByUser(user: User, caller: User): Promise<Day[]> {
+    const days = await this.dayRepo.find({ where: { user }, relations: { emotions: true } });
+    return days.map(day => {
+      if (!this.hasAccessToDetails(day, caller)) {
+        day.resume = null;
+      }
+      return day;
+    });
   }
 
   public async findByDate(user: User, date: Date): Promise<Day> {
@@ -51,5 +62,11 @@ export class DayService {
 
   public async exists(user: User, date: Date): Promise<boolean> {
     return await this.dayRepo.countBy({ user, date }) > 0;
+  }
+
+  public async hasAccessToDetails(day: Day, user: User): Promise<boolean> {
+    return day.visibility === Visibility.PUBLIC
+      || user?.id === day.user as unknown as string
+      || this.roleService.checkPermissions(user, Permission.DAY_RESUME_BYPASS);
   }
 }
