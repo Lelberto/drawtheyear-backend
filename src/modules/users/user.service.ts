@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { validate } from 'class-validator';
 import { FindOptionsWhere } from 'typeorm';
 import userConfig, { UserConfig } from '../config/user.config';
-import { CreateUserDto, UpdateUserDto } from './entities/user.dto';
+import { ChangeRoleDto, CreateUserDto, UpdateUserDto } from './entities/user.dto';
 import { User } from './entities/user.entity';
 import { UserRepository } from './entities/user.repository';
 
@@ -68,6 +68,10 @@ export class UserService {
       dto.username = await this.generateUsername(dto.username);
       user.usernameChangeCountToday++;
     }
+    await this.userRepo.save({ ...user, ...dto });
+  }
+
+  public async changeRole(user: User, dto: ChangeRoleDto): Promise<void> {
     await this.userRepo.save({ ...user, ...dto });
   }
 

@@ -1,6 +1,7 @@
 import { PartialType, PickType } from '@nestjs/mapped-types';
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { IsUsername } from '../../../common/decorators/validation/is-username.decorator';
+import { Role } from '../../../common/types/role.types';
 
 export class CreateUserDto {
 
@@ -22,3 +23,9 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto extends PartialType(PickType(CreateUserDto, ['username', 'name'])) {}
+
+export class ChangeRoleDto {
+  
+  @IsEnum(Role)
+  public role: Role;
+}
