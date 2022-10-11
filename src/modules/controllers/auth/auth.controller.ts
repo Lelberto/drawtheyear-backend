@@ -1,18 +1,22 @@
-import { Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthUser } from '../../../common/decorators/user.decorator';
 import { AuthService } from '../../auth/auth.service';
 import { GoogleAuthGuard } from '../../auth/guards/oauth/google-auth.guard';
 import { RefreshTokenAuthGuard } from '../../auth/guards/jwt/refresh-token-auth.guard';
 import { User } from '../../users/entities/user.entity';
+import { ConfigType } from '@nestjs/config';
+import authConfig, { AuthConfig } from '../../config/auth.config';
 
 @Controller('auth')
 export class AuthController {
 
   private readonly authService: AuthService;
+  private readonly config: ConfigType<AuthConfig>;
 
-  public constructor(authService: AuthService) {
+  public constructor(authService: AuthService, @Inject(authConfig.KEY) config: ConfigType<AuthConfig>) {
     this.authService = authService;
+    this.config = config;
   }
 
   @Get('google')
@@ -41,7 +45,8 @@ export class AuthController {
   public async accessToken(@Req() req: Request) {
     return {
       accessToken: await this.authService.generateAccessToken(req.user as User),
-      refreshToken: await this.authService.generateRefreshToken(req.user as User)
+      refreshToken: await this.authService.generateRefreshToken(req.user as User),
+      expiration: this.config.accessToken.expiration
     };
   }
 }
