@@ -15,7 +15,9 @@ export class EmotionController {
 
   @Get(':emotionId')
   public async findById(@Param('emotionId', ResolveEmotionIdPipe) emotion: Emotion) {
-    return emotion;
+    return {
+      data: emotion
+    };
   }
 
   @Patch(':emotionId')

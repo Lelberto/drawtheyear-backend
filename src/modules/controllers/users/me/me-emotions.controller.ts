@@ -25,6 +25,8 @@ export class MeEmotionsController {
 
   @Get()
   public async find(@AuthUser() authUser: User) {
-    return await this.emotionService.findByUser(authUser);
+    return {
+      data: await this.emotionService.findByUser(authUser)
+    };
   }
 }

@@ -17,7 +17,9 @@ export class MeController {
 
   @Get()
   public async find(@AuthUser() authUser: User) {
-    return authUser;
+    return {
+      data: authUser
+    };
   }
 
   @Patch()

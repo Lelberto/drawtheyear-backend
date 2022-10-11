@@ -21,7 +21,9 @@ export class UserController {
 
   @Get()
   public async find() {
-    return await this.userService.find();
+    return {
+      data: await this.userService.find()
+    };
   }
 
   @Patch(':username')

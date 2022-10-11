@@ -35,7 +35,9 @@ export class UserDayController {
 
   @Get()
   public async find(@Param('username', ResolveUsernamePipe) user: User, @Query() query: FindDaysQueryDto) {
-    return await this.dayService.findByYear(user, parseInt(query.year, 10) || moment().year());
+    return {
+      data: await this.dayService.findByYear(user, parseInt(query.year, 10) || moment().year())
+    };
   }
 
   @Patch(':dayDate')

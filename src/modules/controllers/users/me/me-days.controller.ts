@@ -29,7 +29,9 @@ export class MeDaysController {
 
   @Get()
   public async find(@AuthUser() authUser: User, @Query() query: FindDaysQueryDto) {
-    return await this.dayService.findByYear(authUser, parseInt(query.year, 10) || moment().year());
+    return {
+      data: await this.dayService.findByYear(authUser, parseInt(query.year, 10) || moment().year())
+    };
   }
 
   @Patch(':dayDate')

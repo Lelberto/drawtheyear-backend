@@ -29,6 +29,8 @@ export class UserEmotionsController {
 
   @Get()
   public async find(@Param('username', ResolveUsernamePipe) user: User) {
-    return await this.emotionService.findByUser(user);
+    return {
+      data: await this.emotionService.findByUser(user)
+    };
   }
 }
