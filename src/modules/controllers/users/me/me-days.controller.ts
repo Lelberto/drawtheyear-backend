@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import * as moment from 'moment';
 import { AuthUser } from '../../../../common/decorators/user.decorator';
 import { AccessTokenAuthGuard } from '../../../auth/guards/jwt/access-token-auth.guard';
 import { DayService } from '../../../days/day.service';
-import { AddEmotionToDayDto, CreateDayDto, RemoveEmotionFromDayDto, UpdateDayDto } from '../../../days/entities/day.dto';
+import { AddEmotionToDayDto, CreateDayDto, FindDaysQueryDto, RemoveEmotionFromDayDto, UpdateDayDto } from '../../../days/entities/day.dto';
 import { EmotionService } from '../../../emotions/emotion.service';
 import { User } from '../../../users/entities/user.entity';
 
@@ -27,8 +28,8 @@ export class MeDaysController {
   }
 
   @Get()
-  public async find(@AuthUser() authUser: User) {
-    return await this.dayService.findByUser(authUser, authUser);
+  public async find(@AuthUser() authUser: User, @Query() query: FindDaysQueryDto) {
+    return await this.dayService.findByYear(authUser, parseInt(query.year, 10) || moment().year());
   }
 
   @Patch(':dayDate')

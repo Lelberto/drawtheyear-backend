@@ -1,5 +1,5 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { IsDayDate } from '../../../common/decorators/validation/is-day-date.decorator';
 import { Visibility } from './visibility.enum';
 
@@ -26,3 +26,10 @@ export class AddEmotionToDayDto {
 }
 
 export class RemoveEmotionFromDayDto extends AddEmotionToDayDto {}
+
+export class FindDaysQueryDto {
+
+  @IsString()
+  @IsOptional()
+  public year?: string;
+}

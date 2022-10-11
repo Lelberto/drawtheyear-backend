@@ -1,21 +1,20 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Permission } from '../../common/types/role.types';
 import { RoleService } from '../auth/role.service';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateDayDto, UpdateDayDto } from './entities/day.dto';
 import { Day } from './entities/day.entity';
+import { DayRepository } from './entities/day.repository';
 import { Visibility } from './entities/visibility.enum';
 
 @Injectable()
 export class DayService {
 
-  private readonly dayRepo: Repository<Day>;
+  private readonly dayRepo: DayRepository;
   private readonly roleService: RoleService;
 
-  public constructor(@InjectRepository(Day) dayRepo: Repository<Day>, roleService: RoleService) {
+  public constructor(dayRepo: DayRepository, roleService: RoleService) {
     this.dayRepo = dayRepo;
     this.roleService = roleService;
   }
@@ -44,6 +43,10 @@ export class DayService {
       throw new NotFoundException(`Day with date ${date} for user ${user.username} not found`);
     }
     return day;
+  }
+
+  public async findByYear(user: User, year: number): Promise<Day[]> {
+    return await this.dayRepo.findByYear(user, year);
   }
 
   public async update(day: Day, dto: UpdateDayDto): Promise<void> {
