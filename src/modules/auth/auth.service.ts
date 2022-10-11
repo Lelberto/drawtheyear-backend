@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   public resolvePlatformLoginSuccessUrl(platform: string): string {
-    const url = this.config.app.platforms[platform].loginSuccess;
+    const url = this.config.app.platforms[platform].loginCallback;
     if (!url) {
       throw new BadRequestException(`Invalid platform ${platform}`);
     }
