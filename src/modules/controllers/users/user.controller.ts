@@ -26,6 +26,13 @@ export class UserController {
     };
   }
 
+  @Get(':username')
+  public async findByUsername(@Param('username', ResolveUsernamePipe) user: User) {
+    return {
+      data: user
+    };
+  }
+
   @Patch(':username')
   @UsePermissions(Permission.USER_UPDATE)
   public async update(@Param('username', ResolveUsernamePipe) user: User, @Body() dto: UpdateUserDto) {
