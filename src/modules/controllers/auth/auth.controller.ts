@@ -46,7 +46,8 @@ export class AuthController {
     return {
       accessToken: await this.authService.generateAccessToken(req.user as User),
       refreshToken: await this.authService.generateRefreshToken(req.user as User),
-      expiration: this.config.accessToken.expiration
+      timestamp: Date.now(),
+      expiration: this.config.accessToken.expiration * 1000
     };
   }
 }

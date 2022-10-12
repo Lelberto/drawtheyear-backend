@@ -7,11 +7,11 @@ const config = registerAs('auth', () => ({
   },
   accessToken: {
     secret: process.env.AUTH_ACCESS_TOKEN_SECRET,
-    expiration: process.env.AUTH_ACCESS_TOKEN_EXPIRATION
+    expiration: parseInt(process.env.AUTH_ACCESS_TOKEN_EXPIRATION, 10)
   },
   refreshToken: {
     secret: process.env.AUTH_REFRESH_TOKEN_SECRET,
-    expiration: process.env.AUTH_REFRESH_TOKEN_EXPIRATION
+    expiration: parseInt(process.env.AUTH_REFRESH_TOKEN_EXPIRATION, 10)
   }
 }));
 
