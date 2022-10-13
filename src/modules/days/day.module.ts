@@ -4,11 +4,10 @@ import { AuthModule } from '../auth/auth.module';
 import { EmotionModule } from '../emotions/emotion.module';
 import { DayService } from './day.service';
 import { Day } from './entities/day.entity';
-import { DayRepository } from './entities/day.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Day]), AuthModule, EmotionModule],
   exports: [DayService],
-  providers: [DayRepository, DayService]
+  providers: [DayService]
 })
 export class DayModule {}

@@ -31,7 +31,7 @@ export class Day {
   @ManyToOne(() => User, user => user.days)
   public user: User;
 
-  @ManyToMany(() => Emotion, emotion => emotion.days)
+  @ManyToMany(() => Emotion, emotion => emotion.days, { eager: true })
   @JoinTable()
   public emotions: Emotion[];
 }

@@ -1,20 +1,22 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as moment from 'moment';
+import { Repository } from 'typeorm';
 import { Permission } from '../../common/types/role.types';
 import { RoleService } from '../auth/role.service';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateDayDto, UpdateDayDto } from './entities/day.dto';
 import { Day } from './entities/day.entity';
-import { DayRepository } from './entities/day.repository';
 import { Visibility } from './entities/visibility.enum';
 
 @Injectable()
 export class DayService {
 
-  private readonly dayRepo: DayRepository;
+  private readonly dayRepo: Repository<Day>;
   private readonly roleService: RoleService;
 
-  public constructor(dayRepo: DayRepository, roleService: RoleService) {
+  public constructor(@InjectRepository(Day) dayRepo: Repository<Day>, roleService: RoleService) {
     this.dayRepo = dayRepo;
     this.roleService = roleService;
   }
@@ -28,7 +30,7 @@ export class DayService {
   }
 
   public async findByUser(user: User, caller: User): Promise<Day[]> {
-    const days = await this.dayRepo.find({ where: { user }, relations: { emotions: true } });
+    const days = await this.dayRepo.findBy({ user });
     return days.map(day => {
       if (!this.hasAccessToDetails(day, caller)) {
         day.resume = null;
@@ -38,7 +40,7 @@ export class DayService {
   }
 
   public async findByDate(user: User, date: Date): Promise<Day> {
-    const day = await this.dayRepo.findOne({ where: { user, date }, relations: { emotions: true } });
+    const day = await this.dayRepo.findOneBy({ user });
     if (!day) {
       throw new NotFoundException(`Day with date ${date} for user ${user.username} not found`);
     }
@@ -46,7 +48,8 @@ export class DayService {
   }
 
   public async findByYear(user: User, year: number): Promise<Day[]> {
-    return await this.dayRepo.findByYear(user, year);
+    const dates = [moment(`${year}-01-01`), moment(`${year}-12-31`)];
+    return (await this.findByUser(user, user)).filter(day => moment(day.date).isBetween(dates[0], dates[1]));
   }
 
   public async update(day: Day, dto: UpdateDayDto): Promise<void> {
