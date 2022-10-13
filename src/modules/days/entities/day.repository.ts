@@ -11,7 +11,6 @@ export class DayRepository extends Repository<Day> {
   }
 
   public async findByYear(user: User, year: number): Promise<Day[]> {
-    console.log(typeof year);
     return await this.createQueryBuilder()
       .select()
       .where('user_id = :userId', { userId: user.id })
