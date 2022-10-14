@@ -40,7 +40,7 @@ export class DayService {
   }
 
   public async findByDate(user: User, date: Date): Promise<Day> {
-    const day = await this.dayRepo.findOneBy({ user });
+    const day = await this.dayRepo.findOneBy({ user, date });
     if (!day) {
       throw new NotFoundException(`Day with date ${date} for user ${user.username} not found`);
     }
