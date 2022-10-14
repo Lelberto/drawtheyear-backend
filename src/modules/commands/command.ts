@@ -12,6 +12,7 @@ export type CommandOption = {
 
 export abstract class Command {
 
+  public static readonly KEY = Symbol(Command.constructor.name);
   private static readonly PROGRESS_BAR_FILLED_CHAR = '♦';
   private static readonly PROGRESS_BAR_EMPTY_CHAR = '○';
   private static readonly PROGRESS_BAR_VALUE_LENGTH = 30;

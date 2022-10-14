@@ -7,6 +7,7 @@ import { UserModule } from '../users/user.module';
 import { CommandService } from './command.service';
 import { ImportCommand } from './import.command';
 import { ChangeRoleCommand } from './change-role.command';
+import { Command } from './command';
 
 @Module({
   imports: [
@@ -19,7 +20,12 @@ import { ChangeRoleCommand } from './change-role.command';
   providers: [
     CommandService,
     ImportCommand,
-    ChangeRoleCommand
+    ChangeRoleCommand,
+    {
+      provide: Command.KEY,
+      useFactory: (...cmds) => cmds,
+      inject: [ImportCommand, ChangeRoleCommand]
+    }
   ]
 })
 export class CommandModule {}
