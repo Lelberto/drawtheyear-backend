@@ -40,6 +40,13 @@ export class UserDayController {
     };
   }
 
+  @Get(':dayDate')
+  public async findByDate(@Param('username', ResolveUsernamePipe) user: User, @Param('dayDate') dayDate: Date) {
+    return {
+      data: await this.dayService.findByDate(user, dayDate)
+    };
+  }
+
   @Patch(':dayDate')
   @UsePermissions(Permission.DAY_UPDATE)
   public async update(@Param(ResolveDayDatePipe) day: Day, @Body() dto: UpdateDayDto) {

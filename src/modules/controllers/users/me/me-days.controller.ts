@@ -34,6 +34,13 @@ export class MeDaysController {
     };
   }
 
+  @Get(':dayDate')
+  public async findByDate(@AuthUser() authUser: User, @Param('dayDate') dayDate: Date) {
+    return {
+      data: await this.dayService.findByDate(authUser, dayDate)
+    };
+  }
+
   @Patch(':dayDate')
   public async update(@AuthUser() authUser: User, @Param('dayDate') dayDate: Date, @Body() dto: UpdateDayDto) {
     const day = await this.dayService.findByDate(authUser, dayDate);
