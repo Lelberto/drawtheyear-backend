@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ImportCommand } from './import.command';
 import { Command, ExitCode } from './command';
+import { ChangeRoleCommand } from './change-role.command';
 
 @Injectable()
 export class CommandService {
 
   private readonly commands: Command[];
 
-  public constructor(importCmd: ImportCommand) {
+  public constructor(importCmd: ImportCommand, changeRoleCmd: ChangeRoleCommand) {
     this.commands = [
-      importCmd
+      importCmd,
+      changeRoleCmd
     ]
   }
 

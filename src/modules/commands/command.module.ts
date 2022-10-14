@@ -6,6 +6,7 @@ import { EmotionModule } from '../emotions/emotion.module';
 import { UserModule } from '../users/user.module';
 import { CommandService } from './command.service';
 import { ImportCommand } from './import.command';
+import { ChangeRoleCommand } from './change-role.command';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { ImportCommand } from './import.command';
   ],
   providers: [
     CommandService,
-    ImportCommand
+    ImportCommand,
+    ChangeRoleCommand
   ]
 })
 export class CommandModule {}
