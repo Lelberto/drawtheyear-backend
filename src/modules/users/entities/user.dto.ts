@@ -1,5 +1,5 @@
 import { PartialType, PickType } from '@nestjs/mapped-types';
-import { IsEmail, IsEnum, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 import { IsUsername } from '../../../common/decorators/validation/is-username.decorator';
 import { Role } from '../../../common/types/role.types';
 
@@ -21,6 +21,10 @@ export class CreateUserDto {
   @MaxLength(30)
   @IsNotEmpty()
   public name: string;
+
+  @IsString()
+  @IsOptional()
+  public picture?: string;
 }
 
 export class UpdateUserDto extends PartialType(PickType(CreateUserDto, ['username', 'name'])) {}

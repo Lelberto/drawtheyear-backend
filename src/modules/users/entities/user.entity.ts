@@ -45,6 +45,12 @@ export class User {
   public name: string;
 
   @Column({
+    type: 'text',
+    nullable: true
+  })
+  public picture: string;
+
+  @Column({
     // type: 'enum',
     type: 'varchar', length: 10, // TODO type: 'enum' don't work with SQLite
     enum: Object.values(Role),
