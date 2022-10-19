@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import * as moment from 'moment';
 import { UsePermissions } from '../../../common/decorators/auth/use-permissions.decorator';
+import { AuthUser } from '../../../common/decorators/user.decorator';
 import { Permission } from '../../../common/types/role.types';
 import { AccessTokenAuthGuard } from '../../auth/guards/jwt/access-token-auth.guard';
 import { RoleGuard } from '../../auth/guards/roles/role.guard';
 import { DayService } from '../../days/day.service';
 import { AddEmotionToDayDto, CreateDayDto, FindDaysQueryDto, RemoveEmotionFromDayDto, UpdateDayDto } from '../../days/entities/day.dto';
 import { Day } from '../../days/entities/day.entity';
+import { DayDetailsInterceptor } from '../../days/interceptors/day-details.interceptor';
 import { ResolveDayDatePipe } from '../../days/pipes/resolve-day-date.pipe';
 import { EmotionService } from '../../emotions/emotion.service';
 import { User } from '../../users/entities/user.entity';
@@ -34,13 +36,15 @@ export class UserDayController {
   }
 
   @Get()
-  public async find(@Param('username', ResolveUsernamePipe) user: User, @Query() query: FindDaysQueryDto) {
+  @UseInterceptors(DayDetailsInterceptor)
+  public async find(@AuthUser() authUser: User, @Param('username', ResolveUsernamePipe) user: User, @Query() query: FindDaysQueryDto) {
     return {
       data: await this.dayService.findByYear(user, parseInt(query.year, 10) || moment().year())
     };
   }
 
   @Get(':dayDate')
+  @UseInterceptors(DayDetailsInterceptor)
   public async findByDate(@Param('username', ResolveUsernamePipe) user: User, @Param('dayDate') dayDate: Date) {
     return {
       data: await this.dayService.findByDate(user, dayDate)

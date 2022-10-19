@@ -29,14 +29,8 @@ export class DayService {
     return await this.dayRepo.save(day);
   }
 
-  public async findByUser(user: User, caller: User): Promise<Day[]> {
-    const days = await this.dayRepo.findBy({ user });
-    return days.map(day => {
-      if (!this.hasAccessToDetails(day, caller)) {
-        day.resume = null;
-      }
-      return day;
-    });
+  public async findByUser(user: User): Promise<Day[]> {
+    return await this.dayRepo.findBy({ user });
   }
 
   public async findByDate(user: User, date: Date): Promise<Day> {
@@ -49,7 +43,7 @@ export class DayService {
 
   public async findByYear(user: User, year: number): Promise<Day[]> {
     const dates = [moment(`${year}-01-01`), moment(`${year}-12-31`)];
-    return (await this.findByUser(user, user)).filter(day => moment(day.date).isBetween(dates[0], dates[1]));
+    return (await this.findByUser(user)).filter(day => moment(day.date).isBetween(dates[0], dates[1])); // TODO Check if isBetween() includes 01-01 and 12-31
   }
 
   public async update(day: Day, dto: UpdateDayDto): Promise<void> {
@@ -72,7 +66,6 @@ export class DayService {
 
   public async hasAccessToDetails(day: Day, user: User): Promise<boolean> {
     return day.visibility === Visibility.PUBLIC
-      || user?.id === day.user as unknown as string
       || this.roleService.checkPermissions(user, Permission.DAY_RESUME_BYPASS);
   }
 }

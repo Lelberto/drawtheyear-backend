@@ -12,7 +12,8 @@ const config = registerAs('roles', () => ({
       Permission.USER_UPDATE,
       Permission.EMOTION_CREATION,
       Permission.DAY_CREATION,
-      Permission.DAY_UPDATE
+      Permission.DAY_UPDATE,
+      Permission.DAY_RESUME_BYPASS
     ]
   }
 }));
