@@ -19,7 +19,6 @@ export class DayDetailsInterceptor implements NestInterceptor {
  
   public async intercept(context: ExecutionContext, next: CallHandler<any>): Promise<Observable<any>> {
     const authUser = extractAuthUserFromRequest(context.switchToHttp().getRequest());
-    console.log(authUser)
     return next.handle().pipe(map(async ({ data }) => {
       if (isArray(data)) {
         for (const day of data) {
@@ -28,7 +27,6 @@ export class DayDetailsInterceptor implements NestInterceptor {
           }
         }
       } else {
-        console.log('not array')
         if (!await this.hasAccessToDetails(authUser, data)) {
           this.hideDetails(data);
         }
