@@ -32,7 +32,7 @@ export class Day implements Timestamps {
   @ManyToOne(() => User, user => user.days)
   public user: User;
 
-  @ManyToMany(() => Emotion, emotion => emotion.days, { eager: true })
+  @ManyToMany(() => Emotion, emotion => emotion.days)
   @JoinTable()
   public emotions: Emotion[];
 
