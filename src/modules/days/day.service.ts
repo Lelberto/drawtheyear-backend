@@ -27,10 +27,6 @@ export class DayService {
     return await this.dayRepo.save(day);
   }
 
-  public async findByUser(user: User): Promise<Day[]> {
-    return await this.dayRepo.findByUser(user);
-  }
-
   public async findByDate(user: User, date: Date): Promise<Day> {
     const day = await this.dayRepo.findByDate(user, date);
     if (!day) {
