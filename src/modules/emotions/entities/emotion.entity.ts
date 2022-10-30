@@ -1,9 +1,10 @@
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Timestamps } from '../../../common/entities/timestamps.interface';
 import { Day } from '../../days/entities/day.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
-export class Emotion {
+export class Emotion implements Timestamps {
   @PrimaryGeneratedColumn('uuid')
   public id: string;
 
@@ -24,4 +25,10 @@ export class Emotion {
 
   @ManyToMany(() => Day, day => day.emotions)
   public days: Day[];
+
+  @CreateDateColumn()
+  public createdAt: Date;
+
+  @UpdateDateColumn()
+  public updatedAt: Date;
 }

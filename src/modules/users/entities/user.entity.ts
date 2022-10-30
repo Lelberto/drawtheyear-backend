@@ -1,11 +1,12 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Timestamps } from '../../../common/entities/timestamps.interface';
 import { Day } from '../../days/entities/day.entity';
 import { Emotion } from '../../emotions/entities/emotion.entity';
 import { Role } from './../../../common/types/role.types';
 
 @Entity()
-export class User {
+export class User implements Timestamps {
 
   @PrimaryGeneratedColumn('uuid')
   public id: string;
@@ -56,7 +57,6 @@ export class User {
     enum: Object.values(Role),
     default: Role.USER
   })
-  @Exclude({ toPlainOnly: true })
   public role: Role;
 
   @OneToMany(() => Emotion, emotion => emotion.user)
@@ -64,4 +64,10 @@ export class User {
 
   @OneToMany(() => Day, day => day.user)
   public days: Day[];
+
+  @CreateDateColumn()
+  public createdAt: Date;
+
+  @UpdateDateColumn()
+  public updatedAt: Date;
 }

@@ -1,10 +1,11 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Timestamps } from '../../../common/entities/timestamps.interface';
 import { Emotion } from '../../emotions/entities/emotion.entity';
 import { User } from '../../users/entities/user.entity';
 import { Visibility } from './visibility.enum';
 
 @Entity()
-export class Day {
+export class Day implements Timestamps {
 
   @PrimaryGeneratedColumn('uuid')
   public id: string;
@@ -34,4 +35,10 @@ export class Day {
   @ManyToMany(() => Emotion, emotion => emotion.days, { eager: true })
   @JoinTable()
   public emotions: Emotion[];
+
+  @CreateDateColumn()
+  public createdAt: Date;
+
+  @UpdateDateColumn()
+  public updatedAt: Date;
 }
