@@ -1,22 +1,20 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as moment from 'moment';
-import { Repository } from 'typeorm';
 import { Permission } from '../../common/types/role.types';
 import { RoleService } from '../auth/role.service';
 import { Emotion } from '../emotions/entities/emotion.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateDayDto, UpdateDayDto } from './entities/day.dto';
 import { Day } from './entities/day.entity';
+import { DayRepository } from './entities/day.repository';
 import { Visibility } from './entities/visibility.enum';
 
 @Injectable()
 export class DayService {
 
-  private readonly dayRepo: Repository<Day>;
+  private readonly dayRepo: DayRepository;
   private readonly roleService: RoleService;
 
-  public constructor(@InjectRepository(Day) dayRepo: Repository<Day>, roleService: RoleService) {
+  public constructor(dayRepo: DayRepository, roleService: RoleService) {
     this.dayRepo = dayRepo;
     this.roleService = roleService;
   }
@@ -30,11 +28,11 @@ export class DayService {
   }
 
   public async findByUser(user: User): Promise<Day[]> {
-    return await this.dayRepo.findBy({ user });
+    return await this.dayRepo.findByUser(user);
   }
 
   public async findByDate(user: User, date: Date): Promise<Day> {
-    const day = await this.dayRepo.findOneBy({ user, date });
+    const day = await this.dayRepo.findByDate(user, date);
     if (!day) {
       throw new NotFoundException(`Day with date ${date} for user ${user.username} not found`);
     }
@@ -42,8 +40,7 @@ export class DayService {
   }
 
   public async findByYear(user: User, year: number): Promise<Day[]> {
-    const dates = [moment(`${year}-01-01`), moment(`${year}-12-31`)];
-    return (await this.findByUser(user)).filter(day => moment(day.date).isBetween(dates[0], dates[1])); // TODO Check if isBetween() includes 01-01 and 12-31
+    return await this.dayRepo.findByYear(user, year);
   }
 
   public async update(day: Day, dto: UpdateDayDto): Promise<void> {
@@ -66,6 +63,6 @@ export class DayService {
 
   public async hasAccessToDetails(day: Day, user: User): Promise<boolean> {
     return day.visibility === Visibility.PUBLIC
-      || this.roleService.checkPermissions(user, Permission.DAY_RESUME_BYPASS);
+      || this.roleService.checkPermissions(user, Permission.DAY_DETAILS_BYPASS);
   }
 }

@@ -1,26 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CreateEmotionDto, UpdateEmotionDto } from './entities/emotion.dto';
 import { Emotion } from './entities/emotion.entity';
+import { EmotionRepository } from './entities/emotion.repository';
 
 @Injectable()
 export class EmotionService {
 
-  private readonly emotionRepo: Repository<Emotion>;
+  private readonly emotionRepo: EmotionRepository;
 
-  public constructor(@InjectRepository(Emotion) emotionRepo: Repository<Emotion>) {
+  public constructor(emotionRepo: EmotionRepository) {
     this.emotionRepo = emotionRepo;
   }
 
   public async create(dto: CreateEmotionDto, user: User): Promise<Emotion> {
     const emotion = this.emotionRepo.create({ ...dto, user });
     return await this.emotionRepo.save(emotion);
-  }
-
-  public async find(where?: FindManyOptions<Emotion>): Promise<Emotion[]> {
-    return await this.emotionRepo.find(where);
   }
 
   public async findById(id: string): Promise<Emotion> {
@@ -32,11 +28,11 @@ export class EmotionService {
   }
 
   public async findByUser(user: User): Promise<Emotion[]> {
-    return await this.emotionRepo.findBy({ user });
+    return await this.emotionRepo.findByUser(user);
   }
 
   public async findByName(user: User, name: string): Promise<Emotion> {
-    return await this.emotionRepo.findOneBy({ user, name });
+    return (await this.emotionRepo.findByUser(user)).find(emotion => emotion.name === name);
   }
 
   public async update(emotion: Emotion, dto: UpdateEmotionDto): Promise<void> {

@@ -37,7 +37,7 @@ export class DayDetailsInterceptor implements NestInterceptor {
 
   private async hasAccessToDetails(user: User, day: Day): Promise<boolean> {
     return day.visibility === Visibility.PUBLIC
-      || this.roleService.checkPermissions(user, Permission.DAY_RESUME_BYPASS);
+      || this.roleService.checkPermissions(user, Permission.DAY_DETAILS_BYPASS);
   }
 
   private hideDetails(day: Day): void {
