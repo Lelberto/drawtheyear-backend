@@ -9,5 +9,5 @@ export enum Permission {
   EMOTION_CREATION = 'emotion-creation',
   DAY_CREATION = 'day-creation',
   DAY_UPDATE = 'day-update',
-  DAY_RESUME_BYPASS = 'day-resume-bypass'
+  DAY_DETAILS_BYPASS = 'day-details-bypass'
 }
