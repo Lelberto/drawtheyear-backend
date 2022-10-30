@@ -10,9 +10,11 @@ export class CreateDayDto {
   public date: Date;
 
   @IsString()
+  @IsOptional()
   public resume?: string;
 
   @IsEnum(Visibility)
+  @IsOptional()
   public visibility?: Visibility;
 }
 
