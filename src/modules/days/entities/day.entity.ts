@@ -1,7 +1,9 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Timestamps } from '../../../common/entities/timestamps.interface';
 import { Emotion } from '../../emotions/entities/emotion.entity';
 import { User } from '../../users/entities/user.entity';
+import { DayEmotion } from './day-emotion.entity';
 import { Visibility } from './visibility.enum';
 
 @Entity()
@@ -32,8 +34,10 @@ export class Day implements Timestamps {
   @ManyToOne(() => User, user => user.days)
   public user: User;
 
-  @ManyToMany(() => Emotion, emotion => emotion.days)
-  @JoinTable()
+  @OneToMany(() => DayEmotion, dayEmotion => dayEmotion.day)
+  @Exclude({ toPlainOnly: true })
+  public dayEmotions: DayEmotion[];
+
   public emotions: Emotion[];
 
   @CreateDateColumn()

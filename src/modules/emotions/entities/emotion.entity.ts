@@ -1,6 +1,6 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Timestamps } from '../../../common/entities/timestamps.interface';
-import { Day } from '../../days/entities/day.entity';
+import { DayEmotion } from '../../days/entities/day-emotion.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity()
@@ -23,8 +23,8 @@ export class Emotion implements Timestamps {
   @ManyToOne(() => User, user => user.emotions)
   public user: User;
 
-  @ManyToMany(() => Day, day => day.emotions)
-  public days: Day[];
+  @OneToMany(() => DayEmotion, dayEmotion => dayEmotion.emotion)
+  public dayEmotions: DayEmotion[];
 
   @CreateDateColumn()
   public createdAt: Date;

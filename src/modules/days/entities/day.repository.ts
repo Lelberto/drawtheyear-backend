@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 import { DataSource, Repository } from 'typeorm';
+import { Emotion } from '../../emotions/entities/emotion.entity';
 import { User } from '../../users/entities/user.entity';
 import { Day } from './day.entity';
 
@@ -13,7 +14,8 @@ export class DayRepository extends Repository<Day> {
 
   public async findByDate(user: User, date: Date): Promise<Day> {
     return await this.createQueryBuilder('d')
-      .leftJoinAndSelect('d.emotions', 'e')
+      .leftJoinAndSelect('d.dayEmotions', 'de')
+      .leftJoinAndMapMany('d.emotions', Emotion, 'e', 'e.id = de.emotion_id')
       .where('d.user_id = :userId', { userId: user.id })
       .andWhere('d.date = :date', { date })
       .getOne();
@@ -21,7 +23,8 @@ export class DayRepository extends Repository<Day> {
 
   public async findByYear(user: User, year: number): Promise<Day[]> {
     return await this.createQueryBuilder('d')
-      .leftJoinAndSelect('d.emotions', 'e')
+      .leftJoinAndSelect('d.dayEmotions', 'de')
+      .leftJoinAndMapMany('d.emotions', Emotion, 'e', 'e.id = de.emotion_id')
       .where('d.user_id = :userId', { userId: user.id })
       .andWhere('d.date BETWEEN :minDate AND :maxDate', {
         minDate: moment(`${year}-01-01`).format('YYYY-MM-DD'),

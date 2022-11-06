@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import * as moment from 'moment';
 import { AuthUser } from '../../../../common/decorators/user.decorator';
 import { AccessTokenAuthGuard } from '../../../auth/guards/jwt/access-token-auth.guard';
 import { DayService } from '../../../days/day.service';
 import { AddEmotionToDayDto, CreateDayDto, FindDaysQueryDto, RemoveEmotionFromDayDto, UpdateDayDto } from '../../../days/entities/day.dto';
+import { SortEmotionsInterceptor } from '../../../days/interceptors/sort-emotions.interceptor';
 import { EmotionService } from '../../../emotions/emotion.service';
 import { User } from '../../../users/entities/user.entity';
 
@@ -28,13 +29,15 @@ export class MeDaysController {
   }
 
   @Get()
-  public async find(@AuthUser() authUser: User, @Query() query: FindDaysQueryDto) {
+  @UseInterceptors(SortEmotionsInterceptor)
+  public async find(@AuthUser() authUser: User, @Query() query: FindDaysQueryDto): Promise<{ data: import("d:/Development/drawtheyear/drawtheyear-backend/src/modules/days/entities/day.entity").Day[]; }> {
     return {
       data: await this.dayService.findByYear(authUser, parseInt(query.year, 10) || moment().year())
     };
   }
 
   @Get(':dayDate')
+  @UseInterceptors(SortEmotionsInterceptor)
   public async findByDate(@AuthUser() authUser: User, @Param('dayDate') dayDate: Date) {
     return {
       data: await this.dayService.findByDate(authUser, dayDate)
