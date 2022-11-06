@@ -82,7 +82,6 @@ export class DayService {
   }
 
   public async dayEmotionExists(day: Day, emotion: Emotion): Promise<boolean> {
-    // TODO Faire pareil dans tous les services ({ user } devient { user: { id: user.id } })
     return await this.dayEmotionRepo.countBy({ day: { id: day.id }, emotion: { id: emotion.id } }) > 0;
   }
 

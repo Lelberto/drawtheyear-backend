@@ -50,7 +50,7 @@ export class ImportCommand extends Command {
         for (const emotionName of dataDay.emotions) {
           if (emotionName) {
             let emotion: Emotion;
-            if (await this.emotionService.exists({ user, name: emotionName })) {
+            if (await this.emotionService.exists(user, emotionName)) {
               emotion = await this.emotionService.findByName(user, emotionName);
             } else {
               emotion = await this.emotionService.create({ name: emotionName, color: '#000000' }, user);

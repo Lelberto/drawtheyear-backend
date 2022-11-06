@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindOptionsWhere } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CreateEmotionDto, UpdateEmotionDto } from './entities/emotion.dto';
 import { Emotion } from './entities/emotion.entity';
@@ -39,7 +38,7 @@ export class EmotionService {
     await this.emotionRepo.save({ ...emotion, ...dto });
   }
 
-  public async exists(where: FindOptionsWhere<Emotion>): Promise<boolean> {
-    return await this.emotionRepo.countBy(where) > 0;
+  public async exists(user: User, name: string): Promise<boolean> {
+    return await this.emotionRepo.countBy({ user: { id: user.id }, name }) > 0;
   }
 }
