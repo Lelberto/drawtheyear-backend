@@ -21,6 +21,13 @@ export class Attachment implements Timestamps {
   })
   public path: string;
 
+  @Column({
+    type: 'varchar',
+    length: 30,
+    nullable: true
+  })
+  public mimeType: string;
+
   @ManyToOne(() => Day, day => day.attachments)
   public day: Day;
 
@@ -29,4 +36,8 @@ export class Attachment implements Timestamps {
 
   @UpdateDateColumn()
   public updatedAt: Date;
+
+  public get extension() {
+    return this.path?.substring(this.path?.lastIndexOf('.') + 1);
+  }
 }

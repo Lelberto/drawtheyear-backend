@@ -1,17 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Readable } from 'stream';
 import { Repository } from 'typeorm';
 import { Day } from '../days/entities/day.entity';
+import { AttachmentStorageAdapter } from './attachment-storage-adapter';
 import { CreateAttachmentDto } from './entities/attachment.dto';
 import { Attachment } from './entities/attachment.entity';
 
 @Injectable()
 export class AttachmentService {
 
-  public attachmentRepo: Repository<Attachment>;
+  private readonly attachmentRepo: Repository<Attachment>;
+  private readonly storageAdapter: AttachmentStorageAdapter;
 
-  public constructor(@InjectRepository(Attachment) attachmentRepo: Repository<Attachment>) {
+  public constructor(@InjectRepository(Attachment) attachmentRepo: Repository<Attachment>, storageAdapter: AttachmentStorageAdapter) {
     this.attachmentRepo = attachmentRepo;
+    this.storageAdapter = storageAdapter;
   }
 
   public async create(day: Day, dto: CreateAttachmentDto): Promise<Attachment> {
@@ -29,5 +33,20 @@ export class AttachmentService {
       throw new NotFoundException(`Attachment with ID ${id} not found`);
     }
     return attachment;
+  }
+
+  public async upload(attachment: Attachment, data: Buffer, extension: string, mimeType: string): Promise<void> {
+    attachment.path = `${attachment.id}.${extension}`;
+    attachment.mimeType = mimeType;
+    await this.attachmentRepo.save(attachment);
+    await this.storageAdapter.store(attachment, data);
+  }
+
+  public async download(attachment: Attachment): Promise<Buffer> {
+    return await this.storageAdapter.download(attachment);
+  }
+
+  public stream(attachment: Attachment): Readable {
+    return this.storageAdapter.stream(attachment);
   }
 }
