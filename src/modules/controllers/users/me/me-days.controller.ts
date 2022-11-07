@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import * as moment from 'moment';
 import { AuthUser } from '../../../../common/decorators/user.decorator';
+import { AttachmentService } from '../../../attachments/attachment.service';
+import { CreateAttachmentDto } from '../../../attachments/entities/attachment.dto';
 import { AccessTokenAuthGuard } from '../../../auth/guards/jwt/access-token-auth.guard';
 import { DayService } from '../../../days/day.service';
 import { AddEmotionToDayDto, CreateDayDto, FindDaysQueryDto, RemoveEmotionFromDayDto, UpdateDayDto } from '../../../days/entities/day.dto';
@@ -14,10 +16,12 @@ export class MeDaysController {
 
   private readonly dayService: DayService;
   private readonly emotionService: EmotionService;
+  private readonly attachmentService: AttachmentService;
 
-  public constructor(dayService: DayService, emotionService: EmotionService) {
+  public constructor(dayService: DayService, emotionService: EmotionService, attachmentService: AttachmentService) {
     this.dayService = dayService;
     this.emotionService = emotionService;
+    this.attachmentService = attachmentService;
   }
 
   @Post()
@@ -70,6 +74,23 @@ export class MeDaysController {
     await this.dayService.removeEmotion(day, emotion);
     return {
       date: day.date
+    };
+  }
+
+  @Post(':dayDate/attachments')
+  public async createAttachment(@AuthUser() authUser: User, @Param('dayDate') dayDate: Date, @Body() dto: CreateAttachmentDto) {
+    const day = await this.dayService.findByDate(authUser, dayDate);
+    const attachment = await this.attachmentService.create(day, dto);
+    return {
+      id: attachment.id
+    };
+  }
+
+  @Get(':dayDate/attachments')
+  public async findAttachments(@AuthUser() authUser: User, @Param('dayDate') dayDate: Date) {
+    const day = await this.dayService.findByDate(authUser, dayDate);
+    return {
+      data: await this.attachmentService.findByDay(day)
     };
   }
 }

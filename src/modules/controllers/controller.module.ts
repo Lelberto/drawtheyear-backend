@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
+import { AttachmentModule } from '../attachments/attachment.module';
 import { AuthModule } from '../auth/auth.module';
 import { DayModule } from '../days/day.module';
 import { EmotionModule } from '../emotions/emotion.module';
 import { UserModule } from '../users/user.module';
+import { AttachmentController } from './attachments/attachment.controller';
 import { AuthController } from './auth/auth.controller';
 import { DayController } from './days/day.controller';
 import { EmotionController } from './emotions/emotion.controller';
@@ -14,7 +16,7 @@ import { UserEmotionsController } from './users/user-emotions.controller';
 import { UserController } from './users/user.controller';
 
 @Module({
-  imports: [AuthModule, UserModule, EmotionModule, DayModule],
+  imports: [AuthModule, UserModule, EmotionModule, DayModule, AttachmentModule],
   controllers: [
     AuthController,
     MeController,
@@ -24,7 +26,8 @@ import { UserController } from './users/user.controller';
     UserEmotionsController,
     UserDayController,
     EmotionController,
-    DayController
+    DayController,
+    AttachmentController
   ]
 })
 export class ControllerModule {}
