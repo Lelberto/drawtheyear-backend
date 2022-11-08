@@ -45,10 +45,11 @@ export class AttachmentController {
 
   @Get(':attachmentId/stream')
   public async stream(@Res({ passthrough: true }) res: Response, @Param('attachmentId', ResolveAttachmentIdPipe) attachment: Attachment) {
+    const stream = this.attachmentService.stream(attachment);
     res.set({
       'Content-Type': attachment.mimeType,
       'Content-Disposition': `attachment; filename=${attachment.name}.${attachment.extension}`
     });
-    return new StreamableFile(this.attachmentService.stream(attachment));
+    return new StreamableFile(stream);
   }
 }

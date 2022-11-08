@@ -15,6 +15,7 @@ export class DayRepository extends Repository<Day> {
   public async findByDate(user: User, date: Date): Promise<Day> {
     return await this.createQueryBuilder('d')
       .leftJoinAndSelect('d.dayEmotions', 'de')
+      .leftJoinAndSelect('d.attachments', 'a')
       .leftJoinAndMapMany('d.emotions', Emotion, 'e', 'e.id = de.emotion_id')
       .where('d.user_id = :userId', { userId: user.id })
       .andWhere('d.date = :date', { date })
@@ -24,6 +25,7 @@ export class DayRepository extends Repository<Day> {
   public async findByYear(user: User, year: number): Promise<Day[]> {
     return await this.createQueryBuilder('d')
       .leftJoinAndSelect('d.dayEmotions', 'de')
+      .leftJoinAndSelect('d.attachments', 'a')
       .leftJoinAndMapMany('d.emotions', Emotion, 'e', 'e.id = de.emotion_id')
       .where('d.user_id = :userId', { userId: user.id })
       .andWhere('d.date BETWEEN :minDate AND :maxDate', {

@@ -43,10 +43,16 @@ export class AttachmentService {
   }
 
   public async download(attachment: Attachment): Promise<Buffer> {
+    if (!attachment.path) {
+      throw new NotFoundException(`Attachment with ID ${attachment.id} does not have data`);
+    }
     return await this.storageAdapter.download(attachment);
   }
 
   public stream(attachment: Attachment): Readable {
+    if (!attachment.path) {
+      throw new NotFoundException(`Attachment with ID ${attachment.id} does not have data`);
+    }
     return this.storageAdapter.stream(attachment);
   }
 }

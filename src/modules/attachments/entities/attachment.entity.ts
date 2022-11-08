@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Timestamps } from '../../../common/entities/timestamps.interface';
 import { Day } from '../../days/entities/day.entity';
@@ -19,6 +20,7 @@ export class Attachment implements Timestamps {
     length: 255,
     nullable: true
   })
+  @Exclude({ toPlainOnly: true })
   public path: string;
 
   @Column({
