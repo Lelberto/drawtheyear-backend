@@ -13,7 +13,9 @@ const config = registerAs('roles', () => ({
       Permission.EMOTION_CREATION,
       Permission.DAY_CREATION,
       Permission.DAY_UPDATE,
-      Permission.DAY_DETAILS_BYPASS
+      Permission.DAY_DETAILS_BYPASS,
+      Permission.DAY_ATTACHMENT_VIEW,
+      Permission.DAY_ATTACHMENT_CREATE
     ]
   }
 }));

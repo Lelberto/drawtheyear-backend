@@ -2,6 +2,8 @@ import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards, UseInterce
 import * as moment from 'moment';
 import { UsePermissions } from '../../../common/decorators/auth/use-permissions.decorator';
 import { Permission } from '../../../common/types/role.types';
+import { AttachmentService } from '../../attachments/attachment.service';
+import { CreateAttachmentDto } from '../../attachments/entities/attachment.dto';
 import { AccessTokenAuthGuard } from '../../auth/guards/jwt/access-token-auth.guard';
 import { RoleGuard } from '../../auth/guards/roles/role.guard';
 import { DayService } from '../../days/day.service';
@@ -20,10 +22,12 @@ export class UserDayController {
 
   private readonly dayService: DayService;
   private readonly emotionService: EmotionService;
+  private readonly attachmentService: AttachmentService;
 
-  public constructor(dayService: DayService, emotionService: EmotionService) {
+  public constructor(dayService: DayService, emotionService: EmotionService, attachmentService: AttachmentService) {
     this.dayService = dayService;
     this.emotionService = emotionService;
+    this.attachmentService = attachmentService;
   }
 
   @Post()
@@ -77,6 +81,25 @@ export class UserDayController {
     await this.dayService.removeEmotion(day, emotion);
     return {
       date: day.date
+    };
+  }
+
+  @Post(':dayDate/attachments')
+  @UsePermissions(Permission.DAY_ATTACHMENT_CREATE)
+  public async createAttachment(@Param('username', ResolveUsernamePipe) user: User, @Param('dayDate') dayDate: Date, @Body() dto: CreateAttachmentDto) {
+    const day = await this.dayService.findByDate(user, dayDate);
+    const attachment = await this.attachmentService.create(day, dto);
+    return {
+      id: attachment.id
+    };
+  }
+
+  @Get(':dayDate/attachments')
+  @UsePermissions(Permission.DAY_ATTACHMENT_VIEW)
+  public async findAttachments(@Param('username', ResolveUsernamePipe) user: User, @Param('dayDate') dayDate: Date) {
+    const day = await this.dayService.findByDate(user, dayDate);
+    return {
+      data: await this.attachmentService.findByDay(day)
     };
   }
 }
