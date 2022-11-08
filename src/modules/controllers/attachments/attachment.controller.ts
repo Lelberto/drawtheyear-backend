@@ -1,4 +1,4 @@
-import { Controller, Get, NotImplementedException, Param, Post, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, Post, Res, StreamableFile, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { AttachmentService } from '../../attachments/attachment.service';
@@ -32,15 +32,11 @@ export class AttachmentController {
   }
 
   @Get(':attachmentId/download')
-  public async download() {
-    // FIXME This code causes a Node internal error
-    // const data = await this.attachmentService.fetch(attachment);
-    // res.set({
-    //   'Content-Type': attachment.mimeType,
-    //   'Content-Disposition': `attachment; filename=${attachment.name}.${attachment.extension}`
-    // });
-    // return res.send(data);
-    throw new NotImplementedException('This endpoint is not available, use GET /attachments/:attachmentId/stream instead');
+  public async download(@Param('attachmentId', ResolveAttachmentIdPipe) attachment: Attachment) {
+    const data = await this.attachmentService.download(attachment);
+    return {
+      data: `data:${attachment.mimeType};base64,${data.toString('base64')}`
+    };
   }
 
   @Get(':attachmentId/stream')
